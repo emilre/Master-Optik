@@ -1,0 +1,22 @@
+# Raw Instagram downloads (instaloader) — never commit these
+ig_dl/
+
+# OS / editor noise
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+.vscode/
+.idea/
+
+# Python (media processing tooling)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ffmpeg two-pass scratch
+*-0.log
+*-0.log.mbtree
+ffmpeg2pass-*
