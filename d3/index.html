@@ -33,7 +33,9 @@ body{
   margin:0;background:var(--paper);color:var(--ink);
   font-family:var(--sans);font-size:17px;line-height:1.5;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;-webkit-overflow-scrolling:touch;
 }
+body.menu-open{overflow:hidden}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit}
@@ -85,7 +87,8 @@ nav.main a:hover::after,nav.main a:focus-visible::after{width:100%}
 .hero-meta .tag b{color:var(--orange)}
 .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:var(--grid-gap);align-items:end}
 h1.hero-title{font-family:var(--disp);font-weight:900;text-transform:uppercase;
-  font-size:clamp(48px,9.2vw,150px);line-height:.9;letter-spacing:-.03em;margin:0}
+  font-size:clamp(48px,9.2vw,150px);line-height:.9;letter-spacing:-.03em;margin:0;
+  overflow-wrap:anywhere;word-break:break-word}
 h1.hero-title .em{color:var(--orange)}
 .hero-left .sub{max-width:44ch;margin:28px 0 0;font-size:clamp(16px,1.4vw,20px);line-height:1.55;color:#2a2a2a}
 .hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
@@ -105,7 +108,7 @@ h1.hero-title .em{color:var(--orange)}
 section{padding:clamp(56px,8vw,110px) 0;border-bottom:2px solid var(--ink)}
 .sec-head{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:end;margin-bottom:44px}
 .sec-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--orange);letter-spacing:.05em}
-.sec-title{font-family:var(--disp);font-weight:900;text-transform:uppercase;font-size:clamp(30px,5.4vw,72px);line-height:.92;letter-spacing:-.02em;margin:0}
+.sec-title{font-family:var(--disp);font-weight:900;text-transform:uppercase;font-size:clamp(30px,5.4vw,72px);line-height:.92;letter-spacing:-.02em;margin:0;overflow-wrap:anywhere}
 .sec-sub{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:right;max-width:32ch;justify-self:end;line-height:1.4}
 
 /* ---------- SERVICES ---------- */
@@ -131,8 +134,8 @@ section{padding:clamp(56px,8vw,110px) 0;border-bottom:2px solid var(--ink)}
 
 /* ---------- REELS ---------- */
 .reels{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--grid-gap)}
-.reel{border:2px solid var(--ink);position:relative;aspect-ratio:9/16;overflow:hidden;background:#111}
-.reel video{width:100%;height:100%;object-fit:cover;display:block;background:#111}
+.reel{border:2px solid var(--ink);position:relative;aspect-ratio:9/16;overflow:hidden;background:#f5f2ec}
+.reel video{width:100%;height:100%;object-fit:cover;display:block;background:#f5f2ec}
 .reel .rlab{position:absolute;top:10px;left:10px;font-family:var(--mono);font-size:11px;background:var(--paper);color:#111;padding:3px 7px;z-index:3;letter-spacing:.05em}
 .reels-empty{grid-column:1/-1;border:2px dashed var(--ink);padding:34px;text-align:center;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:none}
 
@@ -156,8 +159,10 @@ section{padding:clamp(56px,8vw,110px) 0;border-bottom:2px solid var(--ink)}
 .cinfo .row .val a{border-bottom:2px solid transparent;transition:border-color .2s}
 .cinfo .row .val a:hover{border-color:var(--orange)}
 .cinfo .cactions{display:flex;flex-wrap:wrap;gap:10px;padding:20px 22px}
-.map{border:2px solid var(--ink);min-height:340px;height:100%;filter:grayscale(1) contrast(1.05)}
+.map-wrap{display:flex;flex-direction:column;gap:12px;min-width:0}
+.map{border:2px solid var(--ink);min-height:340px;flex:1 1 auto;filter:grayscale(1) contrast(1.05)}
 .map iframe{width:100%;height:100%;min-height:340px;border:0;display:block}
+.map-open{align-self:flex-start}
 
 /* ---------- FOOTER ---------- */
 footer{background:var(--ink);color:var(--paper);padding:0}
@@ -179,15 +184,49 @@ footer{background:var(--ink);color:var(--paper);padding:0}
 .ph::before{content:"";position:absolute;inset:0;background:
   repeating-linear-gradient(45deg,rgba(17,17,17,.03) 0 12px,transparent 12px 24px)}
 .ph .in{display:flex;flex-direction:column;align-items:center;gap:10px;z-index:1;padding:14px;text-align:center}
-.ph .in img{height:38px;width:auto;opacity:.85}
+.ph .in img{height:44px;width:auto;opacity:.42}
 .ph .in .cap{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#6b6b6b}
-.reel .ph{background:linear-gradient(135deg,rgba(242,124,23,.28),rgba(23,163,152,.28))}
-.reel .ph .in .cap{color:#eee}
-.reel .ph .in img{opacity:.95}
+.reel .ph{background:linear-gradient(135deg,rgba(242,124,23,.16),rgba(23,163,152,.16))}
+.reel .ph .in .cap{color:#6b6b6b}
+.reel .ph .in img{opacity:.42}
 
 /* ---------- REVEAL ---------- */
 .rev{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
 .rev.in{opacity:1;transform:none}
+
+/* ---------- MOBILE MENU ---------- */
+.mmenu{position:fixed;inset:0;z-index:200;display:none}
+.mmenu.open{display:block}
+.mmenu-backdrop{position:absolute;inset:0;background:rgba(17,17,17,.42);animation:fade .2s ease}
+.mmenu-panel{position:absolute;top:0;right:0;bottom:0;width:min(86vw,360px);background:var(--paper);
+  border-left:2px solid var(--ink);box-shadow:-14px 0 40px rgba(17,17,17,.18);
+  display:flex;flex-direction:column;gap:22px;padding:20px var(--edge) calc(24px + env(safe-area-inset-bottom));
+  overflow-y:auto;-webkit-overflow-scrolling:touch;animation:slidein .24s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes slidein{from{transform:translateX(100%)}to{transform:none}}
+.mmenu-top{display:flex;align-items:center;justify-content:space-between}
+.mmenu-top .brand img{height:34px;width:auto}
+.mmenu-top .brand b{font-family:var(--disp);font-weight:900;font-size:17px;text-transform:uppercase;letter-spacing:-.02em}
+.mmenu-close{width:44px;height:44px;border:2px solid var(--ink);background:none;cursor:pointer;display:grid;place-items:center}
+.mmenu-close svg{width:20px;height:20px}
+.mmenu-nav{display:flex;flex-direction:column}
+.mmenu-nav a{font-family:var(--disp);font-weight:800;text-transform:uppercase;font-size:26px;letter-spacing:-.01em;
+  padding:14px 0;border-bottom:1px solid var(--rule);min-height:44px;display:flex;align-items:center}
+.mmenu-nav a:active{color:var(--orange)}
+.mmenu-lang{align-self:flex-start}
+.mmenu-actions{display:flex;flex-direction:column;gap:10px;margin-top:auto}
+.mmenu-actions .btn{justify-content:center;padding:15px 16px;font-size:13px}
+
+/* ---------- STICKY MOBILE CALL BAR ---------- */
+.callbar{position:fixed;left:0;right:0;bottom:0;z-index:90;display:none;
+  background:var(--paper);border-top:2px solid var(--ink);
+  padding:8px var(--edge) calc(8px + env(safe-area-inset-bottom));gap:8px}
+.callbar a{flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:48px;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.05em;
+  text-transform:uppercase;border:2px solid var(--ink);cursor:pointer}
+.callbar a svg{width:17px;height:17px;flex:0 0 auto}
+.callbar .cb-call{background:var(--ink);color:var(--paper)}
+.callbar .cb-wa{background:var(--orange);color:#111}
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width:1080px){
@@ -198,12 +237,12 @@ footer{background:var(--ink);color:var(--paper);padding:0}
   .contact-grid{grid-template-columns:1fr}
   .reels{grid-template-columns:repeat(3,1fr)}
 }
-@media (max-width:820px){
-  nav.main,.hd .btn.call{display:none}
+@media (max-width:900px){
+  nav.main,.hd .btn.call,.hd .langsw{display:none}
   .burger{display:inline-flex}
-  header.nav-open nav.main{display:flex;position:absolute;top:100%;left:0;right:0;flex-direction:column;
-    background:var(--paper);border-bottom:2px solid var(--ink);padding:18px var(--edge);gap:4px;margin:0}
-  header.nav-open nav.main a{padding:12px 0;border-bottom:1px solid var(--rule);font-size:14px}
+  .brand{margin-right:auto}
+  .callbar{display:flex}
+  body{padding-bottom:72px}
   .sec-head{grid-template-columns:1fr;gap:8px}
   .sec-sub{text-align:left;justify-self:start}
   .svc{grid-template-columns:44px 1fr;gap:16px}
@@ -252,11 +291,49 @@ html{scroll-behavior:smooth}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2Z"/></svg>
       <span data-i18n="cta_call">Zəng et</span>
     </a>
-    <button class="burger" type="button" aria-label="Menu" aria-expanded="false" id="burger">
+    <button class="burger" type="button" aria-label="Menu" data-i18n-attr="aria-label:nav_menu" aria-expanded="false" aria-controls="mobile-menu" id="burger">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     </button>
   </div>
 </header>
+
+<!-- MOBILE MENU -->
+<div class="mmenu" id="mobile-menu" aria-hidden="true">
+  <div class="mmenu-backdrop" data-close></div>
+  <div class="mmenu-panel" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="mmenu-top">
+      <span class="brand" style="display:flex;align-items:center;gap:10px">
+        <img src="../images/logo.svg" alt="Master Optik" data-i18n-attr="alt:nav_home">
+        <b>Master Optik</b>
+      </span>
+      <button class="mmenu-close" id="mmenu-close" type="button" aria-label="Close" data-close>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <nav class="mmenu-nav" aria-label="Mobile">
+      <a href="#top" data-close data-i18n="nav_home">Ana səhifə</a>
+      <a href="#services" data-close data-i18n="nav_services">Xidmətlər</a>
+      <a href="#gallery" data-close data-i18n="nav_gallery">Qalereya</a>
+      <a href="#about" data-close data-i18n="nav_about">Haqqımızda</a>
+      <a href="#contact" data-close data-i18n="nav_contact">Əlaqə</a>
+    </nav>
+    <div class="langsw mmenu-lang" role="group" aria-label="Language">
+      <button data-lang="az" type="button">AZ</button>
+      <button data-lang="ru" type="button">RU</button>
+      <button data-lang="en" type="button">EN</button>
+    </div>
+    <div class="mmenu-actions">
+      <a class="btn orange" href="tel:+994777451905" data-close>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2Z"/></svg>
+        <span data-i18n="cta_call">Zəng et</span>
+      </a>
+      <a class="btn" href="https://wa.me/994777451905" target="_blank" rel="noopener" data-close>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6a9.6 9.6 0 0 1-3.7-3.3c-.3-.4-.8-1.2-.8-2.2s.5-1.5.7-1.7c.2-.2.4-.3.6-.3h.4c.2 0 .4 0 .5.4l.7 1.6c.1.1.1.3 0 .4l-.3.4-.3.3c-.1.1-.2.2-.1.4.2.4.7 1.1 1.3 1.6.8.7 1.4.9 1.7 1 .2.1.4.1.5-.1l.6-.7c.1-.2.3-.1.4-.1l1.5.7c.2.1.3.2.4.3v.6Z"/></svg>
+        <span data-i18n="cta_whatsapp">WhatsApp</span>
+      </a>
+    </div>
+  </div>
+</div>
 
 <main id="main">
 <span id="top"></span>
@@ -397,8 +474,14 @@ html{scroll-behavior:smooth}
           </div>
         </div>
       </div>
-      <div class="map">
-        <iframe src="https://maps.google.com/maps?q=Faiq%20Yusifov%2073%20Baku&output=embed" title="Master Optik — Baku" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="map-wrap">
+        <div class="map">
+          <iframe src="https://www.google.com/maps?q=Master%20Optik%20Faiq%20Yusifov%20k%C3%BC%C3%A7.%2073%2C%20N%C9%99rimanov%2C%20Bak%C4%B1&output=embed" title="Əlaqə" data-i18n-attr="title:contact_title" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <a class="btn ghost map-open" href="https://www.google.com/maps/search/?api=1&query=Master%20Optik%20Faiq%20Yusifov%2073%20Baku" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span data-i18n="map_open">Google Maps-də aç</span>
+        </a>
       </div>
     </div>
   </div>
@@ -440,11 +523,24 @@ html{scroll-behavior:smooth}
   </div>
 </footer>
 
+<!-- STICKY MOBILE CALL BAR -->
+<div class="callbar" aria-label="Quick contact">
+  <a class="cb-call" href="tel:+994777451905">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2Z"/></svg>
+    <span data-i18n="cta_call">Zəng et</span>
+  </a>
+  <a class="cb-wa" href="https://wa.me/994777451905" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6a9.6 9.6 0 0 1-3.7-3.3c-.3-.4-.8-1.2-.8-2.2s.5-1.5.7-1.7c.2-.2.4-.3.6-.3h.4c.2 0 .4 0 .5.4l.7 1.6c.1.1.1.3 0 .4l-.3.4-.3.3c-.1.1-.2.2-.1.4.2.4.7 1.1 1.3 1.6.8.7 1.4.9 1.7 1 .2.1.4.1.5-.1l.6-.7c.1-.2.3-.1.4-.1l1.5.7c.2.1.3.2.4.3v.6Z"/></svg>
+    <span data-i18n="cta_whatsapp">WhatsApp</span>
+  </a>
+</div>
+
 <script>
 const I18N = {
   az: {
     lang_name:"AZ",
     nav_home:"Ana səhifə", nav_services:"Xidmətlər", nav_gallery:"Qalereya", nav_about:"Haqqımızda", nav_contact:"Əlaqə",
+    nav_menu:"Menyu", map_open:"Google Maps-də aç",
     cta_call:"Zəng et", cta_whatsapp:"WhatsApp", cta_directions:"Yol göstər", cta_services:"Xidmətlər",
     hero_title:"Aydın görmə, mükəmməl görünüş",
     hero_sub:"Master Optik — Bakıda eynək satışı, dioptrili linzalar, təmir və fərdi sifariş. Keyfiyyətli çərçivələr və peşəkar xidmət.",
@@ -472,6 +568,7 @@ const I18N = {
   ru: {
     lang_name:"RU",
     nav_home:"Главная", nav_services:"Услуги", nav_gallery:"Галерея", nav_about:"О нас", nav_contact:"Контакты",
+    nav_menu:"Меню", map_open:"Открыть в Google Maps",
     cta_call:"Позвонить", cta_whatsapp:"WhatsApp", cta_directions:"Маршрут", cta_services:"Услуги",
     hero_title:"Чёткое зрение, безупречный образ",
     hero_sub:"Master Optik — продажа очков, диоптрийные линзы, ремонт и индивидуальный заказ в Баку. Качественные оправы и профессиональный сервис.",
@@ -499,6 +596,7 @@ const I18N = {
   en: {
     lang_name:"EN",
     nav_home:"Home", nav_services:"Services", nav_gallery:"Gallery", nav_about:"About", nav_contact:"Contact",
+    nav_menu:"Menu", map_open:"Open in Google Maps",
     cta_call:"Call", cta_whatsapp:"WhatsApp", cta_directions:"Directions", cta_services:"Services",
     hero_title:"Clear vision, perfect look",
     hero_sub:"Master Optik — eyewear, prescription lenses, repairs and custom orders in Baku. Quality frames and professional service.",
@@ -666,15 +764,41 @@ function onScroll(){
 window.addEventListener('scroll', onScroll, {passive:true});
 onScroll();
 
-/* ---- Burger ---- */
+/* ---- Mobile menu ---- */
 const burger = document.getElementById('burger');
-burger.addEventListener('click', ()=>{
-  const open = header.classList.toggle('nav-open');
-  burger.setAttribute('aria-expanded', String(open));
+const mmenu = document.getElementById('mobile-menu');
+const mpanel = mmenu.querySelector('.mmenu-panel');
+let lastFocus = null;
+function openMenu(){
+  lastFocus = document.activeElement;
+  mmenu.classList.add('open');
+  mmenu.setAttribute('aria-hidden','false');
+  burger.setAttribute('aria-expanded','true');
+  document.body.classList.add('menu-open');
+  const first = mpanel.querySelector('a,button');
+  if(first) first.focus();
+}
+function closeMenu(){
+  if(!mmenu.classList.contains('open')) return;
+  mmenu.classList.remove('open');
+  mmenu.setAttribute('aria-hidden','true');
+  burger.setAttribute('aria-expanded','false');
+  document.body.classList.remove('menu-open');
+  if(lastFocus && lastFocus.focus) lastFocus.focus();
+}
+burger.addEventListener('click', openMenu);
+mmenu.querySelectorAll('[data-close]').forEach(el=>el.addEventListener('click', closeMenu));
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') closeMenu();
+  if(e.key==='Tab' && mmenu.classList.contains('open')){
+    const f = mpanel.querySelectorAll('a[href],button:not([disabled])');
+    if(!f.length) return;
+    const first=f[0], last=f[f.length-1];
+    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+  }
 });
-document.querySelectorAll('nav.main a').forEach(a=>{
-  a.addEventListener('click', ()=>{ header.classList.remove('nav-open'); burger.setAttribute('aria-expanded','false'); });
-});
+window.addEventListener('resize', ()=>{ if(window.innerWidth>=900) closeMenu(); });
 
 /* ---- Reveal on scroll ---- */
 (function reveal(){
