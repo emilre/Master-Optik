@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 150" role="img" aria-label="Master Optik">
+  <defs>
+    <radialGradient id="lens" cx="38%" cy="32%" r="75%">
+      <stop offset="0%" stop-color="#8ff0d8"/>
+      <stop offset="42%" stop-color="#26c3a6"/>
+      <stop offset="100%" stop-color="#0f8f7e"/>
+    </radialGradient>
+    <linearGradient id="orange" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f7962b"/>
+      <stop offset="100%" stop-color="#f27c17"/>
+    </linearGradient>
+  </defs>
+
+  <!-- lowercase m -->
+  <path d="M22,132 L22,82 Q22,60 45,60 Q68,60 68,82 L68,132
+           M68,82 Q68,60 91,60 Q114,60 114,82 L114,132"
+        fill="none" stroke="url(#orange)" stroke-width="26"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- eye 'c' : open orange ring -->
+  <path d="M214,101 A42,42 0 1 1 181,58"
+        fill="none" stroke="url(#orange)" stroke-width="24" stroke-linecap="round"/>
+
+  <!-- teal lens / iris sitting in the opening -->
+  <circle cx="199" cy="64" r="27" fill="url(#lens)"/>
+  <!-- glossy highlights -->
+  <ellipse cx="189" cy="54" rx="9" ry="6.5" fill="#ffffff" opacity="0.9" transform="rotate(-32 189 54)"/>
+  <circle cx="207" cy="78" r="3.6" fill="#ffffff" opacity="0.85"/>
+  <circle cx="213" cy="70" r="2.3" fill="#ffffff" opacity="0.7"/>
+</svg>
