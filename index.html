@@ -41,8 +41,8 @@
   .thumb .glass{font-weight:800;font-size:22px;letter-spacing:.02em}
   .d1 .thumb{background:radial-gradient(120% 120% at 30% 20%,#fff,#f0eee6)}
   .d1 .thumb .glass{color:#2e2c26}
-  .d2 .thumb{background:radial-gradient(120% 120% at 70% 20%,#16302c,#0f1413)}
-  .d2 .thumb .glass{color:#eafaf5}
+  .d2 .thumb{background:radial-gradient(120% 120% at 70% 18%,#fffdf8,#f2ead9)}
+  .d2 .thumb .glass{color:#b0862f;font-family:Georgia,'Times New Roman',serif;font-style:italic}
   .d3 .thumb{background:#fff;border-bottom:1px solid var(--ink)}
   .d3 .thumb .glass{color:#111;text-transform:uppercase;font-size:26px;letter-spacing:-.01em}
   .d4 .thumb{background:linear-gradient(135deg,var(--teal2),var(--orange2))}
@@ -92,7 +92,7 @@
       </a>
       <a class="card d2" href="d2/">
         <div class="thumb"><span class="n">02</span><span class="glass">mc — luxe</span></div>
-        <div class="body"><span class="kicker" data-i18n="k2">İstiqamət 02</span><h3 data-i18n="t2">Dark Luxe / Premium</h3><p data-i18n="p2">Tünd, kinematik, şüşə effektli. Parlaq teal/narıncı vurğular, lüks hiss.</p><span class="open" data-i18n="open2">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+        <div class="body"><span class="kicker" data-i18n="k2">İstiqamət 02</span><h3 data-i18n="t2">Elegant Serif Luxe</h3><p data-i18n="p2">İşıqlı, zərif butik. Serif başlıqlar, çempen/qızılı və teal vurğular, premium hiss.</p><span class="open" data-i18n="open2">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d3" href="d3/">
         <div class="thumb"><span class="n">03</span><span class="glass">MC — editorial</span></div>
@@ -124,9 +124,9 @@
 const I18N = {
   az:{title:'Beş <em>dizayn istiqaməti</em>',sub:'Master Optik saytının beş fərqli dizaynı. Birini seçin — hamısı Azərbaycan, Rus və İngilis dillərində.',
     k1:'İstiqamət 01',k2:'İstiqamət 02',k3:'İstiqamət 03',k4:'İstiqamət 04',k5:'İstiqamət 05',
-    t1:'Warm Boutique Minimal',t2:'Dark Luxe / Premium',t3:'Bold Editorial / Swiss',t4:'Vibrant Gradient / Friendly',t5:'Clinical Trust / Optometry',
+    t1:'Warm Boutique Minimal',t2:'Elegant Serif Luxe',t3:'Bold Editorial / Swiss',t4:'Vibrant Gradient / Friendly',t5:'Clinical Trust / Optometry',
     p1:'Açıq, səliqəli, premium butik hissi. Krem fon, çoxlu boş sahə, incə vurğular.',
-    p2:'Tünd, kinematik, şüşə effektli. Parlaq teal/narıncı vurğular, lüks hiss.',
+    p2:'İşıqlı, zərif butik. Serif başlıqlar, çempen/qızılı və teal vurğular, premium hiss.',
     p3:'Yüksək kontrast, iri tipografiya, jurnal üslubu. Cəsarətli və art-direct.',
     p4:'Enerjili qradiyentlər, yumşaq formalar, dost və müasir pərakəndə hissi.',
     p5:'Təmiz, peşəkar, etibarlı — müasir optometriya klinikası hissi.',
@@ -134,9 +134,9 @@ const I18N = {
     note:'İlkin (React) versiya da saxlanılıb.',orig:'İlkin versiyaya bax →',rights:'Bütün hüquqlar qorunur'},
   ru:{title:'Пять <em>дизайн-направлений</em>',sub:'Пять разных дизайнов сайта Master Optik. Выберите один — все на азербайджанском, русском и английском.',
     k1:'Направление 01',k2:'Направление 02',k3:'Направление 03',k4:'Направление 04',k5:'Направление 05',
-    t1:'Warm Boutique Minimal',t2:'Dark Luxe / Premium',t3:'Bold Editorial / Swiss',t4:'Vibrant Gradient / Friendly',t5:'Clinical Trust / Optometry',
+    t1:'Warm Boutique Minimal',t2:'Elegant Serif Luxe',t3:'Bold Editorial / Swiss',t4:'Vibrant Gradient / Friendly',t5:'Clinical Trust / Optometry',
     p1:'Светлый, аккуратный, премиум-бутик. Кремовый фон, много воздуха, тонкие акценты.',
-    p2:'Тёмный, кинематографичный, стеклянный эффект. Яркие teal/оранжевые акценты, люкс.',
+    p2:'Светлый, изысканный бутик. Серифные заголовки, шампань/золото и teal, премиум.',
     p3:'Высокий контраст, крупная типографика, журнальный стиль. Смело и арт-дирекшн.',
     p4:'Энергичные градиенты, мягкие формы, дружелюбный современный ритейл.',
     p5:'Чисто, профессионально, надёжно — современная клиника оптометрии.',
@@ -144,9 +144,9 @@ const I18N = {
     note:'Первоначальная (React) версия тоже сохранена.',orig:'Открыть первую версию →',rights:'Все права защищены'},
   en:{title:'Five <em>design directions</em>',sub:"Five distinct designs for the Master Optik site. Pick one — all in Azerbaijani, Russian and English.",
     k1:'Direction 01',k2:'Direction 02',k3:'Direction 03',k4:'Direction 04',k5:'Direction 05',
-    t1:'Warm Boutique Minimal',t2:'Dark Luxe / Premium',t3:'Bold Editorial / Swiss',t4:'Vibrant Gradient / Friendly',t5:'Clinical Trust / Optometry',
+    t1:'Warm Boutique Minimal',t2:'Elegant Serif Luxe',t3:'Bold Editorial / Swiss',t4:'Vibrant Gradient / Friendly',t5:'Clinical Trust / Optometry',
     p1:'Light, tidy, premium-boutique feel. Cream background, lots of whitespace, subtle accents.',
-    p2:'Dark, cinematic, glassy. Luminous teal/orange accents, luxury feel.',
+    p2:'Light, refined boutique. Serif headings, champagne/gold and teal accents, premium feel.',
     p3:'High-contrast, big typography, magazine style. Bold and art-directed.',
     p4:'Energetic gradients, soft shapes, friendly modern retail vibe.',
     p5:'Clean, professional, trustworthy — a modern optometry clinic.',
