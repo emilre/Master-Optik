@@ -415,7 +415,7 @@ html{scroll-behavior:smooth}
       <h2 class="sec-title" data-i18n="reels_title">Videolar</h2>
       <p class="sec-sub">Instagram · @master__optik</p>
     </div>
-    <div class="reels rev" id="reels">
+    <div class="reels rev" id="reels-grid">
       <div class="reels-empty" id="reels-empty" data-i18n="reels_title">Videolar</div>
     </div>
   </div>
@@ -675,7 +675,7 @@ const ICONS = {
 
 /* ---- Build reels ---- */
 (function buildReels(){
-  const host = document.getElementById('reels');
+  const host = document.getElementById('reels-grid');
   const empty = document.getElementById('reels-empty');
   for(let i=1;i<=3;i++){
     const wrap = document.createElement('div');
