@@ -1,45 +1,59 @@
-# Master Optik — sayt
+# Master Optik — website
 
-Tək fayllı statik sayt: `index.html`. Heç bir build lazım deyil.
+Static site hosted on **GitHub Pages** → https://emilre.github.io/Master-Optik/
 
-## GitHub Pages-də yerləşdirmək
+No build step. Plain HTML/CSS/vanilla JS. Deploy is automatic: every push to
+`claude/github-pages-deploy-e3kwmy` runs `.github/workflows/deploy-pages.yml`.
 
-1. Yeni repo yaradın (məsələn `master-optik`).
-2. Bu qovluğun içindəkiləri repo-nun köküne yükləyin (`index.html`, `images/`).
-3. Repo → **Settings → Pages** → *Source: Deploy from a branch* → branch `main`, folder `/ (root)` → **Save**.
-4. 1–2 dəqiqə sonra sayt açılır: `https://<istifadəçi>.github.io/master-optik/`
+## Structure
 
-Öz domeni bağlamaq: Pages bölməsində **Custom domain** → domen adı, sonra domen provayderində CNAME yazısı.
-
-## Səhifələr
-
-Sayt tək fayl daxilində 4 səhifədən ibarətdir (keçidlər animasiyalıdır):
-
-- `#/` — Ana səhifə (dioptri sürgüsü)
-- `#/xidmetler` — Xidmətlər
-- `#/qalereya` — Qalereya
-- `#/elaqe` — Əlaqə, iş saatları, xəritə
-
-## Şəkillər
-
-Şəkil yerləri hələ boşdur. Faylları `images/` qovluğuna bu adlarla qoyun:
-
-| Fayl | Nə olmalı |
+| Path | What |
 |---|---|
-| `images/hero.jpg` | eynək seçimi — əsas foto |
-| `images/01.jpg` | mağaza vitrini |
-| `images/02.jpg` | optik çərçivə portret |
-| `images/03.jpg` | günəş eynəyi |
-| `images/04.jpg` | təmir prosesi |
-| `images/05.jpg` | linza kəsimi |
-| `images/06.jpg` | uşaq eynəyi |
-| `images/07.jpg` | çərçivə rəfi |
-| `images/08.jpg` | usta işi |
-| `images/09.jpg` | mağaza interyeri |
-| `images/mekan.jpg` | mağazanın xarici görünüşü |
+| `/` (`index.html`) | Landing page — pick one of the five design directions |
+| `/d1/` | **Warm Boutique Minimal** — cream, airy, understated |
+| `/d2/` | **Dark Luxe / Premium** — dark, cinematic, glassmorphism |
+| `/d3/` | **Bold Editorial / Swiss** — big type, high-contrast grid |
+| `/d4/` | **Vibrant Gradient / Friendly** — colorful, rounded, energetic |
+| `/d5/` | **Clinical Trust / Optometry** — clean, professional, trust cues |
+| `/original/` | The first single-file React version (kept for reference) |
+| `images/` | Shared images + `logo.svg` |
+| `videos/` | Shared reel videos |
 
-Şəkillər hazır olanda onları dizayna bağlamaq lazımdır — faylları göndərin, yerinə salınacaq.
+Every design (d1–d5) is a self-contained `index.html` that reads photos/videos
+from the shared `images/` and `videos/` folders — so adding media fills **all**
+designs at once.
 
-## Əlaqə məlumatları
+## Languages
 
-Telefon / WhatsApp: +994 77 745 19 05 · Ünvan: Faiq Yusifov küç. 73, N.Nərimanov, Bakı · Instagram: @master__optik
+All five directions are trilingual — **AZ (default) / RU / EN** — with a language
+switcher in the header. Choice persists in `localStorage`. Copy lives in a
+`const I18N` object inside each page; keep the three languages in sync when editing.
+
+## Logo
+
+`images/logo.svg` — the "mc" eye/lens mark (no wordmark text). Works on light and
+dark backgrounds. The "MASTER OPTİK" wordmark, where shown, is live HTML text.
+
+## Adding photos & reels (from Instagram @master__optik)
+
+Media isn't in the repo yet — the pages show branded placeholders until it is.
+Instagram can't be reached from CI, so download on a machine where you're logged in:
+
+```
+pip install instaloader
+instaloader --login <IG_USERNAME> --highlights --stories --reels master__optik
+```
+
+Then drop the files into the shared folders with these names and push:
+
+| File | Content |
+|---|---|
+| `images/hero.jpg` | main hero / storefront |
+| `images/01.jpg` … `images/09.jpg` | gallery photos |
+| `images/mekan.jpg` | shop exterior |
+| `videos/reel1.mp4` … `reel3.mp4` | reels (≤8 MB, 720p) |
+
+## Contact
+
+Phone / WhatsApp: +994 77 745 19 05 · Faiq Yusifov küç. 73, Nərimanov r., Bakı ·
+Instagram: [@master__optik](https://instagram.com/master__optik)

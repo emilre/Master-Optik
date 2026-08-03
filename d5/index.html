@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Master Optik — Bakı</title>
+<meta name="description" content="Master Optik — eynək satışı, dioptrili linzalar, təmir və fərdi sifariş. Bakı, Nərimanov.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange:#f27c17; --orange2:#f7962b;
+    --teal:#17a398; --teal-d:#0f8f7e; --teal2:#26c3a6;
+    --ink:#132322; --slate:#4a5b5a; --muted:#6d7f7e;
+    --bg:#ffffff; --bg2:#f6f9f9; --line:#e2ebea; --line2:#d5e2e0;
+    --card:#ffffff; --shadow:0 1px 2px rgba(15,32,31,.04),0 8px 24px rgba(15,32,31,.06);
+    --shadow-lg:0 12px 40px rgba(15,32,31,.12);
+    --r:12px; --r-lg:18px;
+    --maxw:1180px;
+    --hdr-h:74px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0; font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.6; -webkit-font-smoothing:antialiased;
+    scroll-padding-top:var(--hdr-h);
+  }
+  img{max-width:100%; display:block}
+  a{color:inherit; text-decoration:none}
+  h1,h2,h3{line-height:1.15; margin:0; font-weight:700; letter-spacing:-.01em}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 20px}
+  section{scroll-margin-top:var(--hdr-h)}
+
+  /* buttons */
+  .btn{display:inline-flex; align-items:center; gap:8px; font:inherit; font-weight:600; font-size:.95rem;
+    padding:11px 18px; border-radius:10px; border:1px solid transparent; cursor:pointer; transition:.18s ease;
+    white-space:nowrap; line-height:1}
+  .btn svg{width:18px;height:18px;flex:none}
+  .btn-primary{background:var(--teal); color:#fff; box-shadow:0 6px 16px rgba(23,163,152,.28)}
+  .btn-primary:hover{background:var(--teal-d); transform:translateY(-1px)}
+  .btn-accent{background:var(--orange); color:#fff; box-shadow:0 6px 16px rgba(242,124,23,.26)}
+  .btn-accent:hover{background:var(--orange2); transform:translateY(-1px)}
+  .btn-ghost{background:#fff; color:var(--ink); border-color:var(--line2)}
+  .btn-ghost:hover{border-color:var(--teal); color:var(--teal-d)}
+  :focus-visible{outline:3px solid rgba(23,163,152,.5); outline-offset:2px; border-radius:6px}
+
+  /* header */
+  header{position:sticky; top:0; z-index:50; background:rgba(255,255,255,.86);
+    backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid transparent; transition:.25s ease}
+  header.scrolled{border-bottom-color:var(--line); box-shadow:0 4px 20px rgba(15,32,31,.05)}
+  .hdr{display:flex; align-items:center; gap:18px; height:var(--hdr-h); transition:height .25s ease}
+  header.scrolled .hdr{height:62px}
+  .brand{display:flex; align-items:center; gap:11px; font-weight:700; letter-spacing:-.02em}
+  .brand img{height:38px; width:auto}
+  .brand .wm{font-size:1.18rem}
+  .brand .wm b{color:var(--teal-d)}
+  nav.main{display:flex; gap:4px; margin-left:8px}
+  nav.main a{padding:8px 12px; border-radius:8px; color:var(--slate); font-weight:500; font-size:.94rem; transition:.15s}
+  nav.main a:hover{color:var(--teal-d); background:var(--bg2)}
+  .hdr-right{margin-left:auto; display:flex; align-items:center; gap:12px}
+  .langsw{display:inline-flex; background:var(--bg2); border:1px solid var(--line); border-radius:9px; padding:3px}
+  .langsw button{border:0; background:transparent; font:inherit; font-weight:600; font-size:.82rem; color:var(--muted);
+    padding:5px 9px; border-radius:6px; cursor:pointer; transition:.15s}
+  .langsw button[aria-pressed="true"]{background:#fff; color:var(--teal-d); box-shadow:var(--shadow)}
+  .langsw button:hover{color:var(--ink)}
+  .menu-btn{display:none; background:#fff; border:1px solid var(--line2); border-radius:9px; width:42px; height:42px;
+    align-items:center; justify-content:center; cursor:pointer}
+  .menu-btn svg{width:22px;height:22px}
+
+  /* hero */
+  .hero{background:linear-gradient(180deg,#fff 0%, var(--bg2) 100%); padding:56px 0 64px; position:relative; overflow:hidden}
+  .hero::before{content:""; position:absolute; top:-140px; right:-120px; width:420px; height:420px; border-radius:50%;
+    background:radial-gradient(circle,rgba(38,195,166,.14),transparent 70%); pointer-events:none}
+  .hero-grid{display:grid; grid-template-columns:1.05fr 1fr; gap:48px; align-items:center; position:relative}
+  .eyebrow{display:inline-flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--line);
+    color:var(--teal-d); font-weight:600; font-size:.82rem; padding:7px 13px; border-radius:999px; box-shadow:var(--shadow)}
+  .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(23,163,152,.15)}
+  h1.hero-title{font-size:clamp(2.05rem,4.6vw,3.2rem); margin:20px 0 16px; letter-spacing:-.025em}
+  .hero-sub{font-size:1.08rem; color:var(--slate); max-width:44ch}
+  .hero-cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px}
+  .trustbadges{display:flex; flex-wrap:wrap; gap:10px 22px; margin-top:28px}
+  .tb{display:flex; align-items:center; gap:9px; font-size:.9rem; color:var(--slate); font-weight:500}
+  .tb .ck{width:22px;height:22px;border-radius:50%;background:rgba(23,163,152,.12); color:var(--teal-d);
+    display:flex;align-items:center;justify-content:center;flex:none}
+  .tb .ck svg{width:13px;height:13px}
+  .hero-media{position:relative}
+  .frame{background:#fff; border:1px solid var(--line); border-radius:var(--r-lg); padding:12px; box-shadow:var(--shadow-lg)}
+  .frame .ph, .frame img{width:100%; aspect-ratio:4/3.2; object-fit:cover; border-radius:12px}
+  .hero-chip{position:absolute; left:-14px; bottom:22px; background:#fff; border:1px solid var(--line);
+    border-radius:14px; padding:12px 15px; box-shadow:var(--shadow-lg); display:flex; align-items:center; gap:11px}
+  .hero-chip .ic{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--orange),var(--orange2));
+    color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+  .hero-chip .ic svg{width:22px;height:22px}
+  .hero-chip b{display:block;font-size:.95rem}
+  .hero-chip span{font-size:.78rem;color:var(--muted)}
+
+  /* stats bar */
+  .statsbar{background:var(--teal); color:#fff; margin-top:-1px}
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:26px 0}
+  .stat{text-align:center; padding:6px 8px; border-right:1px solid rgba(255,255,255,.18)}
+  .stat:last-child{border-right:0}
+  .stat b{display:block; font-size:1.7rem; font-weight:700; letter-spacing:-.02em}
+  .stat span{font-size:.86rem; color:rgba(255,255,255,.85)}
+
+  /* generic section head */
+  .sec{padding:74px 0}
+  .sec.alt{background:var(--bg2); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  .sec-head{text-align:center; max-width:620px; margin:0 auto 44px}
+  .sec-head .kicker{color:var(--teal-d); font-weight:600; font-size:.8rem; letter-spacing:.12em; text-transform:uppercase}
+  .sec-head h2{font-size:clamp(1.6rem,3vw,2.15rem); margin:10px 0 12px}
+  .sec-head p{color:var(--slate); margin:0; font-size:1.03rem}
+
+  /* services */
+  .svc-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:20px}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:24px 22px;
+    box-shadow:var(--shadow); transition:.2s ease; position:relative}
+  .card:hover{transform:translateY(-4px); box-shadow:var(--shadow-lg); border-color:var(--line2)}
+  .badge-ic{width:52px;height:52px;border-radius:50%;background:rgba(23,163,152,.1); color:var(--teal-d);
+    display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+  .badge-ic svg{width:26px;height:26px}
+  .card h3{font-size:1.06rem; margin-bottom:8px}
+  .card p{color:var(--slate); font-size:.92rem; margin:0}
+  .card .ckrow{display:flex;align-items:center;gap:7px;margin-top:14px;color:var(--teal-d);font-size:.82rem;font-weight:600}
+  .card .ckrow svg{width:15px;height:15px}
+
+  /* gallery */
+  .gal{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+  .gal a{display:block; border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:var(--bg2);
+    box-shadow:var(--shadow); position:relative}
+  .gal a img, .gal a .ph{width:100%; aspect-ratio:4/3; object-fit:cover; transition:transform .4s ease}
+  .gal a:hover img{transform:scale(1.05)}
+
+  /* placeholder */
+  .ph{background:linear-gradient(135deg,rgba(242,124,23,.14),rgba(23,163,152,.16));
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);
+    text-align:center;padding:14px}
+  .ph img{width:46px!important;height:auto!important;aspect-ratio:auto!important;opacity:.72;object-fit:contain!important}
+  .ph span{font-size:.74rem;letter-spacing:.02em;opacity:.85}
+
+  /* reels */
+  .reels{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+  .reel{background:#000; border:1px solid var(--line); border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow)}
+  .reel video{width:100%; aspect-ratio:9/13; object-fit:cover; display:block; background:#0b1615}
+  .reel.ph{aspect-ratio:9/13}
+
+  /* about */
+  .about-grid{display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center}
+  .about-media .frame .ph, .about-media .frame img{aspect-ratio:4/3.4}
+  .about-txt h2{font-size:clamp(1.6rem,3vw,2.15rem); margin-bottom:16px}
+  .about-txt p{color:var(--slate); font-size:1.04rem; margin:0 0 22px}
+  .about-list{display:grid; gap:12px; margin:0; padding:0; list-style:none}
+  .about-list li{display:flex; gap:11px; align-items:flex-start; font-weight:500}
+  .about-list .ck{width:24px;height:24px;border-radius:50%;background:rgba(242,124,23,.14);color:var(--orange);
+    flex:none;display:flex;align-items:center;justify-content:center}
+  .about-list .ck svg{width:14px;height:14px}
+
+  /* contact */
+  .contact-grid{display:grid; grid-template-columns:.9fr 1.1fr; gap:36px}
+  .info-card{background:#fff; border:1px solid var(--line); border-radius:var(--r); padding:26px; box-shadow:var(--shadow)}
+  .info-item{display:flex; gap:14px; padding:16px 0; border-bottom:1px solid var(--line)}
+  .info-item:last-child{border-bottom:0; padding-bottom:0}
+  .info-item:first-child{padding-top:0}
+  .info-item .ic{width:44px;height:44px;border-radius:10px;background:rgba(23,163,152,.1);color:var(--teal-d);
+    flex:none;display:flex;align-items:center;justify-content:center}
+  .info-item .ic svg{width:22px;height:22px}
+  .info-item .lbl{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+  .info-item .val{font-weight:500; margin-top:2px}
+  .info-item a.val:hover{color:var(--teal-d)}
+  .info-actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:22px}
+  .map-card{border:1px solid var(--line); border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow); min-height:340px; background:var(--bg2)}
+  .map-card iframe{width:100%; height:100%; min-height:340px; border:0; display:block}
+
+  /* footer */
+  footer{background:#0f1c1b; color:#cfdedc; padding:52px 0 26px}
+  .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:34px; margin-bottom:34px}
+  .foot-brand{display:flex; align-items:center; gap:11px; margin-bottom:14px}
+  .foot-brand img{height:40px}
+  .foot-brand .wm{font-weight:700; font-size:1.15rem; color:#fff}
+  .foot-brand .wm b{color:var(--teal2)}
+  footer p{color:#9fb3b1; font-size:.94rem; margin:0; max-width:34ch}
+  .foot-col h4{font-size:.8rem; text-transform:uppercase; letter-spacing:.1em; color:#7f9695; margin:0 0 14px; font-weight:600}
+  .foot-col a{display:block; color:#cfdedc; padding:5px 0; font-size:.94rem}
+  .foot-col a:hover{color:var(--teal2)}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,.09); padding-top:20px; display:flex; flex-wrap:wrap; gap:10px;
+    justify-content:space-between; align-items:center; font-size:.86rem; color:#8ba09e}
+
+  /* reveal */
+  .rv{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease}
+  .rv.in{opacity:1; transform:none}
+  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+  /* mobile */
+  @media (max-width:960px){
+    .hero-grid{grid-template-columns:1fr; gap:34px}
+    .hero-media{order:-1}
+    .about-grid{grid-template-columns:1fr; gap:32px}
+    .about-media{order:-1}
+    .contact-grid{grid-template-columns:1fr}
+    .svc-grid{grid-template-columns:repeat(2,1fr)}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:820px){
+    nav.main, .hdr-right .cta-hdr{display:none}
+    .menu-btn{display:flex}
+    nav.main.open{display:flex; position:absolute; top:var(--hdr-h); left:0; right:0; flex-direction:column;
+      background:#fff; border-bottom:1px solid var(--line); padding:12px 20px; box-shadow:var(--shadow-lg); gap:2px}
+    nav.main.open a{padding:12px}
+  }
+  @media (max-width:620px){
+    .stats{grid-template-columns:repeat(2,1fr); gap:16px 8px}
+    .stat:nth-child(2){border-right:0}
+    .gal{grid-template-columns:repeat(2,1fr); gap:12px}
+    .reels{grid-template-columns:1fr 1fr}
+    .foot-grid{grid-template-columns:1fr}
+    .sec{padding:56px 0}
+    .brand .wm{display:none}
+  }
+  @media (max-width:400px){
+    .svc-grid{grid-template-columns:1fr}
+    .reels{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<a class="btn" href="#main" style="position:absolute;left:-9999px;top:0;z-index:100" onfocus="this.style.left='12px';this.style.top='10px'" onblur="this.style.left='-9999px'">Skip</a>
+
+<header id="hdr">
+  <div class="wrap hdr">
+    <a class="brand" href="#top" aria-label="Master Optik">
+      <img src="../images/logo.svg" alt="" data-i18n-attr="alt:footer_tag" onerror="this.style.display='none'">
+      <span class="wm">Master <b>Optik</b></span>
+    </a>
+    <nav class="main" id="nav">
+      <a href="#top" data-i18n="nav_home">Ana səhifə</a>
+      <a href="#services" data-i18n="nav_services">Xidmətlər</a>
+      <a href="#gallery" data-i18n="nav_gallery">Qalereya</a>
+      <a href="#about" data-i18n="nav_about">Haqqımızda</a>
+      <a href="#contact" data-i18n="nav_contact">Əlaqə</a>
+    </nav>
+    <div class="hdr-right">
+      <div class="langsw" role="group" aria-label="Language">
+        <button type="button" data-lang="az" aria-pressed="true">AZ</button>
+        <button type="button" data-lang="ru" aria-pressed="false">RU</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="btn btn-primary cta-hdr" href="tel:+994777451905">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+        <span data-i18n="cta_call">Zəng et</span>
+      </a>
+      <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<span id="top"></span>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy rv">
+      <span class="eyebrow"><span class="dot"></span><span data-i18n="hero_badge">2015-dən etibarən Bakıda</span></span>
+      <h1 class="hero-title" data-i18n="hero_title">Aydın görmə, mükəmməl görünüş</h1>
+      <p class="hero-sub" data-i18n="hero_sub">Master Optik — Bakıda eynək satışı, dioptrili linzalar, təmir və fərdi sifariş.</p>
+      <div class="hero-cta">
+        <a class="btn btn-accent" href="https://wa.me/994777451905" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.8.9.9-2.8-.2-.3A8 8 0 1 1 12 20zm4.5-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8.9-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2a.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11 11 0 0 0 4.3 3.8c1.5.6 2 .7 2.8.6a2.4 2.4 0 0 0 1.6-1.1 2 2 0 0 0 .1-1.1c0-.1-.2-.2-.5-.3z"/></svg>
+          <span data-i18n="cta_whatsapp">WhatsApp</span>
+        </a>
+        <a class="btn btn-ghost" href="#services">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+          <span data-i18n="cta_services">Xidmətlər</span>
+        </a>
+      </div>
+      <div class="trustbadges">
+        <div class="tb"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="tb_brands">Top brendlər</span></div>
+        <div class="tb"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="tb_warranty">Zəmanətli xidmət</span></div>
+        <div class="tb"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="tb_expert">Peşəkar məsləhət</span></div>
+      </div>
+    </div>
+    <div class="hero-media rv">
+      <div class="frame">
+        <img src="../images/hero.jpg" alt="" data-i18n-attr="alt:hero_title" loading="lazy">
+      </div>
+      <div class="hero-chip">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span>
+        <div><b data-i18n="hero_chip_t">5000+</b><span data-i18n="hero_chip_s">məmnun müştəri</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="statsbar">
+  <div class="wrap stats">
+    <div class="stat"><b>10+</b><span data-i18n="stat_years">il təcrübə</span></div>
+    <div class="stat"><b>5000+</b><span data-i18n="stat_clients">məmnun müştəri</span></div>
+    <div class="stat"><b>8</b><span data-i18n="stat_services">xidmət növü</span></div>
+    <div class="stat"><b>UV400</b><span data-i18n="stat_protect">tam qoruma</span></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="sec" id="services">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker" data-i18n="services_title">Xidmətlərimiz</span>
+      <h2 data-i18n="services_title">Xidmətlərimiz</h2>
+      <p data-i18n="services_sub">Gözlərinizə lazım olan hər şey bir yerdə</p>
+    </div>
+    <div class="svc-grid" id="svcGrid"></div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="sec alt" id="gallery">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker" data-i18n="gallery_title">Qalereya</span>
+      <h2 data-i18n="gallery_title">Qalereya</h2>
+      <p data-i18n="gallery_sub">Mağazamızdan və işlərimizdən görüntülər</p>
+    </div>
+    <div class="gal rv" id="galGrid"></div>
+
+    <div class="sec-head rv" style="margin-top:58px">
+      <span class="kicker" data-i18n="reels_title">Videolar</span>
+      <h2 data-i18n="reels_title">Videolar</h2>
+    </div>
+    <div class="reels rv" id="reelsGrid"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="sec" id="about">
+  <div class="wrap about-grid">
+    <div class="about-media rv">
+      <div class="frame">
+        <img src="../images/05.jpg" alt="" data-i18n-attr="alt:about_title" loading="lazy">
+      </div>
+    </div>
+    <div class="about-txt rv">
+      <span class="kicker" style="color:var(--teal-d);font-weight:600;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase" data-i18n="about_title">Haqqımızda</span>
+      <h2 data-i18n="about_title" style="margin-top:8px">Haqqımızda</h2>
+      <p data-i18n="about_p">Master Optik uzun illərdir Bakıda keyfiyyətli optik məhsullar və peşəkar xidmət təqdim edir.</p>
+      <ul class="about-list">
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="about_li1">Təcrübəli və peşəkar komanda</span></li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="about_li2">Orijinal brend məhsullar</span></li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span data-i18n="about_li3">Fərdi yanaşma və dəqiq linza seçimi</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sec alt" id="contact">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker" data-i18n="contact_title">Əlaqə</span>
+      <h2 data-i18n="contact_title">Əlaqə</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="info-card rv">
+        <div class="info-item">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+          <div><div class="lbl" data-i18n="contact_addr_l">Ünvan</div><div class="val" data-i18n="addr_v">Faiq Yusifov küç. 73, Nərimanov r., Bakı</div></div>
+        </div>
+        <div class="info-item">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span>
+          <div><div class="lbl" data-i18n="contact_phone_l">Telefon</div><a class="val" href="tel:+994777451905">+994 77 745 19 05</a></div>
+        </div>
+        <div class="info-item">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+          <div><div class="lbl" data-i18n="contact_hours_l">İş saatları</div><div class="val" data-i18n="hours_v">B.e–Şənbə 10:00–20:00 · Bazar 11:00–18:00</div></div>
+        </div>
+        <div class="info-item">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg></span>
+          <div><div class="lbl" data-i18n="contact_social_l">Sosial şəbəkə</div><a class="val" href="https://instagram.com/master__optik" target="_blank" rel="noopener">@master__optik</a></div>
+        </div>
+        <div class="info-actions">
+          <a class="btn btn-primary" href="tel:+994777451905"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><span data-i18n="cta_call">Zəng et</span></a>
+          <a class="btn btn-ghost" href="https://maps.google.com/maps?q=Faiq%20Yusifov%2073%20Baku" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20 3 17V4l6 3 6-3 6 3v13l-6-3-6 3z"/><path d="M9 7v13M15 4v13"/></svg><span data-i18n="cta_directions">Yol göstər</span></a>
+        </div>
+      </div>
+      <div class="map-card rv">
+        <iframe title="Master Optik — Google Maps" src="https://maps.google.com/maps?q=Faiq%20Yusifov%2073%20Baku&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">
+          <img src="../images/logo.svg" alt="Master Optik" onerror="this.style.display='none'">
+          <span class="wm">Master <b>Optik</b></span>
+        </div>
+        <p data-i18n="footer_tag">Aydın görmə, mükəmməl görünüş</p>
+      </div>
+      <div class="foot-col">
+        <h4 data-i18n="nav_services">Xidmətlər</h4>
+        <a href="#services" data-i18n="nav_services">Xidmətlər</a>
+        <a href="#gallery" data-i18n="nav_gallery">Qalereya</a>
+        <a href="#about" data-i18n="nav_about">Haqqımızda</a>
+        <a href="#contact" data-i18n="nav_contact">Əlaqə</a>
+      </div>
+      <div class="foot-col">
+        <h4 data-i18n="contact_title">Əlaqə</h4>
+        <a href="tel:+994777451905">+994 77 745 19 05</a>
+        <a href="https://wa.me/994777451905" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://instagram.com/master__optik" target="_blank" rel="noopener">@master__optik</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Master Optik</span>
+      <span data-i18n="rights">Bütün hüquqlar qorunur</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const I18N = {
+  az: {
+    lang_name:"AZ",
+    nav_home:"Ana səhifə", nav_services:"Xidmətlər", nav_gallery:"Qalereya", nav_about:"Haqqımızda", nav_contact:"Əlaqə",
+    cta_call:"Zəng et", cta_whatsapp:"WhatsApp", cta_directions:"Yol göstər", cta_services:"Xidmətlər",
+    hero_title:"Aydın görmə, mükəmməl görünüş",
+    hero_sub:"Master Optik — Bakıda eynək satışı, dioptrili linzalar, təmir və fərdi sifariş. Keyfiyyətli çərçivələr və peşəkar xidmət.",
+    hero_badge:"2015-dən etibarən Bakıda",
+    services_title:"Xidmətlərimiz",
+    services_sub:"Gözlərinizə lazım olan hər şey bir yerdə",
+    svc1_t:"Eynək satışı", svc1_d:"Geniş çeşiddə optik və günəş eynəkləri, müasir çərçivələr.",
+    svc2_t:"Dioptrili linzalar", svc2_d:"Reseptə uyğun optik linzalar, antirefleks və blue-light örtük.",
+    svc3_t:"Günəş eynəkləri", svc3_d:"UV qorumalı, orijinal brend günəş eynəkləri.",
+    svc4_t:"Eynək təmiri", svc4_d:"Çərçivə və linza təmiri, vint, burun altlığı və menteşə dəyişimi.",
+    svc5_t:"Göz yoxlanışı", svc5_d:"Görmə itiliyinin ölçülməsi və düzgün linza seçimi.",
+    svc6_t:"Kontakt linzalar", svc6_d:"Gündəlik, aylıq və rəngli kontakt linzalar.",
+    svc7_t:"Uşaq eynəkləri", svc7_d:"Davamlı və rahat uşaq çərçivələri.",
+    svc8_t:"Fərdi sifariş", svc8_d:"İstədiyiniz model və linzanın fərdi sifarişi.",
+    gallery_title:"Qalereya", gallery_sub:"Mağazamızdan və işlərimizdən görüntülər",
+    reels_title:"Videolar",
+    about_title:"Haqqımızda",
+    about_p:"Master Optik uzun illərdir Bakıda keyfiyyətli optik məhsullar və peşəkar xidmət təqdim edir. Məqsədimiz — hər müştəriyə həm sağlam görmə, həm də zövqlü görünüş qazandırmaqdır. Təcrübəli komandamız düzgün linza və çərçivə seçimində sizə kömək edir.",
+    contact_title:"Əlaqə", contact_addr_l:"Ünvan", contact_phone_l:"Telefon", contact_hours_l:"İş saatları", contact_social_l:"Sosial şəbəkə",
+    hours_v:"B.e–Şənbə 10:00–20:00 · Bazar 11:00–18:00",
+    addr_v:"Faiq Yusifov küç. 73, Nərimanov r., Bakı",
+    footer_tag:"Aydın görmə, mükəmməl görünüş",
+    rights:"Bütün hüquqlar qorunur"
+  },
+  ru: {
+    lang_name:"RU",
+    nav_home:"Главная", nav_services:"Услуги", nav_gallery:"Галерея", nav_about:"О нас", nav_contact:"Контакты",
+    cta_call:"Позвонить", cta_whatsapp:"WhatsApp", cta_directions:"Маршрут", cta_services:"Услуги",
+    hero_title:"Чёткое зрение, безупречный образ",
+    hero_sub:"Master Optik — продажа очков, диоптрийные линзы, ремонт и индивидуальный заказ в Баку. Качественные оправы и профессиональный сервис.",
+    hero_badge:"В Баку с 2015 года",
+    services_title:"Наши услуги",
+    services_sub:"Всё для ваших глаз в одном месте",
+    svc1_t:"Продажа очков", svc1_d:"Большой выбор оптических и солнцезащитных очков, современные оправы.",
+    svc2_t:"Диоптрийные линзы", svc2_d:"Линзы по рецепту, антибликовое и blue-light покрытие.",
+    svc3_t:"Солнцезащитные очки", svc3_d:"Оригинальные брендовые очки с UV-защитой.",
+    svc4_t:"Ремонт очков", svc4_d:"Ремонт оправ и линз, замена винтов, носоупоров и петель.",
+    svc5_t:"Проверка зрения", svc5_d:"Измерение остроты зрения и подбор правильных линз.",
+    svc6_t:"Контактные линзы", svc6_d:"Однодневные, месячные и цветные контактные линзы.",
+    svc7_t:"Детские очки", svc7_d:"Прочные и удобные детские оправы.",
+    svc8_t:"Индивидуальный заказ", svc8_d:"Индивидуальный заказ нужной модели и линз.",
+    gallery_title:"Галерея", gallery_sub:"Кадры из нашего магазина и работ",
+    reels_title:"Видео",
+    about_title:"О нас",
+    about_p:"Master Optik уже много лет предлагает в Баку качественную оптику и профессиональный сервис. Наша цель — обеспечить каждому клиенту и здоровое зрение, и стильный образ. Опытная команда поможет подобрать правильные линзы и оправу.",
+    contact_title:"Контакты", contact_addr_l:"Адрес", contact_phone_l:"Телефон", contact_hours_l:"Часы работы", contact_social_l:"Соцсети",
+    hours_v:"Пн–Сб 10:00–20:00 · Вс 11:00–18:00",
+    addr_v:"ул. Фаига Юсифова 73, Наримановский р-н, Баку",
+    footer_tag:"Чёткое зрение, безупречный образ",
+    rights:"Все права защищены"
+  },
+  en: {
+    lang_name:"EN",
+    nav_home:"Home", nav_services:"Services", nav_gallery:"Gallery", nav_about:"About", nav_contact:"Contact",
+    cta_call:"Call", cta_whatsapp:"WhatsApp", cta_directions:"Directions", cta_services:"Services",
+    hero_title:"Clear vision, perfect look",
+    hero_sub:"Master Optik — eyewear, prescription lenses, repairs and custom orders in Baku. Quality frames and professional service.",
+    hero_badge:"In Baku since 2015",
+    services_title:"Our services",
+    services_sub:"Everything your eyes need, in one place",
+    svc1_t:"Eyewear sales", svc1_d:"A wide range of optical and sunglasses with modern frames.",
+    svc2_t:"Prescription lenses", svc2_d:"Lenses to prescription with anti-reflective and blue-light coating.",
+    svc3_t:"Sunglasses", svc3_d:"Genuine branded sunglasses with UV protection.",
+    svc4_t:"Eyewear repair", svc4_d:"Frame and lens repair, screw, nose-pad and hinge replacement.",
+    svc5_t:"Vision test", svc5_d:"Visual acuity measurement and correct lens selection.",
+    svc6_t:"Contact lenses", svc6_d:"Daily, monthly and colored contact lenses.",
+    svc7_t:"Kids' eyewear", svc7_d:"Durable and comfortable frames for children.",
+    svc8_t:"Custom orders", svc8_d:"Custom order of the model and lenses you want.",
+    gallery_title:"Gallery", gallery_sub:"Shots from our store and our work",
+    reels_title:"Videos",
+    about_title:"About us",
+    about_p:"For many years Master Optik has offered quality optics and professional service in Baku. Our goal is to give every customer both healthy vision and a stylish look. Our experienced team helps you pick the right lenses and frames.",
+    contact_title:"Contact", contact_addr_l:"Address", contact_phone_l:"Phone", contact_hours_l:"Opening hours", contact_social_l:"Social",
+    hours_v:"Mon–Sat 10:00–20:00 · Sun 11:00–18:00",
+    addr_v:"73 Faig Yusifov str., Narimanov dist., Baku",
+    footer_tag:"Clear vision, perfect look",
+    rights:"All rights reserved"
+  }
+};
+
+/* extra UI strings not in shared dictionary (localized, don't alter shared copy) */
+const EXTRA = {
+  az:{tb_brands:"Top brendlər",tb_warranty:"Zəmanətli xidmət",tb_expert:"Peşəkar məsləhət",
+    hero_chip_t:"5000+",hero_chip_s:"məmnun müştəri",
+    stat_years:"il təcrübə",stat_clients:"məmnun müştəri",stat_services:"xidmət növü",stat_protect:"tam qoruma",
+    about_li1:"Təcrübəli və peşəkar komanda",about_li2:"Orijinal brend məhsullar",about_li3:"Fərdi yanaşma və dəqiq linza seçimi",
+    ph_soon:"Şəkil tezliklə"},
+  ru:{tb_brands:"Топовые бренды",tb_warranty:"Сервис с гарантией",tb_expert:"Профессиональный совет",
+    hero_chip_t:"5000+",hero_chip_s:"довольных клиентов",
+    stat_years:"лет опыта",stat_clients:"довольных клиентов",stat_services:"видов услуг",stat_protect:"полная защита",
+    about_li1:"Опытная и профессиональная команда",about_li2:"Оригинальная брендовая продукция",about_li3:"Индивидуальный подход и точный подбор линз",
+    ph_soon:"Фото скоро"},
+  en:{tb_brands:"Top brands",tb_warranty:"Serviced with warranty",tb_expert:"Expert advice",
+    hero_chip_t:"5000+",hero_chip_s:"happy clients",
+    stat_years:"years experience",stat_clients:"happy clients",stat_services:"service types",stat_protect:"full protection",
+    about_li1:"Experienced, professional team",about_li2:"Genuine branded products",about_li3:"Personal approach and precise lens selection",
+    ph_soon:"Photo coming soon"}
+};
+
+/* service icons (stroke SVG) */
+const SVC_ICONS = [
+  '<circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/><path d="M12 12h0"/><path d="M2 10c1-1 3-1 4 0M18 10c1-1 3-1 4 0"/>',
+  '<circle cx="12" cy="12" r="7"/><path d="M12 5a7 7 0 0 1 0 14"/>',
+  '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/>',
+  '<path d="m14 7 3-3 3 3-3 3"/><path d="m14 7-8 8"/><path d="M6 15a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/><path d="m9 12 3 3"/>',
+  '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  '<ellipse cx="12" cy="12" rx="9" ry="6"/><path d="M12 6v12"/>',
+  '<circle cx="9" cy="7" r="3"/><path d="M3 21a6 6 0 0 1 12 0"/><path d="M16 11l2 2 4-4"/>',
+  '<path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 15.5 7.1 18.2 8 12.7l-4-3.9 5.5-.8z"/>'
+];
+
+function buildServices(){
+  const g=document.getElementById('svcGrid'); g.innerHTML='';
+  for(let i=1;i<=8;i++){
+    const c=document.createElement('div'); c.className='card rv';
+    c.innerHTML=`<div class="badge-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${SVC_ICONS[i-1]}</svg></div>
+      <h3 data-i18n="svc${i}_t"></h3>
+      <p data-i18n="svc${i}_d"></p>
+      <div class="ckrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="tb_expert"></span></div>`;
+    g.appendChild(c);
+  }
+}
+function buildGallery(){
+  const g=document.getElementById('galGrid'); g.innerHTML='';
+  for(let i=1;i<=9;i++){
+    const n=String(i).padStart(2,'0');
+    const a=document.createElement('a'); a.href='#gallery'; a.setAttribute('aria-label','Master Optik '+n);
+    a.innerHTML=`<img src="../images/${n}.jpg" alt="Master Optik ${n}" loading="lazy">`;
+    g.appendChild(a);
+  }
+}
+function buildReels(){
+  const g=document.getElementById('reelsGrid'); g.innerHTML='';
+  for(let i=1;i<=3;i++){
+    const d=document.createElement('div'); d.className='reel';
+    d.innerHTML=`<video controls playsinline preload="metadata" poster="../images/0${i}.jpg">
+      <source src="../videos/reel${i}.mp4" type="video/mp4"></video>`;
+    const v=d.querySelector('video');
+    v.addEventListener('error',()=>replaceVideo(d),true);
+    v.querySelector('source').addEventListener('error',()=>replaceVideo(d));
+    g.appendChild(d);
+  }
+}
+function replaceVideo(d){
+  if(d.dataset.done) return; d.dataset.done='1';
+  d.classList.add('ph');
+  d.innerHTML=`<img src="../images/logo.svg" alt="" onerror="this.style.display='none'"><span data-i18n-extra="ph_soon"></span>`;
+  applyI18n(currentLang);
+}
+
+/* placeholders for images */
+function makePlaceholder(img){
+  if(img.dataset.phDone) return; img.dataset.phDone='1';
+  const cap = (EXTRA[currentLang]&&EXTRA[currentLang].ph_soon)||'';
+  const div=document.createElement('div'); div.className='ph';
+  div.innerHTML=`<img src="../images/logo.svg" alt="" onerror="this.style.display='none'"><span>${cap}</span>`;
+  const al=img.getAttribute('alt'); if(al) div.setAttribute('aria-label',al);
+  img.replaceWith(div);
+}
+function applyPlaceholders(){
+  document.querySelectorAll('img[src^="../images/"]:not([data-ph-skip])').forEach(img=>{
+    if(img.closest('.brand')||img.closest('.foot-brand')) return; // logos handled separately
+    img.addEventListener('error',()=>makePlaceholder(img));
+    if(img.complete && img.naturalWidth===0) makePlaceholder(img);
+  });
+}
+
+/* i18n */
+let currentLang='az';
+function applyI18n(lang){
+  currentLang=lang;
+  const d=I18N[lang], ex=EXTRA[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n'); if(d[k]!=null) el.textContent=d[k];
+  });
+  // extra keys (some data-i18n keys live in EXTRA)
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(d[k]==null && ex && ex[k]!=null) el.textContent=ex[k];
+  });
+  document.querySelectorAll('[data-i18n-extra]').forEach(el=>{
+    const k=el.getAttribute('data-i18n-extra'); if(ex&&ex[k]!=null) el.textContent=ex[k];
+  });
+  document.querySelectorAll('[data-i18n-attr]').forEach(el=>{
+    el.getAttribute('data-i18n-attr').split(';').forEach(pair=>{
+      const [attr,key]=pair.split(':'); const v=(d[key]!=null?d[key]:(ex&&ex[key]));
+      if(v!=null) el.setAttribute(attr,v);
+    });
+  });
+  // update placeholder captions already rendered
+  const cap=(ex&&ex.ph_soon)||'';
+  document.querySelectorAll('.ph span:not([data-i18n-extra])').forEach(s=>{if(cap) s.textContent=cap;});
+  document.documentElement.lang=lang;
+  document.querySelectorAll('.langsw button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.lang===lang?'true':'false'));
+  try{localStorage.setItem('mo_lang',lang);}catch(e){}
+}
+
+/* init */
+document.addEventListener('DOMContentLoaded',()=>{
+  buildServices(); buildGallery(); buildReels();
+  let saved='az'; try{saved=localStorage.getItem('mo_lang')||'az';}catch(e){}
+  if(!I18N[saved]) saved='az';
+  applyI18n(saved);
+  applyPlaceholders();
+
+  document.querySelectorAll('.langsw button').forEach(b=>{
+    b.addEventListener('click',()=>applyI18n(b.dataset.lang));
+  });
+
+  const hdr=document.getElementById('hdr');
+  const onScroll=()=>hdr.classList.toggle('scrolled', window.scrollY>12);
+  onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
+
+  const nav=document.getElementById('nav'), mb=document.getElementById('menuBtn');
+  mb.addEventListener('click',()=>{
+    const open=nav.classList.toggle('open');
+    mb.setAttribute('aria-expanded',open?'true':'false');
+  });
+  nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+    nav.classList.remove('open'); mb.setAttribute('aria-expanded','false');
+  }));
+
+  // reveal
+  const rvs=document.querySelectorAll('.rv');
+  if('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion:reduce)').matches){
+    const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12});
+    rvs.forEach(el=>io.observe(el));
+  } else { rvs.forEach(el=>el.classList.add('in')); }
+});
+</script>
+</body>
+</html>
