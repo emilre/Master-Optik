@@ -25,10 +25,10 @@
   --font:"Poppins","Nunito",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:clip}
 body{
   margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);
-  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip;
   scroll-padding-top:var(--header-h);
   -webkit-tap-highlight-color:transparent;-webkit-overflow-scrolling:touch;
 }
@@ -79,13 +79,13 @@ header{
 }
 header.scrolled{background:rgba(251,252,255,.92);box-shadow:var(--shadow-sm);border-bottom-color:var(--line)}
 .nav{display:flex;align-items:center;gap:1rem;height:var(--header-h)}
-.brand{display:flex;align-items:center;gap:.6rem;margin-right:auto}
+.brand{display:flex;align-items:center;gap:.6rem;margin-right:auto;flex-shrink:0}
 .brand img{height:42px;width:auto;filter:drop-shadow(0 4px 10px rgba(242,124,23,.22))}
-.brand .name{font-weight:800;font-size:1.18rem;letter-spacing:-.02em}
+.brand .name{font-weight:800;font-size:1.18rem;letter-spacing:-.02em;white-space:nowrap}
 .brand .name b{font-weight:800}
-.brand .tag{display:block;font-size:.66rem;font-weight:600;color:var(--muted);letter-spacing:.02em;margin-top:-3px}
+.brand .tag{display:block;font-size:.66rem;font-weight:600;color:var(--muted);letter-spacing:.02em;margin-top:-3px;white-space:nowrap;max-width:210px;overflow:hidden;text-overflow:ellipsis}
 .menu{display:flex;gap:.35rem;align-items:center}
-.menu a{padding:.5rem .8rem;border-radius:var(--pill);font-weight:600;font-size:.95rem;color:var(--ink-soft);transition:color .18s,background .18s}
+.menu a{padding:.5rem .8rem;border-radius:var(--pill);font-weight:600;font-size:.95rem;color:var(--ink-soft);transition:color .18s,background .18s;white-space:nowrap}
 .menu a:hover{color:var(--teal);background:var(--grad-soft)}
 .langs{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:3px;box-shadow:var(--shadow-sm)}
 .langs button{
@@ -112,7 +112,8 @@ header.scrolled{background:rgba(251,252,255,.92);box-shadow:var(--shadow-sm);bor
 .menu-backdrop.open{opacity:1;visibility:visible}
 .mobile-menu{
   position:fixed;inset:var(--header-h) 0 auto 0;z-index:1200;
-  background:rgba(251,252,255,.98);backdrop-filter:blur(14px);
+  width:auto;margin:0;padding-left:max(4vw,16px);padding-right:max(4vw,16px);box-sizing:border-box;
+  background:#fbfcff;backdrop-filter:blur(14px);
   border-bottom:1px solid var(--line);box-shadow:var(--shadow);
   padding:1rem 0 1.4rem;transform:translateY(-120%);transition:transform .3s ease;
   max-height:calc(100vh - var(--header-h));overflow-y:auto;-webkit-overflow-scrolling:touch;
@@ -286,7 +287,7 @@ footer p.foot-tag{color:#93a2b5;max-width:22rem}
   background:linear-gradient(135deg,rgba(242,124,23,.16),rgba(23,163,152,.16)),var(--card);
   color:var(--muted);text-align:center;padding:1rem;
 }
-.ph img{width:46%;max-width:88px;opacity:.4;margin-bottom:.3rem}
+.ph img{width:46%;max-width:88px;height:auto;object-fit:contain;opacity:.4;margin-bottom:.3rem}
 .ph span{font-size:.72rem;font-weight:600;letter-spacing:.02em;color:var(--ink-soft);opacity:.7}
 
 /* reveal */
@@ -718,10 +719,14 @@ function applyPlaceholders(){
       const cap = img.getAttribute('alt') || 'Master Optik';
       const div = document.createElement('div');
       div.className='ph';
-      div.innerHTML = '<img src="'+LOGO+'" alt=""><span>'+cap+'</span>';
+      // keep the caption translatable: reuse the img's alt i18n key if it had one
+      const attrSpec = img.getAttribute('data-i18n-attr') || '';
+      const altKey = (attrSpec.split(';').map(s=>s.split(':')).find(p=>p[0]&&p[0].trim()==='alt')||[])[1];
+      div.innerHTML = '<img src="'+LOGO+'" alt=""><span'+(altKey?' data-i18n="'+altKey.trim()+'"':'')+'>'+cap+'</span>';
       div.setAttribute('role','img');
       div.setAttribute('aria-label', cap);
       img.replaceWith(div);
+      if(altKey && typeof I18N!=='undefined'){const d=I18N[currentLang]||I18N.az;const k=altKey.trim();if(d[k]) div.querySelector('span').textContent=d[k];}
     };
     img.addEventListener('error', swap);
     if(img.complete && img.naturalWidth===0) swap();
