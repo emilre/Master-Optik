@@ -41,34 +41,31 @@
   .card{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;transition:transform .25s ease,box-shadow .25s ease}
   .card:hover{transform:translateY(-6px);box-shadow:0 22px 50px -24px rgba(0,0,0,.28)}
   .thumb{height:172px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  .thumb .tphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
-  .card:hover .tphoto{transform:scale(1.05)}
-  .thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,22,23,.05) 30%,rgba(16,22,23,.55));pointer-events:none}
-  .thumb .n{position:absolute;top:12px;left:14px;font-size:12px;font-weight:800;letter-spacing:.14em;opacity:.95;z-index:2;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.5)}
-  .thumb .glass{position:absolute;bottom:10px;left:14px;font-weight:800;font-size:17px;letter-spacing:.02em;z-index:2;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.55)}
+  .thumb .n{position:absolute;top:12px;left:14px;font-size:12px;font-weight:800;letter-spacing:.14em;opacity:.9}
+  .thumb .glass{font-weight:800;font-size:22px;letter-spacing:.02em}
   .d1 .thumb{background:radial-gradient(120% 120% at 30% 20%,#fff,#f0eee6)}
-  
+  .d1 .thumb .glass{color:#2e2c26}
   .d2 .thumb{background:radial-gradient(120% 120% at 70% 18%,#fffdf8,#f2ead9)}
-  .d2 .thumb .glass{font-family:Georgia,'Times New Roman',serif;font-style:italic}
+  .d2 .thumb .glass{color:#b0862f;font-family:Georgia,'Times New Roman',serif;font-style:italic}
   .d3 .thumb{background:#fff;border-bottom:1px solid var(--ink)}
-  .d3 .thumb .glass{text-transform:uppercase;letter-spacing:-.01em}
+  .d3 .thumb .glass{color:#111;text-transform:uppercase;font-size:26px;letter-spacing:-.01em}
   .d4 .thumb{background:linear-gradient(135deg,var(--teal2),var(--orange2))}
-  
+  .d4 .thumb .glass{color:#fff}
   .d5 .thumb{background:linear-gradient(180deg,#f6f9f9,#eaf3f2)}
-  
+  .d5 .thumb .glass{color:#0f8f7e}
   .d6 .thumb{background:linear-gradient(180deg,#fffdf7,#fff0dc)}
-  
+  .d6 .thumb .glass{color:#f27c17}
   .d7 .thumb{background:radial-gradient(120% 120% at 50% 0%,#1b2138,#0b0e1a)}
-  .d7 .thumb .glass{text-shadow:0 0 18px rgba(255,176,32,.55)}
+  .d7 .thumb .glass{color:#ffb020;text-shadow:0 0 18px rgba(255,176,32,.55)}
   .d8 .thumb{background:#f7f3e8}
-  .d8 .thumb .glass{font-family:Georgia,'Times New Roman',serif}
+  .d8 .thumb .glass{color:#e8402a;font-family:Georgia,'Times New Roman',serif}
   .d9 .thumb{background:#0e3b2e}
-  .d9 .thumb .glass{font-family:Georgia,'Times New Roman',serif;font-weight:400;}
+  .d9 .thumb .glass{color:#c87941;font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:26px}
   .d10 .thumb{background:#fff;border-bottom:3px solid #000}
-  .d10 .thumb .glass{text-transform:uppercase;letter-spacing:-.03em}
+  .d10 .thumb .glass{color:#000;text-transform:uppercase;font-size:27px;letter-spacing:-.03em}
   .d10 .thumb .glass i{color:#ff5a00;font-style:normal}
   .d11 .thumb{background:linear-gradient(140deg,#f4f0fa,#e3daf6)}
-  
+  .d11 .thumb .glass{color:#7c4def}
   .card .body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
   .card .kicker{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange)}
   .card h3{font-size:19px;font-weight:800}
@@ -109,47 +106,47 @@
   <div class="wrap">
     <div class="grid">
       <a class="card d6" href="d6/">
-        <div class="thumb"><img class="tphoto" src="images/01.jpg" alt="" loading="lazy"><span class="n">01</span><span class="glass">mc — vitrin</span></div>
+        <div class="thumb"><span class="n">01</span><span class="glass">mc — vitrin</span></div>
         <div class="body"><span class="kicker" data-i18n="k6">İstiqamət 01</span><h3 data-i18n="t6">Vitrin / 4 səhifə</h3><p data-i18n="p6">Dörd səhifəli tam sayt. Yumşaq künclər, narıncı və teal. Vitrin lövhələri: rəf şəkli taxılmış şəklə keçir.</p><span class="quirk"><b data-i18n="q6l">Funksiya</b> <span data-i18n="q6">dioptri sürgüsü + vitrin keçidi</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d7" href="d7/">
-        <div class="thumb"><img class="tphoto" src="images/03.jpg" alt="" loading="lazy"><span class="n">02</span><span class="glass">mc — neon</span></div>
+        <div class="thumb"><span class="n">02</span><span class="glass">mc — neon</span></div>
         <div class="body"><span class="kicker" data-i18n="k7">İstiqamət 02</span><h3 data-i18n="t7">Gecə Neon</h3><p data-i18n="p7">Gecə indiqosu və kəhrəba. Premium, günəş eynəyi enerjisi, gecə Bakısı.</p><span class="quirk"><b data-i18n="q7l">Funksiya</b> <span data-i18n="q7">linza sürgüsü bütün səhifəni tündləşdirir</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d8" href="d8/">
-        <div class="thumb"><img class="tphoto" src="images/04.jpg" alt="" loading="lazy"><span class="n">03</span><span class="glass">mc — kağız</span></div>
+        <div class="thumb"><span class="n">03</span><span class="glass">mc — kağız</span></div>
         <div class="body"><span class="kicker" data-i18n="k8">İstiqamət 03</span><h3 data-i18n="t8">Riso Kağız</h3><p data-i18n="p8">Çap üslubu: kağız fon, qırmızı və mavi mürəkkəb, serif başlıqlar, qalın xətlər.</p><span class="quirk"><b data-i18n="q8l">Funksiya</b> <span data-i18n="q8">siyahı şəklində xidmətlər, təbii rəngli şəkillər</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d9" href="d9/">
-        <div class="thumb"><img class="tphoto" src="images/07.jpg" alt="" loading="lazy"><span class="n">04</span><span class="glass">mc — zümrüd</span></div>
+        <div class="thumb"><span class="n">04</span><span class="glass">mc — zümrüd</span></div>
         <div class="body"><span class="kicker" data-i18n="k9">İstiqamət 04</span><h3 data-i18n="t9">Zümrüd</h3><p data-i18n="p9">Zümrüd yaşıl, sümük rəngi və mis. Sakit, bahalı, optika salonu hissi.</p><span class="quirk"><b data-i18n="q9l">Funksiya</b> <span data-i18n="q9">üz formasına görə vitrin filtri</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d10" href="d10/">
-        <div class="thumb"><img class="tphoto" src="images/08.jpg" alt="" loading="lazy"><span class="n">05</span><span class="glass">MC — <i>brutal</i></span></div>
+        <div class="thumb"><span class="n">05</span><span class="glass">MC — <i>brutal</i></span></div>
         <div class="body"><span class="kicker" data-i18n="k10">İstiqamət 05</span><h3 data-i18n="t10">Brutal Narıncı</h3><p data-i18n="p10">Ağ fon, qalın qara xətlər, iri narıncı. Sərt, birbaşa, yadda qalan.</p><span class="quirk"><b data-i18n="q10l">Funksiya</b> <span data-i18n="q10">canlı saat: indi açıqdır / bağlıdır</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d11" href="d11/">
-        <div class="thumb"><img class="tphoto" src="images/06.jpg" alt="" loading="lazy"><span class="n">06</span><span class="glass">mc — pastel</span></div>
+        <div class="thumb"><span class="n">06</span><span class="glass">mc — pastel</span></div>
         <div class="body"><span class="kicker" data-i18n="k11">İstiqamət 06</span><h3 data-i18n="t11">Pastel Lilac</h3><p data-i18n="p11">Lilac, bənövşəyi və nanə. Yumşaq, müasir, gənc auditoriya üçün.</p><span class="quirk"><b data-i18n="q11l">Funksiya</b> <span data-i18n="q11">eynəksiz / eynəklə bölünmüş şəkil</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
     <a class="card d1" href="d1/">
-        <div class="thumb"><img class="tphoto" src="images/02.jpg" alt="" loading="lazy"><span class="n">07</span><span class="glass">mc — minimal</span></div>
+        <div class="thumb"><span class="n">07</span><span class="glass">mc — minimal</span></div>
         <div class="body"><span class="kicker" data-i18n="k1">İstiqamət 07</span><h3 data-i18n="t1">Warm Boutique Minimal</h3><p data-i18n="p1">Açıq, səliqəli, premium butik hissi. Krem fon, çoxlu boş sahə, incə vurğular.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d2" href="d2/">
-        <div class="thumb"><img class="tphoto" src="images/hero.jpg" alt="" loading="lazy"><span class="n">08</span><span class="glass">mc — luxe</span></div>
+        <div class="thumb"><span class="n">08</span><span class="glass">mc — luxe</span></div>
         <div class="body"><span class="kicker" data-i18n="k2">İstiqamət 08</span><h3 data-i18n="t2">Elegant Serif Luxe</h3><p data-i18n="p2">İşıqlı, zərif butik. Serif başlıqlar, çempen/qızılı və teal vurğular, premium hiss.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d3" href="d3/">
-        <div class="thumb"><img class="tphoto" src="images/09.jpg" alt="" loading="lazy"><span class="n">09</span><span class="glass">MC — editorial</span></div>
+        <div class="thumb"><span class="n">09</span><span class="glass">MC — editorial</span></div>
         <div class="body"><span class="kicker" data-i18n="k3">İstiqamət 09</span><h3 data-i18n="t3">Bold Editorial / Swiss</h3><p data-i18n="p3">Yüksək kontrast, iri tipografiya, jurnal üslubu. Cəsarətli və art-direct.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d4" href="d4/">
-        <div class="thumb"><img class="tphoto" src="images/about.jpg" alt="" loading="lazy"><span class="n">10</span><span class="glass">mc — vibrant</span></div>
+        <div class="thumb"><span class="n">10</span><span class="glass">mc — vibrant</span></div>
         <div class="body"><span class="kicker" data-i18n="k4">İstiqamət 10</span><h3 data-i18n="t4">Vibrant Gradient / Friendly</h3><p data-i18n="p4">Enerjili qradiyentlər, yumşaq formalar, dost və müasir pərakəndə hissi.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d5" href="d5/">
-        <div class="thumb"><img class="tphoto" src="images/05.jpg" alt="" loading="lazy"><span class="n">11</span><span class="glass">mc — clinic</span></div>
+        <div class="thumb"><span class="n">11</span><span class="glass">mc — clinic</span></div>
         <div class="body"><span class="kicker" data-i18n="k5">İstiqamət 11</span><h3 data-i18n="t5">Clinical Trust / Optometry</h3><p data-i18n="p5">Təmiz, peşəkar, etibarlı — müasir optometriya klinikası hissi.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
     </div>
