@@ -681,7 +681,7 @@ const ICONS = {
     const wrap = document.createElement('div');
     wrap.className = 'reel rev';
     wrap.innerHTML = `<span class="rlab">REEL 0${i}</span>
-      <video controls playsinline preload="metadata" poster="../images/0${i}.jpg">
+      <video controls playsinline preload="metadata" poster="../images/reel${i}.jpg">
         <source src="../videos/reel${i}.mp4" type="video/mp4">
       </video>`;
     host.insertBefore(wrap, empty);

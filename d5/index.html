@@ -427,7 +427,7 @@
   <div class="wrap about-grid">
     <div class="about-media rv">
       <div class="frame">
-        <img src="../images/05.jpg" alt="" data-i18n-attr="alt:about_title" loading="lazy">
+        <img src="../images/about.jpg" alt="" data-i18n-attr="alt:about_title" loading="lazy">
       </div>
     </div>
     <div class="about-txt rv">
@@ -673,7 +673,7 @@ function buildReels(){
   const g=document.getElementById('reelsGrid'); g.innerHTML='';
   for(let i=1;i<=3;i++){
     const d=document.createElement('div'); d.className='reel';
-    d.innerHTML=`<video controls playsinline preload="metadata" poster="../images/0${i}.jpg">
+    d.innerHTML=`<video controls playsinline preload="metadata" poster="../images/reel${i}.jpg">
       <source src="../videos/reel${i}.mp4" type="video/mp4"></video>`;
     const v=d.querySelector('video');
     v.addEventListener('error',()=>replaceVideo(d),true);

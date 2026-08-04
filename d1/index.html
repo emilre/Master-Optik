@@ -178,7 +178,7 @@
   .gallery{background:var(--cream-2)}
   .g-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
   .g-item{
-    position:relative;border-radius:var(--radius);overflow:hidden;background:#fff;
+    position:relative;margin:0;border-radius:var(--radius);overflow:hidden;background:#fff;
     border:1px solid var(--line);aspect-ratio:1/1;box-shadow:var(--shadow);
   }
   .g-item:nth-child(1),.g-item:nth-child(6),.g-item:nth-child(8){aspect-ratio:1/1.28}
@@ -526,7 +526,7 @@
         </div>
       </div>
       <div class="about-visual reveal">
-        <img src="../images/02.jpg" alt="" loading="lazy" data-ph="about">
+        <img src="../images/about.jpg" alt="" loading="lazy" data-ph="about">
       </div>
     </div>
   </div>
@@ -768,7 +768,7 @@ for(let i=1;i<=9;i++){
 for(let i=1;i<=3;i++){
   const wrap=document.createElement('div');
   wrap.className='reel';
-  wrap.innerHTML='<video controls playsinline preload="metadata" poster="../images/0'+i+'.jpg">'+
+  wrap.innerHTML='<video controls playsinline preload="metadata" poster="../images/reel'+i+'.jpg">'+
     '<source src="../videos/reel'+i+'.mp4" type="video/mp4"></video>';
   reelsGrid.appendChild(wrap);
 }
