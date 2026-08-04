@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Master Optik — Design Directions</title>
-<meta name="description" content="Master Optik — beş dizayn istiqaməti / пять дизайн-направлений / five design directions">
+<meta name="description" content="Master Optik — on bir dizayn istiqaməti / одиннадцать дизайн-направлений / eleven design directions">
 <link rel="icon" href="images/logo.svg" type="image/svg+xml">
 <style>
   :root{
@@ -27,13 +27,17 @@
   .langs button{border:0;background:transparent;font:inherit;font-weight:700;font-size:13px;color:var(--muted);padding:6px 12px;border-radius:999px;cursor:pointer;transition:.2s}
   .langs button.active{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff}
 
-  .hero{text-align:center;padding:72px 24px 40px}
+  .hero{text-align:center;padding:72px 24px 34px}
   .hero .mark{height:96px;margin:0 auto 22px;display:block}
   .hero h1{font-size:clamp(30px,5vw,52px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
   .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--orange),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
   .hero p{max-width:620px;margin:16px auto 0;color:var(--muted);font-size:clamp(15px,2.2vw,18px)}
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;padding:20px 0 30px}
+  .sechead{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:34px 0 12px}
+  .sechead h2{font-size:15px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+  .sechead span{font-size:13.5px;color:var(--muted)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;padding:22px 0 8px}
   .card{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;transition:transform .25s ease,box-shadow .25s ease}
   .card:hover{transform:translateY(-6px);box-shadow:0 22px 50px -24px rgba(0,0,0,.28)}
   .thumb{height:172px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -49,14 +53,29 @@
   .d4 .thumb .glass{color:#fff}
   .d5 .thumb{background:linear-gradient(180deg,#f6f9f9,#eaf3f2)}
   .d5 .thumb .glass{color:#0f8f7e}
+  .d6 .thumb{background:linear-gradient(180deg,#fffdf7,#fff0dc)}
+  .d6 .thumb .glass{color:#f27c17}
+  .d7 .thumb{background:radial-gradient(120% 120% at 50% 0%,#1b2138,#0b0e1a)}
+  .d7 .thumb .glass{color:#ffb020;text-shadow:0 0 18px rgba(255,176,32,.55)}
+  .d8 .thumb{background:#f7f3e8}
+  .d8 .thumb .glass{color:#e8402a;font-family:Georgia,'Times New Roman',serif}
+  .d9 .thumb{background:#0e3b2e}
+  .d9 .thumb .glass{color:#c87941;font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:26px}
+  .d10 .thumb{background:#fff;border-bottom:3px solid #000}
+  .d10 .thumb .glass{color:#000;text-transform:uppercase;font-size:27px;letter-spacing:-.03em}
+  .d10 .thumb .glass i{color:#ff5a00;font-style:normal}
+  .d11 .thumb{background:linear-gradient(140deg,#f4f0fa,#e3daf6)}
+  .d11 .thumb .glass{color:#7c4def}
   .card .body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
   .card .kicker{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange)}
   .card h3{font-size:19px;font-weight:800}
   .card p{color:var(--muted);font-size:14.5px;flex:1}
-  .card .open{margin-top:10px;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:14px;color:#fff;background:linear-gradient(135deg,var(--orange),var(--orange2));padding:10px 16px;border-radius:999px}
+  .quirk{display:inline-flex;align-self:flex-start;gap:7px;align-items:center;background:#f4f2ec;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700;color:#4a4844}
+  .quirk b{color:var(--teal)}
+  .card .open{margin-top:8px;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:14px;color:#fff;background:linear-gradient(135deg,var(--orange),var(--orange2));padding:10px 16px;border-radius:999px}
   .card .open svg{width:15px;height:15px}
 
-  .note{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin:8px 0 60px;color:var(--muted);font-size:14px}
+  .note{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin:26px 0 60px;color:var(--muted);font-size:14px}
   .note a{color:var(--teal);font-weight:700}
   footer{border-top:1px solid var(--line);padding:26px 24px;text-align:center;color:var(--muted);font-size:13px}
   footer img{height:26px;vertical-align:middle;margin-right:8px}
@@ -80,11 +99,47 @@
 <main>
   <section class="hero">
     <img class="mark" src="images/logo.svg" alt="Master Optik">
-    <h1 data-i18n="title">Beş <em>dizayn istiqaməti</em></h1>
-    <p data-i18n="sub">Master Optik saytının beş fərqli dizaynı. Birini seçin — hamısı Azərbaycan, Rus və İngilis dillərində.</p>
+    <h1 data-i18n="title">On bir <em>dizayn istiqaməti</em></h1>
+    <p data-i18n="sub">Master Optik saytının on bir fərqli dizaynı. Sonuncu altısında mağazanın öz şəkilləri istifadə olunub.</p>
   </section>
 
   <div class="wrap">
+
+    <div class="sechead">
+      <h2 data-i18n="s2h">Yeni — real şəkillərlə</h2>
+      <span data-i18n="s2s">Hər birinin öz rəngi və öz funksiyası var</span>
+    </div>
+    <div class="grid">
+      <a class="card d6" href="d6/">
+        <div class="thumb"><span class="n">06</span><span class="glass">mc — vitrin</span></div>
+        <div class="body"><span class="kicker" data-i18n="k6">İstiqamət 06</span><h3 data-i18n="t6">Vitrin / 4 səhifə</h3><p data-i18n="p6">Dörd səhifəli tam sayt. Yumşaq künclər, narıncı və teal. Vitrin lövhələri: rəf şəkli taxılmış şəklə keçir.</p><span class="quirk"><b data-i18n="q6l">Funksiya</b> <span data-i18n="q6">dioptri sürgüsü + vitrin keçidi</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </a>
+      <a class="card d7" href="d7/">
+        <div class="thumb"><span class="n">07</span><span class="glass">mc — neon</span></div>
+        <div class="body"><span class="kicker" data-i18n="k7">İstiqamət 07</span><h3 data-i18n="t7">Gecə Neon</h3><p data-i18n="p7">Gecə indiqosu və kəhrəba. Premium, günəş eynəyi enerjisi, gecə Bakısı.</p><span class="quirk"><b data-i18n="q7l">Funksiya</b> <span data-i18n="q7">linza sürgüsü bütün səhifəni tündləşdirir</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </a>
+      <a class="card d8" href="d8/">
+        <div class="thumb"><span class="n">08</span><span class="glass">mc — kağız</span></div>
+        <div class="body"><span class="kicker" data-i18n="k8">İstiqamət 08</span><h3 data-i18n="t8">Riso Kağız</h3><p data-i18n="p8">Çap üslubu: kağız fon, qırmızı və mavi mürəkkəb, serif başlıqlar, qalın xətlər.</p><span class="quirk"><b data-i18n="q8l">Funksiya</b> <span data-i18n="q8">siyahı şəklində xidmətlər, təbii rəngli şəkillər</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </a>
+      <a class="card d9" href="d9/">
+        <div class="thumb"><span class="n">09</span><span class="glass">mc — zümrüd</span></div>
+        <div class="body"><span class="kicker" data-i18n="k9">İstiqamət 09</span><h3 data-i18n="t9">Zümrüd</h3><p data-i18n="p9">Zümrüd yaşıl, sümük rəngi və mis. Sakit, bahalı, optika salonu hissi.</p><span class="quirk"><b data-i18n="q9l">Funksiya</b> <span data-i18n="q9">üz formasına görə vitrin filtri</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </a>
+      <a class="card d10" href="d10/">
+        <div class="thumb"><span class="n">10</span><span class="glass">MC — <i>brutal</i></span></div>
+        <div class="body"><span class="kicker" data-i18n="k10">İstiqamət 10</span><h3 data-i18n="t10">Brutal Narıncı</h3><p data-i18n="p10">Ağ fon, qalın qara xətlər, iri narıncı. Sərt, birbaşa, yadda qalan.</p><span class="quirk"><b data-i18n="q10l">Funksiya</b> <span data-i18n="q10">canlı saat: indi açıqdır / bağlıdır</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </a>
+      <a class="card d11" href="d11/">
+        <div class="thumb"><span class="n">11</span><span class="glass">mc — pastel</span></div>
+        <div class="body"><span class="kicker" data-i18n="k11">İstiqamət 11</span><h3 data-i18n="t11">Pastel Lilac</h3><p data-i18n="p11">Lilac, bənövşəyi və nanə. Yumşaq, müasir, gənc auditoriya üçün.</p><span class="quirk"><b data-i18n="q11l">Funksiya</b> <span data-i18n="q11">eynəksiz / eynəklə bölünmüş şəkil</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </a>
+    </div>
+
+    <div class="sechead">
+      <h2 data-i18n="s1h">İlk beş istiqamət</h2>
+      <span data-i18n="s1s">Şəkillərdən əvvəl hazırlanıb</span>
+    </div>
     <div class="grid">
       <a class="card d1" href="d1/">
         <div class="thumb"><span class="n">01</span><span class="glass">mc — minimal</span></div>
@@ -92,19 +147,19 @@
       </a>
       <a class="card d2" href="d2/">
         <div class="thumb"><span class="n">02</span><span class="glass">mc — luxe</span></div>
-        <div class="body"><span class="kicker" data-i18n="k2">İstiqamət 02</span><h3 data-i18n="t2">Elegant Serif Luxe</h3><p data-i18n="p2">İşıqlı, zərif butik. Serif başlıqlar, çempen/qızılı və teal vurğular, premium hiss.</p><span class="open" data-i18n="open2">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+        <div class="body"><span class="kicker" data-i18n="k2">İstiqamət 02</span><h3 data-i18n="t2">Elegant Serif Luxe</h3><p data-i18n="p2">İşıqlı, zərif butik. Serif başlıqlar, çempen/qızılı və teal vurğular, premium hiss.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d3" href="d3/">
         <div class="thumb"><span class="n">03</span><span class="glass">MC — editorial</span></div>
-        <div class="body"><span class="kicker" data-i18n="k3">İstiqamət 03</span><h3 data-i18n="t3">Bold Editorial / Swiss</h3><p data-i18n="p3">Yüksək kontrast, iri tipografiya, jurnal üslubu. Cəsarətli və art-direct.</p><span class="open" data-i18n="open3">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+        <div class="body"><span class="kicker" data-i18n="k3">İstiqamət 03</span><h3 data-i18n="t3">Bold Editorial / Swiss</h3><p data-i18n="p3">Yüksək kontrast, iri tipografiya, jurnal üslubu. Cəsarətli və art-direct.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d4" href="d4/">
         <div class="thumb"><span class="n">04</span><span class="glass">mc — vibrant</span></div>
-        <div class="body"><span class="kicker" data-i18n="k4">İstiqamət 04</span><h3 data-i18n="t4">Vibrant Gradient / Friendly</h3><p data-i18n="p4">Enerjili qradiyentlər, yumşaq formalar, dost və müasir pərakəndə hissi.</p><span class="open" data-i18n="open4">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+        <div class="body"><span class="kicker" data-i18n="k4">İstiqamət 04</span><h3 data-i18n="t4">Vibrant Gradient / Friendly</h3><p data-i18n="p4">Enerjili qradiyentlər, yumşaq formalar, dost və müasir pərakəndə hissi.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
       <a class="card d5" href="d5/">
         <div class="thumb"><span class="n">05</span><span class="glass">mc — clinic</span></div>
-        <div class="body"><span class="kicker" data-i18n="k5">İstiqamət 05</span><h3 data-i18n="t5">Clinical Trust / Optometry</h3><p data-i18n="p5">Təmiz, peşəkar, etibarlı — müasir optometriya klinikası hissi.</p><span class="open" data-i18n="open5">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+        <div class="body"><span class="kicker" data-i18n="k5">İstiqamət 05</span><h3 data-i18n="t5">Clinical Trust / Optometry</h3><p data-i18n="p5">Təmiz, peşəkar, etibarlı — müasir optometriya klinikası hissi.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
       </a>
     </div>
 
@@ -122,36 +177,71 @@
 
 <script>
 const I18N = {
-  az:{title:'Beş <em>dizayn istiqaməti</em>',sub:'Master Optik saytının beş fərqli dizaynı. Birini seçin — hamısı Azərbaycan, Rus və İngilis dillərində.',
+  az:{title:'On bir <em>dizayn istiqaməti</em>',sub:'Master Optik saytının on bir fərqli dizaynı. Sonuncu altısında mağazanın öz şəkilləri istifadə olunub.',
+    s1h:'İlk beş istiqamət',s1s:'Şəkillərdən əvvəl hazırlanıb',s2h:'Yeni — real şəkillərlə',s2s:'Hər birinin öz rəngi və öz funksiyası var',
     k1:'İstiqamət 01',k2:'İstiqamət 02',k3:'İstiqamət 03',k4:'İstiqamət 04',k5:'İstiqamət 05',
+    k6:'İstiqamət 06',k7:'İstiqamət 07',k8:'İstiqamət 08',k9:'İstiqamət 09',k10:'İstiqamət 10',k11:'İstiqamət 11',
     t1:'Warm Boutique Minimal',t2:'Elegant Serif Luxe',t3:'Bold Editorial / Swiss',t4:'Vibrant Gradient / Friendly',t5:'Clinical Trust / Optometry',
+    t6:'Vitrin / 4 səhifə',t7:'Gecə Neon',t8:'Riso Kağız',t9:'Zümrüd',t10:'Brutal Narıncı',t11:'Pastel Lilac',
     p1:'Açıq, səliqəli, premium butik hissi. Krem fon, çoxlu boş sahə, incə vurğular.',
     p2:'İşıqlı, zərif butik. Serif başlıqlar, çempen/qızılı və teal vurğular, premium hiss.',
     p3:'Yüksək kontrast, iri tipografiya, jurnal üslubu. Cəsarətli və art-direct.',
     p4:'Enerjili qradiyentlər, yumşaq formalar, dost və müasir pərakəndə hissi.',
     p5:'Təmiz, peşəkar, etibarlı — müasir optometriya klinikası hissi.',
-    open:'Bax',open2:'Bax',open3:'Bax',open4:'Bax',open5:'Bax',
-    note:'İlkin (React) versiya da saxlanılıb.',orig:'İlkin versiyaya bax →',rights:'Bütün hüquqlar qorunur'},
-  ru:{title:'Пять <em>дизайн-направлений</em>',sub:'Пять разных дизайнов сайта Master Optik. Выберите один — все на азербайджанском, русском и английском.',
+    p6:'Dörd səhifəli tam sayt. Yumşaq künclər, narıncı və teal. Vitrin lövhələri: rəf şəkli taxılmış şəklə keçir.',
+    p7:'Gecə indiqosu və kəhrəba. Premium, günəş eynəyi enerjisi, gecə Bakısı.',
+    p8:'Çap üslubu: kağız fon, qırmızı və mavi mürəkkəb, serif başlıqlar, qalın xətlər.',
+    p9:'Zümrüd yaşıl, sümük rəngi və mis. Sakit, bahalı, optika salonu hissi.',
+    p10:'Ağ fon, qalın qara xətlər, iri narıncı. Sərt, birbaşa, yadda qalan.',
+    p11:'Lilac, bənövşəyi və nanə. Yumşaq, müasir, gənc auditoriya üçün.',
+    q6l:'Funksiya',q7l:'Funksiya',q8l:'Funksiya',q9l:'Funksiya',q10l:'Funksiya',q11l:'Funksiya',
+    q6:'dioptri sürgüsü + vitrin keçidi',q7:'linza sürgüsü bütün səhifəni tündləşdirir',q8:'siyahı şəklində xidmətlər, təbii rəngli şəkillər',
+    q9:'üz formasına görə vitrin filtri',q10:'canlı saat: indi açıqdır / bağlıdır',q11:'eynəksiz / eynəklə bölünmüş şəkil',
+    open:'Bax',note:'İlkin (React) versiya da saxlanılıb.',orig:'İlkin versiyaya bax →',rights:'Bütün hüquqlar qorunur'},
+
+  ru:{title:'Одиннадцать <em>дизайн-направлений</em>',sub:'Одиннадцать разных дизайнов сайта Master Optik. В последних шести — настоящие фото магазина.',
+    s1h:'Первые пять направлений',s1s:'Сделаны до появления фото',s2h:'Новые — с реальными фото',s2s:'У каждого свой цвет и своя функция',
     k1:'Направление 01',k2:'Направление 02',k3:'Направление 03',k4:'Направление 04',k5:'Направление 05',
+    k6:'Направление 06',k7:'Направление 07',k8:'Направление 08',k9:'Направление 09',k10:'Направление 10',k11:'Направление 11',
     t1:'Warm Boutique Minimal',t2:'Elegant Serif Luxe',t3:'Bold Editorial / Swiss',t4:'Vibrant Gradient / Friendly',t5:'Clinical Trust / Optometry',
+    t6:'Витрина / 4 страницы',t7:'Ночной неон',t8:'Ризо-бумага',t9:'Изумруд',t10:'Брутальный оранжевый',t11:'Пастельный лиловый',
     p1:'Светлый, аккуратный, премиум-бутик. Кремовый фон, много воздуха, тонкие акценты.',
     p2:'Светлый, изысканный бутик. Серифные заголовки, шампань/золото и teal, премиум.',
     p3:'Высокий контраст, крупная типографика, журнальный стиль. Смело и арт-дирекшн.',
     p4:'Энергичные градиенты, мягкие формы, дружелюбный современный ритейл.',
     p5:'Чисто, профессионально, надёжно — современная клиника оптометрии.',
-    open:'Открыть',open2:'Открыть',open3:'Открыть',open4:'Открыть',open5:'Открыть',
-    note:'Первоначальная (React) версия тоже сохранена.',orig:'Открыть первую версию →',rights:'Все права защищены'},
-  en:{title:'Five <em>design directions</em>',sub:"Five distinct designs for the Master Optik site. Pick one — all in Azerbaijani, Russian and English.",
+    p6:'Полный сайт из четырёх страниц. Мягкие углы, оранжевый и teal. Плитки витрины: фото полки сменяется фото на лице.',
+    p7:'Ночное индиго и янтарь. Премиум, энергия солнцезащитных очков, ночное Баку.',
+    p8:'Печатный стиль: бумажный фон, красная и синяя краска, серифные заголовки, жирные линии.',
+    p9:'Изумрудный, костяной и медь. Спокойно, дорого, ощущение салона оптики.',
+    p10:'Белый фон, толстые чёрные линии, крупный оранжевый. Резко, прямо, запоминается.',
+    p11:'Лиловый, фиолетовый и мята. Мягко, современно, для молодой аудитории.',
+    q6l:'Функция',q7l:'Функция',q8l:'Функция',q9l:'Функция',q10l:'Функция',q11l:'Функция',
+    q6:'ползунок диоптрий + смена фото витрины',q7:'ползунок линзы затемняет всю страницу',q8:'услуги списком, фото в естественном цвете',
+    q9:'фильтр витрины по форме лица',q10:'живые часы: сейчас открыто / закрыто',q11:'фото со сдвигом: без очков / в очках',
+    open:'Открыть',note:'Первоначальная (React) версия тоже сохранена.',orig:'Открыть первую версию →',rights:'Все права защищены'},
+
+  en:{title:'Eleven <em>design directions</em>',sub:'Eleven distinct designs for the Master Optik site. The last six use the shop\u2019s own photos.',
+    s1h:'The first five directions',s1s:'Made before the photos arrived',s2h:'New — with real photos',s2s:'Each has its own colour and its own feature',
     k1:'Direction 01',k2:'Direction 02',k3:'Direction 03',k4:'Direction 04',k5:'Direction 05',
+    k6:'Direction 06',k7:'Direction 07',k8:'Direction 08',k9:'Direction 09',k10:'Direction 10',k11:'Direction 11',
     t1:'Warm Boutique Minimal',t2:'Elegant Serif Luxe',t3:'Bold Editorial / Swiss',t4:'Vibrant Gradient / Friendly',t5:'Clinical Trust / Optometry',
+    t6:'Storefront / 4 pages',t7:'Night Neon',t8:'Riso Paper',t9:'Emerald',t10:'Brutal Orange',t11:'Pastel Lilac',
     p1:'Light, tidy, premium-boutique feel. Cream background, lots of whitespace, subtle accents.',
     p2:'Light, refined boutique. Serif headings, champagne/gold and teal accents, premium feel.',
     p3:'High-contrast, big typography, magazine style. Bold and art-directed.',
     p4:'Energetic gradients, soft shapes, friendly modern retail vibe.',
     p5:'Clean, professional, trustworthy — a modern optometry clinic.',
-    open:'Open',open2:'Open',open3:'Open',open4:'Open',open5:'Open',
-    note:'The original (React) version is kept too.',orig:'Open the original →',rights:'All rights reserved'}
+    p6:'A full four-page site. Soft corners, orange and teal. Storefront tiles swap the shelf photo for the worn one.',
+    p7:'Night indigo and amber. Premium, sunglasses-first energy, night-time Baku.',
+    p8:'Print-led: paper stock, red and blue ink, serif headings, heavy rules.',
+    p9:'Emerald, bone and copper. Quiet, expensive, optical-salon feel.',
+    p10:'White ground, thick black rules, big orange. Blunt, direct, memorable.',
+    p11:'Lilac, violet and mint. Soft, modern, aimed at a younger audience.',
+    q6l:'Feature',q7l:'Feature',q8l:'Feature',q9l:'Feature',q10l:'Feature',q11l:'Feature',
+    q6:'diopter slider + storefront hover swap',q7:'lens slider darkens the whole page',q8:'services as a list, photos in true colour',
+    q9:'storefront filter by face shape',q10:'live clock: open now / closed',q11:'split photo: without glasses / with',
+    open:'Open',note:'The original (React) version is kept too.',orig:'Open the original →',rights:'All rights reserved'}
 };
 function setLang(l){
   const d=I18N[l]||I18N.az;
