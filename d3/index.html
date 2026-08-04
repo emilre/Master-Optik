@@ -817,5 +817,25 @@ window.addEventListener('resize', ()=>{ if(window.innerWidth>=900) closeMenu(); 
   els.forEach(e=>io.observe(e));
 })();
 </script>
+<style data-mo-pill>
+.mo-lang{position:fixed;left:14px;bottom:16px;z-index:140;display:flex;gap:2px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid rgba(0,0,0,.12);border-radius:999px;padding:4px;box-shadow:0 8px 20px -8px rgba(0,0,0,.35);margin-bottom:env(safe-area-inset-bottom)}
+.mo-lang button{border:0;background:transparent;font:700 12.5px/1 system-ui,sans-serif;color:#555;padding:8px 11px;border-radius:999px;cursor:pointer;min-height:32px;-webkit-tap-highlight-color:transparent}
+.mo-lang button[aria-pressed="true"]{background:#f27c17;color:#fff}
+</style>
+<div class="mo-lang" role="group" aria-label="Language" data-mo-ui>
+  <button data-mo-pill-lang="az">AZ</button><button data-mo-pill-lang="ru">RU</button><button data-mo-pill-lang="en">EN</button>
+</div>
+<script data-mo-pill>
+(function(){
+  function sync(){var l='az';try{l=localStorage.getItem('mo_lang')||'az'}catch(e){}
+    document.querySelectorAll('[data-mo-pill-lang]').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mo-pill-lang')===l))});}
+  document.querySelectorAll('[data-mo-pill-lang]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=document.querySelector('[data-lang="'+b.getAttribute('data-mo-pill-lang')+'"]');
+      if(t){t.click()}else{try{localStorage.setItem('mo_lang',b.getAttribute('data-mo-pill-lang'))}catch(e){};location.reload()}
+      sync();});});
+  sync();
+})();
+</script>
 </body>
 </html>
