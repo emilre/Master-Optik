@@ -5,7 +5,7 @@ Static site hosted on **GitHub Pages** → https://emilre.github.io/Master-Optik
 No build step. Plain HTML/CSS/vanilla JS. Deploy is automatic: every push to
 `claude/github-pages-deploy-e3kwmy` or `main` runs `.github/workflows/deploy-pages.yml`.
 
-## Structure
+## Designs
 
 The landing page (`index.html`) lists all eleven design directions, numbered in
 display order (badge → folder):
@@ -23,6 +23,37 @@ display order (badge → folder):
 | 09 | `/d3/` | **Bold Editorial / Swiss** — big type, high-contrast grid |
 | 10 | `/d4/` | **Vibrant Gradient / Friendly** — colorful, rounded, energetic |
 | 11 | `/d5/` | **Clinical Trust / Optometry** — clean, professional, trust cues |
+
+## Admin panel / CRM (`/admin/`)
+
+A working CRM for the shop owner, on the same static host: **customers &
+prescriptions, orders, stock, an Instagram-only gallery and the website copy**.
+Data lives in a free Supabase project (Postgres + Auth, Row Level Security).
+
+Start with **[`admin/guide.html`](admin/guide.html)** — a step-by-step setup
+tutorial in Azerbaijani and English (Supabase project, database schema, login,
+Instagram access token). Short version in [`admin/SETUP.md`](admin/SETUP.md).
+
+| File | Role |
+|---|---|
+| `admin/index.html` · `app.js` · `admin.css` | the panel itself (AZ / RU / EN) |
+| `admin/schema.sql` | run once in the Supabase SQL editor |
+| `admin/guide.html` | setup tutorial |
+| `assets/mo-config.js` | the two Supabase values the site needs (fill in once) |
+| `assets/mo-site.js` | public-site runtime: Instagram gallery + copy overrides |
+
+Until `assets/mo-config.js` is filled in, every design keeps working exactly as
+before — the runtime silently does nothing.
+
+### Gallery = Instagram posts
+
+`assets/mo-site.js` replaces each design's static gallery photos with the real
+posts synced from [@master__optik](https://instagram.com/master__optik), reusing
+that design's own tile markup and CSS, and links each tile to the post. `d1`–`d5`
+load the script directly; `d6`–`d11` get it through `overlay.js` after they
+unpack. Which posts appear, and in what order, is decided in the admin panel.
+
+## Structure
 
 `d1`–`d5` read photos/videos from the shared `images/` and `videos/` folders —
 replacing a file there updates all five at once. `d6`–`d11` are fully

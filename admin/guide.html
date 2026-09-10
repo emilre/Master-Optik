@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Master Optik — Quraşdırma bələdçisi</title>
+<link rel="icon" href="../images/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="admin.css">
+<style>
+  body{background:var(--bg)}
+  .doc{max-width:840px;margin:0 auto;padding:0 20px 80px}
+  .doc header{display:flex;align-items:center;gap:14px;padding:26px 0 18px}
+  .doc header img{height:40px}
+  .doc header b{font-weight:800;font-size:16px;display:block;line-height:1.2}
+  .doc header span{font-size:11px;font-weight:800;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--orange)}
+  .doc h1{font-size:clamp(24px,4vw,34px);font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+  .doc h2{font-size:20px;font-weight:800;letter-spacing:-.01em;margin:38px 0 4px;
+    scroll-margin-top:20px}
+  .doc h3{font-size:15.5px;font-weight:800;margin:22px 0 6px}
+  .doc p{margin:8px 0;color:var(--ink-2)}
+  .doc .lead{font-size:16px;color:var(--muted);margin-bottom:8px}
+  .doc ol,.doc ul{margin:10px 0 10px 20px;display:flex;flex-direction:column;gap:9px}
+  .doc li{padding-left:4px}
+  .doc code{background:#eceae4;border-radius:6px;padding:2px 6px;font-size:13px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .doc pre{background:var(--ink);color:#f4f1ea;border-radius:var(--r);padding:14px 16px;
+    overflow-x:auto;font-size:12.5px;line-height:1.6;margin:12px 0;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .doc a{color:var(--teal);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+  .doc .card{padding:22px 24px;margin:14px 0}
+  .doc .step{counter-increment:s;position:relative;padding-left:42px;margin:18px 0}
+  .doc .step::before{content:counter(s);position:absolute;left:0;top:-2px;width:28px;height:28px;
+    border-radius:50%;background:var(--orange-soft);color:#a8530a;font-weight:800;font-size:13px;
+    display:flex;align-items:center;justify-content:center}
+  .doc .steps{counter-reset:s}
+  .doc .step b{display:block;font-size:15px;margin-bottom:3px}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px}
+  .toc a{text-decoration:none}
+  .sticky{position:sticky;top:0;z-index:20;background:rgba(244,243,240,.9);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  [data-l]{display:none!important}
+  html[lang="az"] [data-l="az"],html[lang="en"] [data-l="en"]{display:revert!important}
+  /* step titles are <b> but must sit on their own line */
+  html[lang="az"] .doc .step b[data-l="az"],
+  html[lang="en"] .doc .step b[data-l="en"]{display:block!important}
+  .doc table.tbl{background:var(--panel);border-radius:var(--r);overflow:hidden;margin:12px 0}
+</style>
+</head>
+<body>
+
+<div class="sticky">
+  <div class="doc" style="padding-bottom:0">
+    <header>
+      <img src="../images/logo.svg" alt="">
+      <div><b>MASTER OPTİK</b><span data-l="az">Quraşdırma bələdçisi</span><span data-l="en">Setup guide</span></div>
+      <span class="spacer" style="flex:1"></span>
+      <div class="langs" id="langs">
+        <button data-lang="az" class="active">AZ</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <a class="btn sm" href="index.html">← <span data-l="az">Panel</span><span data-l="en">Panel</span></a>
+    </header>
+  </div>
+</div>
+
+<div class="doc">
+
+  <h1 data-l="az">Panelin quraşdırılması</h1>
+  <h1 data-l="en">Setting up the admin panel</h1>
+
+  <p class="lead" data-l="az">Bir dəfə edilir, təxminən 20 dəqiqə çəkir. Proqramlaşdırma bilgisi tələb olunmur —
+    yalnız iki səhifədə düymələr basılır və iki dəyər kopyalanır.</p>
+  <p class="lead" data-l="en">A one-time job, about 20 minutes. No programming needed — you click through two
+    websites and copy two values.</p>
+
+  <div class="toc">
+    <a class="chip" href="#supabase">1 · <span data-l="az">Verilənlər bazası</span><span data-l="en">Database</span></a>
+    <a class="chip" href="#config">2 · <span data-l="az">Sayta qoşmaq</span><span data-l="en">Connect the site</span></a>
+    <a class="chip" href="#instagram">3 · Instagram</a>
+    <a class="chip" href="#daily">4 · <span data-l="az">Gündəlik istifadə</span><span data-l="en">Daily use</span></a>
+    <a class="chip" href="#trouble">5 · <span data-l="az">Problemlər</span><span data-l="en">Troubleshooting</span></a>
+  </div>
+
+  <!-- ================= 1. SUPABASE ================= -->
+  <h2 id="supabase">1. <span data-l="az">Verilənlər bazası (Supabase)</span><span data-l="en">The database (Supabase)</span></h2>
+
+  <p data-l="az">Müştərilər, sifarişlər və anbar Supabase adlı pulsuz bulud bazasında saxlanılır.
+    Pulsuz plan bu ölçüdə bir mağaza üçün tamamilə kifayətdir (500 MB baza, limitsiz istifadəçi).</p>
+  <p data-l="en">Customers, orders and stock live in a free cloud database called Supabase. The free
+    plan is more than enough for a shop this size (500 MB of data, unlimited users).</p>
+
+  <div class="card steps">
+    <div class="step">
+      <b data-l="az">Hesab açın</b><b data-l="en">Create an account</b>
+      <p data-l="az"><a href="https://supabase.com" target="_blank" rel="noopener">supabase.com</a> →
+        <i>Start your project</i> → GitHub və ya Google hesabı ilə daxil olun. Kart məlumatı istənmir.</p>
+      <p data-l="en"><a href="https://supabase.com" target="_blank" rel="noopener">supabase.com</a> →
+        <i>Start your project</i> → sign in with GitHub or Google. No card required.</p>
+    </div>
+    <div class="step">
+      <b data-l="az">Yeni layihə yaradın</b><b data-l="en">Create a project</b>
+      <p data-l="az"><i>New project</i> düyməsi. Ad: <code>master-optik</code>.
+        <b>Database password</b> — güclü şifrə yazın və onu bir yerdə saxlayın.
+        Region: <b>Frankfurt (eu-central-1)</b> — Bakıya ən yaxınıdır. <i>Create new project</i>.
+        Hazırlanması 1–2 dəqiqə çəkir.</p>
+      <p data-l="en">Click <i>New project</i>. Name: <code>master-optik</code>.
+        <b>Database password</b> — pick a strong one and store it somewhere safe.
+        Region: <b>Frankfurt (eu-central-1)</b>, the closest to Baku. <i>Create new project</i>.
+        It takes 1–2 minutes to build.</p>
+    </div>
+    <div class="step">
+      <b data-l="az">Cədvəlləri yaradın</b><b data-l="en">Create the tables</b>
+      <p data-l="az">Sol menyudan <b>SQL Editor</b> → <i>New query</i>. Bu depodakı
+        <code>admin/schema.sql</code> faylını açın, <b>bütün</b> mətni kopyalayıb pəncərəyə yapışdırın və
+        <i>Run</i> basın. Aşağıda <i>Success</i> yazısı görünməlidir. Fayl təkrar işlədilə bilər —
+        səhvən iki dəfə işlətsəniz heç nə pozulmur.</p>
+      <p data-l="en">In the left menu open <b>SQL Editor</b> → <i>New query</i>. Open
+        <code>admin/schema.sql</code> from this repository, copy <b>all</b> of it into the editor and press
+        <i>Run</i>. You should see <i>Success</i>. The file is safe to re-run — running it twice breaks nothing.</p>
+    </div>
+    <div class="step">
+      <b data-l="az">Giriş hesabı yaradın</b><b data-l="en">Create your login</b>
+      <p data-l="az"><b>Authentication</b> → <b>Users</b> → <i>Add user</i> → <i>Create new user</i>.
+        E-poçt və şifrə yazın, <b>Auto Confirm User</b> seçimini işarələyin. Bu, panelə giriş məlumatınızdır.
+        İşçilər üçün də eyni qaydada əlavə hesablar aça bilərsiniz.</p>
+      <p data-l="en"><b>Authentication</b> → <b>Users</b> → <i>Add user</i> → <i>Create new user</i>.
+        Enter an email and password and tick <b>Auto Confirm User</b>. That is your admin login.
+        Add more users the same way for staff.</p>
+    </div>
+    <div class="step">
+      <b data-l="az">İki dəyəri kopyalayın</b><b data-l="en">Copy the two values</b>
+      <p data-l="az"><b>Project Settings</b> (dişli çarx) → <b>API</b>. Lazım olan iki dəyər:
+        <b>Project URL</b> və <b>anon public</b> açarı. <i>service_role</i> açarını <b>heç vaxt</b>
+        kopyalamayın — o gizli qalmalıdır.</p>
+      <p data-l="en"><b>Project Settings</b> (the gear) → <b>API</b>. You need two values:
+        the <b>Project URL</b> and the <b>anon public</b> key. <b>Never</b> copy the
+        <i>service_role</i> key — that one must stay secret.</p>
+    </div>
+  </div>
+
+  <div class="notice info" style="margin:16px 0">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+    <div>
+      <span data-l="az"><b>anon açarı gizli deyil</b> — o, saytın hər ziyarətçisinin brauzerinə düşür və
+        bu normaldır. Bazadakı «Row Level Security» qaydaları ziyarətçiyə yalnız sayt mətnlərini və
+        görünən Instagram paylaşımlarını oxumağa icazə verir. Müştəri, sifariş və anbar məlumatlarına
+        yalnız şifrə ilə daxil olan istifadəçilər çata bilər.</span>
+      <span data-l="en"><b>The anon key is not a secret</b> — it ships to every visitor's browser and that
+        is by design. The database's Row Level Security rules let a visitor read only the website copy
+        and the visible Instagram posts. Customers, orders and stock are reachable only by users who
+        signed in with a password.</span>
+    </div>
+  </div>
+
+  <!-- ================= 2. CONFIG ================= -->
+  <h2 id="config">2. <span data-l="az">Saytı bazaya qoşmaq</span><span data-l="en">Connecting the website</span></h2>
+
+  <p data-l="az">Depodakı <code>assets/mo-config.js</code> faylını açın və iki dəyəri yazın:</p>
+  <p data-l="en">Open <code>assets/mo-config.js</code> in the repository and fill in the two values:</p>
+
+<pre>window.MO_CONFIG = {
+  SUPABASE_URL: 'https://xxxxxxxxxxxx.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+};</pre>
+
+  <p data-l="az">Faylı yadda saxlayıb GitHub-a göndərin (commit + push). 1–2 dəqiqə sonra sayt yenilənir.
+    Bundan sonra <code>saytınız/admin/</code> ünvanını açıb e-poçt və şifrənizlə daxil ola bilərsiniz.</p>
+  <p data-l="en">Save the file and push it to GitHub. The site redeploys in a minute or two. After that open
+    <code>yoursite/admin/</code> and sign in with your email and password.</p>
+
+  <div class="notice warn" style="margin:16px 0">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2 18a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+    <div>
+      <span data-l="az">Faylı redaktə etmək istəmirsinizsə: <code>/admin/</code> səhifəsini açın —
+        panel özü bir forma göstərəcək və dəyərləri həmin brauzerdə saxlayacaq. Amma bu halda
+        <b>saytdakı Instagram qalereyası işləməyəcək</b>, çünki ziyarətçilərin brauzeri həmin
+        dəyərləri bilmir. Qalereya üçün fayl mütləq doldurulmalıdır.</span>
+      <span data-l="en">If you would rather not edit the file: just open <code>/admin/</code> — the panel
+        shows a form and stores the values in that browser. But then <b>the website gallery will not
+        work</b>, because visitors' browsers do not have those values. For the gallery, the file must
+        be filled in.</span>
+    </div>
+  </div>
+
+  <!-- ================= 3. INSTAGRAM ================= -->
+  <h2 id="instagram">3. <span data-l="az">Instagram qalereyası</span><span data-l="en">The Instagram gallery</span></h2>
+
+  <p data-l="az">Saytın qalereyası birbaşa <a href="https://instagram.com/master__optik" target="_blank" rel="noopener">@master__optik</a>
+    hesabının paylaşımlarını göstərir. Panel Instagram-dan paylaşımları çəkib bazaya yazır, sayt isə
+    bazadan oxuyur — beləliklə ziyarətçilərin brauzerində heç bir Instagram açarı görünmür.</p>
+  <p data-l="en">The website gallery shows the posts of
+    <a href="https://instagram.com/master__optik" target="_blank" rel="noopener">@master__optik</a> itself.
+    The panel pulls the posts from Instagram into the database and the website reads them from there,
+    so no Instagram token is ever exposed to visitors.</p>
+
+  <h3 data-l="az">Bir dəfəlik hazırlıq</h3>
+  <h3 data-l="en">One-time preparation</h3>
+
+  <div class="card steps">
+    <div class="step">
+      <b data-l="az">Hesab «Professional» olmalıdır</b><b data-l="en">The account must be Professional</b>
+      <p data-l="az">Instagram tətbiqi → Profil → <i>Settings and privacy</i> → <i>Account type and tools</i> →
+        <i>Switch to professional account</i> → <b>Business</b>. Adi (şəxsi) hesabla API işləmir.</p>
+      <p data-l="en">Instagram app → Profile → <i>Settings and privacy</i> → <i>Account type and tools</i> →
+        <i>Switch to professional account</i> → <b>Business</b>. The API does not work with a personal account.</p>
+    </div>
+    <div class="step">
+      <b data-l="az">Meta developer hesabı</b><b data-l="en">Meta developer account</b>
+      <p data-l="az"><a href="https://developers.facebook.com" target="_blank" rel="noopener">developers.facebook.com</a> →
+        <i>Log in</i> (Facebook hesabı ilə) → <i>My Apps</i> → <i>Create App</i>.</p>
+      <p data-l="en"><a href="https://developers.facebook.com" target="_blank" rel="noopener">developers.facebook.com</a> →
+        <i>Log in</i> with a Facebook account → <i>My Apps</i> → <i>Create App</i>.</p>
+    </div>
+    <div class="step">
+      <b data-l="az">Tətbiq yaradın</b><b data-l="en">Create the app</b>
+      <p data-l="az">Ad: <code>Master Optik Sayt</code>. Use case sualında <b>Other</b> → tip: <b>Business</b> →
+        <i>Create app</i>. (Bu tətbiq yalnız sizin öz hesabınıza giriş üçündür, yoxlamaya göndərmək lazım deyil.)</p>
+      <p data-l="en">Name it <code>Master Optik Site</code>. For the use case pick <b>Other</b> → type
+        <b>Business</b> → <i>Create app</i>. (This app only reads your own account; it never needs App Review.)</p>
+    </div>
+    <div class="step">
+      <b data-l="az">Instagram məhsulunu əlavə edin</b><b data-l="en">Add the Instagram product</b>
+      <p data-l="az">Tətbiqin panelində <b>Products</b> siyahısından <b>Instagram</b> → <i>Set up</i> →
+        <b>API setup with Instagram login</b> bölməsi.</p>
+      <p data-l="en">In the app dashboard find <b>Instagram</b> in the product list → <i>Set up</i> →
+        the <b>API setup with Instagram login</b> section.</p>
+    </div>
+    <div class="step">
+      <b data-l="az">Hesabı bağlayın və token alın</b><b data-l="en">Connect the account and generate a token</b>
+      <p data-l="az"><i>1. Generate access tokens</i> → <i>Add account</i> → Instagram hesabınıza daxil olun və
+        icazələri təsdiqləyin. Sonra <b>Generate token</b> → açılan uzun mətni <b>tam</b> kopyalayın.
+        Bu token 60 gün etibarlıdır.</p>
+      <p data-l="en">Under <i>1. Generate access tokens</i> click <i>Add account</i>, log into your Instagram
+        account and approve the permissions. Then press <b>Generate token</b> and copy the long string in
+        <b>full</b>. The token is valid for 60 days.</p>
+    </div>
+    <div class="step">
+      <b data-l="az">Tokeni panelə yazın</b><b data-l="en">Paste the token into the panel</b>
+      <p data-l="az"><code>/admin/</code> → <b>Instagram</b> → tokeni sahəyə yapışdırın → <i>Yadda saxla</i> →
+        <i>İndi sinxronlaşdır</i>. Bir neçə saniyəyə son 30 paylaşım gəlir.</p>
+      <p data-l="en"><code>/admin/</code> → <b>Instagram</b> → paste the token → <i>Save</i> →
+        <i>Sync now</i>. The last 30 posts arrive within a few seconds.</p>
+    </div>
+    <div class="step">
+      <b data-l="az">Qalereyanı seçin</b><b data-l="en">Curate the gallery</b>
+      <p data-l="az">Hər paylaşımın altındakı göz düyməsi ilə onu saytda gizlədə/göstərə, yuxarı-aşağı
+        oxlarla sırasını dəyişə bilərsiniz. Sayt ilk 12 görünən paylaşımı göstərir.</p>
+      <p data-l="en">The eye button hides or shows a post on the website; the arrows change its order.
+        The website shows the first 12 visible posts.</p>
+    </div>
+  </div>
+
+  <div class="notice good" style="margin:16px 0">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg>
+    <div>
+      <span data-l="az"><b>Sonra nə etmək lazımdır? Demək olar ki, heç nə.</b> Panel açılanda tokeni özü
+        uzadır və gündə bir dəfə paylaşımları özü yeniləyir. Yeni paylaşımın saytda görünməsi üçün
+        sadəcə paneli açmaq (və ya <i>İndi sinxronlaşdır</i> basmaq) kifayətdir.</span>
+      <span data-l="en"><b>What next? Almost nothing.</b> The panel refreshes the token by itself and
+        re-syncs the posts once a day whenever it is opened. To get a new post onto the site, just open
+        the panel — or press <i>Sync now</i>.</span>
+    </div>
+  </div>
+
+  <!-- ================= 4. DAILY ================= -->
+  <h2 id="daily">4. <span data-l="az">Gündəlik istifadə</span><span data-l="en">Daily use</span></h2>
+
+  <div class="table-wrap"><table class="tbl">
+    <thead><tr>
+      <th data-l="az">Bölmə</th><th data-l="en">Section</th>
+      <th data-l="az">Nə üçündür</th><th data-l="en">What it is for</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="strong">İdarə paneli / Dashboard</td>
+        <td><span data-l="az">Bu ayın satışı, açıq sifarişlər, götürülməyi gözləyən eynəklər, azalan mallar.</span>
+            <span data-l="en">Sales this month, open orders, glasses waiting for pickup, low stock.</span></td></tr>
+      <tr><td class="strong">Müştərilər / Customers</td>
+        <td><span data-l="az">Müştəri kartı: telefon, qeyd, bütün reseptləri və bütün sifarişləri.
+            Resepti çap edib müştəriyə vermək olar.</span>
+            <span data-l="en">Customer card: phone, notes, every prescription and every order.
+            A prescription can be printed and handed to the customer.</span></td></tr>
+      <tr><td class="strong">Sifarişlər / Orders</td>
+        <td><span data-l="az">Çərçivə + linza sətirləri, vədə tarixi, ödəniş və qalıq.
+            Status «Təhvil verilib» olanda anbardan avtomatik silinir.</span>
+            <span data-l="en">Frame + lens lines, promised date, paid and balance.
+            Setting the status to Delivered deducts the items from stock automatically.</span></td></tr>
+      <tr><td class="strong">Anbar / Stock</td>
+        <td><span data-l="az">Mallar, sayı (+/− düymələri ilə), maya və satış qiyməti, minimum həddə çatanda
+            xəbərdarlıq.</span>
+            <span data-l="en">Products, quantity (with +/− buttons), cost and sale price, a warning when
+            the minimum is reached.</span></td></tr>
+      <tr><td class="strong">Instagram</td>
+        <td><span data-l="az">Saytdakı qalereya. Paylaşımların seçimi və sırası.</span>
+            <span data-l="en">The website gallery: which posts show and in what order.</span></td></tr>
+      <tr><td class="strong">Sayt mətnləri / Site copy</td>
+        <td><span data-l="az">Saytdakı başlıqlar, xidmət təsvirləri, ünvan və iş saatları — üç dildə.</span>
+            <span data-l="en">Headlines, service descriptions, address and opening hours — in all three languages.</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 data-l="az">Ehtiyat nüsxə</h3>
+  <h3 data-l="en">Backups</h3>
+  <p data-l="az">Ayda bir dəfə <b>Ayarlar → Ehtiyat nüsxə → Yüklə</b> basın. Bütün müştəri, sifariş və
+    anbar məlumatları bir JSON faylı kimi kompüterinizə yüklənir.</p>
+  <p data-l="en">Once a month press <b>Settings → Backup → Download</b>. All customers, orders and stock
+    are saved to your computer as a single JSON file.</p>
+
+  <!-- ================= 5. TROUBLE ================= -->
+  <h2 id="trouble">5. <span data-l="az">Problem olarsa</span><span data-l="en">Troubleshooting</span></h2>
+
+  <h3 data-l="az">Panelə girə bilmirəm</h3>
+  <h3 data-l="en">I cannot sign in</h3>
+  <p data-l="az">Şifrəni unutmusunuzsa, giriş səhifəsində <i>Şifrəni unutmusunuz?</i> düyməsi bərpa linki
+    göndərir. Alınmazsa: Supabase → Authentication → Users → istifadəçi → <i>Reset password</i>.</p>
+  <p data-l="en">Use <i>Forgot your password?</i> on the sign-in screen. If that fails:
+    Supabase → Authentication → Users → the user → <i>Reset password</i>.</p>
+
+  <h3 data-l="az">Instagram sinxronizasiyası alınmır</h3>
+  <h3 data-l="en">Instagram sync fails</h3>
+  <p data-l="az">Brauzer bəzən birbaşa Instagram sorğusunu bloklayır. Bu halda <b>Əl ilə import</b>
+    düyməsini basın: açılan linki yeni tabda açın, göründüyü mətni (JSON) tam kopyalayıb pəncərəyə
+    yapışdırın və <i>Import et</i> basın. Nəticə eynidir.</p>
+  <p data-l="en">Some browsers block the direct call to Instagram. Press <b>Manual import</b>: open the link
+    it shows in a new tab, copy the JSON text you see there, paste it back and press <i>Import</i>.
+    The result is identical.</p>
+  <p data-l="az">Token 60 gündən çox işlədilməyibsə, artıq etibarsızdır — yuxarıdakı 5-ci addımı
+    təkrarlayıb yeni token alın.</p>
+  <p data-l="en">If the token has not been used for more than 60 days it has expired — repeat step 5 above
+    to generate a new one.</p>
+
+  <h3 data-l="az">Saytda qalereya köhnə görünür</h3>
+  <h3 data-l="en">The website gallery looks stale</h3>
+  <p data-l="az">Instagram-ın şəkil linkləri müvəqqətidir. Panel şəkillərin daimi surətini Supabase
+    Storage-a yazır; alınmadıqda gündəlik sinxronizasiya linkləri təzələyir. Şəkillər boş görünürsə,
+    panelə girib <i>İndi sinxronlaşdır</i> basın.</p>
+  <p data-l="en">Instagram's image links are temporary. The panel mirrors the images into Supabase Storage;
+    where that is not possible the daily sync refreshes the links instead. If images look blank, open the
+    panel and press <i>Sync now</i>.</p>
+
+  <h3 data-l="az">Qalereya ümumiyyətlə görünmür</h3>
+  <h3 data-l="en">No gallery at all</h3>
+  <p data-l="az">Yoxlayın: <code>assets/mo-config.js</code> faylında hər iki dəyər yazılıb və commit edilib;
+    panelin Instagram bölməsində ən azı bir paylaşım <b>görünən</b> vəziyyətdədir. Bunlar yoxdursa,
+    sayt dizaynerin qoyduğu köhnə şəkilləri göstərməyə davam edir — yəni sayt heç vaxt boş qalmır.</p>
+  <p data-l="en">Check that both values in <code>assets/mo-config.js</code> are filled in and committed, and
+    that at least one post is <b>visible</b> in the panel's Instagram section. Until then the site keeps
+    showing the designer's original photos — it never ends up empty.</p>
+
+  <p style="margin-top:40px" class="small faint">Master Optik · admin/guide.html</p>
+</div>
+
+<script>
+  var langs = document.getElementById('langs');
+  function setLang(l) {
+    document.documentElement.lang = l;
+    Array.prototype.forEach.call(langs.children, function (b) {
+      b.classList.toggle('active', b.dataset.lang === l);
+    });
+    try { localStorage.setItem('mo_admin_lang', l); } catch (e) {}
+  }
+  langs.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (b) setLang(b.dataset.lang);
+  });
+  var saved = 'az';
+  try { saved = localStorage.getItem('mo_admin_lang') || 'az'; } catch (e) {}
+  setLang(saved === 'en' ? 'en' : 'az');
+</script>
+
+</body>
+</html>

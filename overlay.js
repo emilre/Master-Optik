@@ -327,6 +327,31 @@
     return true;
   }
 
+  /* ------------- Instagram gallery + editable copy -------------
+     The bundled designs unpack themselves into the DOM, so the shared
+     site runtime can only be loaded once that DOM exists. Both files
+     live next to this one at the site root. */
+  function loadSiteRuntime() {
+    var base = (SCRIPT && SCRIPT.src) ? SCRIPT.src.replace(/overlay\.js.*$/, '') : '../';
+    function add(file, next) {
+      var el = document.createElement('script');
+      el.src = base + 'assets/' + file;
+      el.onload = next || null;
+      el.onerror = function () { /* not configured yet — page stays as-is */ };
+      document.head.appendChild(el);
+    }
+    add('mo-config.js', function () {
+      add('mo-site.js', function () {
+        /* one late retry, in case the gallery section arrived after us */
+        setTimeout(function () {
+          if (window.MOSite && !document.querySelector('[data-ig-rendered]')) {
+            window.MOSite.refresh();
+          }
+        }, 1500);
+      });
+    });
+  }
+
   /* ---------------- boot ---------------- */
   function mount() {
     (document.head || document.body).appendChild(css);
@@ -349,6 +374,7 @@
       }
     });
     mo.observe(document.body, { childList: true, subtree: true, characterData: true });
+    loadSiteRuntime();
   }
   var tries = 0;
   var t = setInterval(function () {
