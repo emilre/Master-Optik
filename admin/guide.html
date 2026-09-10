@@ -34,7 +34,8 @@
     border-radius:50%;background:var(--orange-soft);color:#a8530a;font-weight:800;font-size:13px;
     display:flex;align-items:center;justify-content:center}
   .doc .steps{counter-reset:s}
-  .doc .step b{display:block;font-size:15px;margin-bottom:3px}
+  /* only the step's own title is a block; bold words inside sentences stay inline */
+  .doc .step > b{display:block;font-size:15px;margin-bottom:3px}
   .toc{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px}
   .toc a{text-decoration:none}
   .sticky{position:sticky;top:0;z-index:20;background:rgba(244,243,240,.9);
@@ -42,8 +43,8 @@
   [data-l]{display:none!important}
   html[lang="az"] [data-l="az"],html[lang="en"] [data-l="en"]{display:revert!important}
   /* step titles are <b> but must sit on their own line */
-  html[lang="az"] .doc .step b[data-l="az"],
-  html[lang="en"] .doc .step b[data-l="en"]{display:block!important}
+  html[lang="az"] .doc .step > b[data-l="az"],
+  html[lang="en"] .doc .step > b[data-l="en"]{display:block!important}
   .doc table.tbl{background:var(--panel);border-radius:var(--r);overflow:hidden;margin:12px 0}
 </style>
 </head>
