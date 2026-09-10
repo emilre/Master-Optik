@@ -38,8 +38,17 @@
 
   /* ================= 1. INSTAGRAM GALLERY ============================ */
 
+  /* Everything below comes out of the database and lands in href/src, so the
+     scheme is checked here rather than trusted: a javascript: URL in a post
+     row would otherwise execute for every visitor to the site. */
+  function safeUrl(value) {
+    if (!value) return '';
+    var v = String(value).trim();
+    return /^https?:\/\//i.test(v) ? v : '';
+  }
+
   function postImage(p) {
-    return p.stored_url || p.thumbnail_url || p.media_url || '';
+    return safeUrl(p.stored_url) || safeUrl(p.thumbnail_url) || safeUrl(p.media_url);
   }
 
   function shortCaption(p) {
@@ -118,6 +127,7 @@
   function buildTile(template, post) {
     var node = template.cloneNode(true);
     var src = postImage(post);
+    var permalink = safeUrl(post.permalink) || IG_PROFILE;
     if (!src) return null;
 
     var img = node.tagName === 'IMG' ? node : node.querySelector('img');
@@ -135,14 +145,14 @@
     /* make the whole tile open the post on Instagram */
     var link = node.tagName === 'A' ? node : node.querySelector('a');
     if (link) {
-      link.href = post.permalink;
+      link.href = permalink;
       link.target = '_blank';
       link.rel = 'noopener';
     } else {
       node.setAttribute('role', 'link');
       node.setAttribute('tabindex', '0');
       node.style.cursor = 'pointer';
-      var open = function () { window.open(post.permalink, '_blank', 'noopener'); };
+      var open = function () { window.open(permalink, '_blank', 'noopener'); };
       node.addEventListener('click', open);
       node.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }

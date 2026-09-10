@@ -129,6 +129,27 @@
         Add more users the same way for staff.</p>
     </div>
     <div class="step">
+      <b data-l="az">Qeydiyyatı bağlayın <i>(vacib)</i></b><b data-l="en">Close public sign-ups <i>(important)</i></b>
+      <p data-l="az"><b>Authentication</b> → <b>Sign In / Providers</b> → <b>«Allow new users to sign up»</b>
+        seçimini <b>söndürün</b>. Supabase bunu susmaya görə açıq buraxır; açıq qalsa, saytın açarını
+        görən istənilən adam özünə hesab yarada bilər.</p>
+      <p data-l="en"><b>Authentication</b> → <b>Sign In / Providers</b> → turn
+        <b>OFF</b> "Allow new users to sign up". Supabase leaves this on by default, and while it is on
+        anyone who reads the site's public key can register an account for themselves.</p>
+    </div>
+    <div class="step">
+      <b data-l="az">Hesaba icazə verin <i>(vacib)</i></b><b data-l="en">Grant the account access <i>(important)</i></b>
+      <p data-l="az">Sistemə girmək hələ icazə demək deyil — baza yalnız <code>staff</code> siyahısındakı
+        istifadəçilərə cavab verir. <b>SQL Editor</b>-də e-poçtu öz ünvanınızla əvəz edib işlədin:</p>
+      <p data-l="en">Signing in is not the same as being allowed in — the database only answers to users
+        on the <code>staff</code> list. In the <b>SQL Editor</b>, replace the address with your own and run:</p>
+<pre>insert into public.staff (user_id, email)
+select id, email from auth.users where email = 'owner@example.com'
+on conflict (user_id) do nothing;</pre>
+      <p data-l="az">Hər yeni işçi üçün 4-cü və bu addımı təkrarlayın.</p>
+      <p data-l="en">Repeat step 4 and this step for each member of staff.</p>
+    </div>
+    <div class="step">
       <b data-l="az">İki dəyəri kopyalayın</b><b data-l="en">Copy the two values</b>
       <p data-l="az"><b>Project Settings</b> (dişli çarx) → <b>API</b>. Lazım olan iki dəyər:
         <b>Project URL</b> və <b>anon public</b> açarı. <i>service_role</i> açarını <b>heç vaxt</b>
@@ -144,12 +165,14 @@
     <div>
       <span data-l="az"><b>anon açarı gizli deyil</b> — o, saytın hər ziyarətçisinin brauzerinə düşür və
         bu normaldır. Bazadakı «Row Level Security» qaydaları ziyarətçiyə yalnız sayt mətnlərini və
-        görünən Instagram paylaşımlarını oxumağa icazə verir. Müştəri, sifariş və anbar məlumatlarına
-        yalnız şifrə ilə daxil olan istifadəçilər çata bilər.</span>
+        görünən Instagram paylaşımlarını oxumağa icazə verir. Müştəri, sifariş, anbar və Instagram
+        tokeni isə yalnız <code>staff</code> siyahısındakı hesablara açıqdır — məhz buna görə 5-ci və
+        6-cı addımları ötürmək olmaz.</span>
       <span data-l="en"><b>The anon key is not a secret</b> — it ships to every visitor's browser and that
         is by design. The database's Row Level Security rules let a visitor read only the website copy
-        and the visible Instagram posts. Customers, orders and stock are reachable only by users who
-        signed in with a password.</span>
+        and the visible Instagram posts. Customers, orders, stock and the Instagram token are reachable
+        only by accounts on the <code>staff</code> list — which is exactly why steps 5 and 6 cannot be
+        skipped.</span>
     </div>
   </div>
 

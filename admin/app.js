@@ -251,6 +251,7 @@ az: {
   setup_connect:'Qoşul', login_title:'İdarə paneli', login_sub:'Master Optik — daxil olun',
   login_btn:'Daxil ol', login_bad:'E-poçt və ya şifrə yanlışdır',
   login_forgot:'Şifrəni unutmusunuz?', login_sent:'Bərpa linki e-poçtunuza göndərildi',
+  noacc_t:'Bu hesaba icazə verilməyib', noacc_d:'Giriş uğurlu oldu, amma bu e-poçt işçi siyahısında deyil. Supabase → SQL Editor-də bu sətri işlədin (quraşdırma bələdçisinə baxın):',
   /* onboarding */
   ob_w1_t:'Xoş gəldiniz!', ob_w1_d:'Bu, Master Optik-in öz idarə panelidir. Müştərilər, reseptlər, sifarişlər və anbar — hamısı bir yerdə. Məlumatlar buludda saxlanılır, telefondan da, kompüterdən də girə bilərsiniz.',
   ob_w2_t:'Gündəlik iş', ob_w2_d:'Müştəri gələndə: «Müştərilər» → yeni müştəri → resepti yazın. Sonra «Sifarişlər» → yeni sifariş: çərçivə və linzanı seçin, beh məbləğini yazın. Sifariş hazır olanda statusu «Hazır» edin — panel qalığı özü hesablayır.',
@@ -349,6 +350,7 @@ ru: {
   setup_connect:'Подключить', login_title:'Панель управления', login_sub:'Master Optik — вход',
   login_btn:'Войти', login_bad:'Неверная почта или пароль',
   login_forgot:'Забыли пароль?', login_sent:'Ссылка для сброса отправлена на почту',
+  noacc_t:'Этому аккаунту не выдан доступ', noacc_d:'Вход выполнен, но эта почта не в списке сотрудников. Выполните эту строку в Supabase → SQL Editor (см. руководство):',
   ob_w1_t:'Добро пожаловать!', ob_w1_d:'Это панель управления Master Optik. Клиенты, рецепты, заказы и склад — всё в одном месте. Данные в облаке: заходите и с телефона, и с компьютера.',
   ob_w2_t:'Ежедневная работа', ob_w2_d:'Пришёл клиент: «Клиенты» → новый клиент → запишите рецепт. Затем «Заказы» → новый заказ: выберите оправу и линзы, укажите предоплату. Когда заказ готов — поставьте статус «Готов»; остаток посчитается сам.',
   ob_w3_t:'Склад предупреждает сам', ob_w3_d:'Задайте минимальное количество для товара. Когда остаток опустится до него, панель предупредит. При статусе «Выдан» товары списываются со склада автоматически.',
@@ -445,6 +447,7 @@ en: {
   setup_connect:'Connect', login_title:'Admin panel', login_sub:'Master Optik — sign in',
   login_btn:'Sign in', login_bad:'Wrong email or password',
   login_forgot:'Forgot your password?', login_sent:'A reset link was sent to your email',
+  noacc_t:'This account has not been granted access', noacc_d:'Sign-in worked, but this email is not on the staff list. Run this line in Supabase → SQL Editor (see the setup guide):',
   ob_w1_t:'Welcome!', ob_w1_d:'This is Master Optik\'s own admin panel. Customers, prescriptions, orders and stock in one place. The data lives in the cloud, so you can use it from a phone or a computer.',
   ob_w2_t:'The daily routine', ob_w2_d:'A customer walks in: Customers → new customer → record the prescription. Then Orders → new order: pick the frame and lenses, enter the deposit. When the job is ready set the status to Ready — the balance is worked out for you.',
   ob_w3_t:'Stock warns you itself', ob_w3_d:'Give every product a minimum quantity. When it drops that low the panel tells you. Setting an order to Delivered deducts its items from stock automatically.',
@@ -1015,14 +1018,61 @@ function showHelp(view) {
 /* =====================================================================
    boot
    ===================================================================== */
-function boot() {
-  renderShell();
-  go(currentHash(), true);
-  igAutoRefreshToken();
-  igAutoSync();
-  obGet().then(function (state) {
-    if (!state.seen) showWelcome(state);
+
+/* Signing in is not the same as being allowed in: the database only
+   answers to users listed in public.staff. The panel asks up front so a
+   stranger who registered an account gets a clear message instead of a
+   set of mysteriously empty screens. */
+function checkStaff() {
+  if (!db || typeof db.rpc !== 'function') return Promise.resolve(true);
+  return Promise.resolve(db.rpc('is_staff')).then(function (r) {
+    if (r.error) throw r.error;
+    return r.data === true;
   });
+}
+
+function renderNoAccess() {
+  var email = (session && session.user && session.user.email) || '';
+  var sql = "insert into public.staff (user_id, email)\n" +
+            "select id, email from auth.users where email = '" + email + "'\n" +
+            "on conflict (user_id) do nothing;";
+  $('#root').innerHTML =
+    '<div class="login"><div class="box">' +
+      '<img class="mark" src="../images/logo.svg" alt="Master Optik">' +
+      '<h1>' + esc(t('noacc_t')) + '</h1>' +
+      '<p class="sub">' + esc(email) + '</p>' +
+      '<div class="notice warn" style="text-align:left">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+          'stroke-linecap="round"><path d="M12 9v4M12 17h.01"/>' +
+          '<path d="M10.3 3.9 2 18a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>' +
+        '<div>' + esc(t('noacc_d')) +
+          '<pre class="snippet">' + esc(sql) + '</pre></div>' +
+      '</div>' +
+      '<div class="row" style="margin-top:18px">' +
+        '<a class="btn" href="guide.html" target="_blank" rel="noopener">' +
+          esc(t('set_docs')) + '</a>' +
+        '<span class="spacer"></span>' +
+        '<button class="btn" id="noAccOut">' + esc(t('sign_out')) + '</button>' +
+      '</div>' +
+    '</div></div>';
+  $('#noAccOut').addEventListener('click', function () {
+    db.auth.signOut().then(function () { session = null; renderLogin(); });
+  });
+}
+
+function boot() {
+  checkStaff()
+    .catch(function () { return true; })   /* schema without is_staff(): RLS still decides */
+    .then(function (allowed) {
+      if (!allowed) return renderNoAccess();
+      renderShell();
+      go(currentHash(), true);
+      igAutoRefreshToken();
+      igAutoSync();
+      obGet().then(function (state) {
+        if (!state.seen) showWelcome(state);
+      });
+    });
 }
 
 function start() {
@@ -2306,7 +2356,8 @@ VIEWS.instagram = function (view) {
 };
 
 function igCard(p) {
-  var img = p.stored_url || p.thumbnail_url || p.media_url || '';
+  var img = safeUrl(p.stored_url) || safeUrl(p.thumbnail_url) || safeUrl(p.media_url) || '';
+  var permalink = safeUrl(p.permalink) || 'https://instagram.com/master__optik';
   var typeLabel = p.media_type === 'VIDEO' ? t('ig_video')
     : p.media_type === 'CAROUSEL_ALBUM' ? t('ig_album') : '';
   return '<div class="ig-card' + (p.hidden ? ' hidden-post' : '') + '">' +
@@ -2324,7 +2375,7 @@ function igCard(p) {
       '<button class="btn icon ghost" data-ig="' + esc(p.id) + '" data-act="down" title="' +
         esc(t('ig_down')) + '">' + ico('down') + '</button>' +
       '<span class="spacer"></span>' +
-      '<a class="btn icon ghost" href="' + esc(p.permalink) + '" target="_blank" rel="noopener" ' +
+      '<a class="btn icon ghost" href="' + esc(permalink) + '" target="_blank" rel="noopener" ' +
         'title="' + esc(t('open')) + '">' + ico('ext') + '</a>' +
     '</div></div>';
 }
@@ -2340,34 +2391,58 @@ function igSync(token, settings) {
     });
 }
 
-function igStore(j, token, settings) {
-  return Promise.resolve().then(function () {
-      var media = j.data || [];
-      if (!media.length) return 0;
+/* Only http(s) links ever reach the website's gallery. The media comes back
+   from the Graph API, but it can also be pasted by hand into the manual
+   import box, and these values end up in href/src attributes on the public
+   site — a javascript: URL there would be stored XSS against every visitor. */
+function safeUrl(value) {
+  if (!value) return null;
+  var v = String(value).trim();
+  return /^https?:\/\//i.test(v) ? v : null;
+}
 
-      var rows = media.map(function (p, i) {
-        return {
+function igStore(j, token, settings) {
+  var media = (j && j.data) || [];
+  if (!media.length) return Promise.resolve(0);
+
+  /* The owner can reorder and hide posts by hand. A re-sync must not undo
+     that, so sort_order is written for genuinely new posts only. */
+  return guard(db.from('instagram_posts').select('id,sort_order'))
+    .catch(function () { return []; })
+    .then(function (existing) {
+      var known = {};
+      var maxOrder = -1;
+      (existing || []).forEach(function (r) {
+        known[r.id] = true;
+        if (num(r.sort_order) > maxOrder) maxOrder = num(r.sort_order);
+      });
+
+      var now = new Date().toISOString();
+      var fresh = 0;
+      var rows = media.map(function (p) {
+        var row = {
           id: p.id,
-          permalink: p.permalink,
-          media_type: p.media_type,
-          media_url: p.media_url || null,
-          thumbnail_url: p.thumbnail_url || null,
+          permalink: safeUrl(p.permalink) || 'https://instagram.com/master__optik',
+          media_type: p.media_type || null,
+          media_url: safeUrl(p.media_url),
+          thumbnail_url: safeUrl(p.thumbnail_url),
           caption: p.caption || null,
           posted_at: p.timestamp || null,
-          sort_order: i,
-          synced_at: new Date().toISOString()
+          synced_at: now
         };
+        if (!known[p.id]) row.sort_order = maxOrder + 1 + (fresh++);
+        return row;
       });
 
       return guard(db.from('instagram_posts').upsert(rows, { onConflict: 'id' }))
         .then(function () { return igMirror(media); })
         .then(function () {
-          settings.synced_at = new Date().toISOString();
+          settings.synced_at = now;
           if (token) settings.token = token;
           return igSaveSetting(settings);
         })
         .then(function () { return rows.length; });
-  });
+    });
 }
 
 /* Fallback when the browser refuses the cross-origin call: the owner opens
@@ -2423,7 +2498,7 @@ function igMirror(media) {
 
     return todo.reduce(function (chain, p) {
       return chain.then(function () {
-        var src = p.media_type === 'VIDEO' ? p.thumbnail_url : p.media_url;
+        var src = safeUrl(p.media_type === 'VIDEO' ? p.thumbnail_url : p.media_url);
         if (!src) return null;
         return fetch(src)
           .then(function (r) { if (!r.ok) throw new Error('fetch'); return r.blob(); })

@@ -226,6 +226,51 @@ create trigger settings_touch before update on public.settings
   for each row execute function public.touch_updated_at();
 
 -- =====================================================================
+-- WHO COUNTS AS STAFF
+-- ---------------------------------------------------------------------
+-- Being logged in is NOT enough. A Supabase project accepts sign-ups
+-- through the public anon key by default, so "any authenticated user"
+-- would mean "anybody who registers an account" — and this database
+-- holds customer names, phone numbers, prescriptions and an Instagram
+-- token. Access is therefore granted per user, by this table only.
+--
+-- After creating the login under Authentication → Users, add it here:
+--
+--   insert into public.staff (user_id, email)
+--   select id, email from auth.users where email = 'owner@example.com'
+--   on conflict (user_id) do nothing;
+--
+-- (Also turn OFF Authentication → Sign In / Providers → "Allow new users
+--  to sign up". Both steps are in admin/guide.html.)
+-- =====================================================================
+create table if not exists public.staff (
+  user_id  uuid primary key references auth.users(id) on delete cascade,
+  email    text,
+  added_at timestamptz not null default now()
+);
+alter table public.staff enable row level security;
+
+-- security definer: the check must work even though `staff` is itself
+-- protected, and a caller must not be able to see other people's rows.
+create or replace function public.is_staff()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (select 1 from public.staff where user_id = auth.uid());
+$$;
+
+revoke all on function public.is_staff() from public, anon;
+grant execute on function public.is_staff() to authenticated;
+
+-- a signed-in user may confirm their own membership, nothing more
+drop policy if exists staff_self on public.staff;
+create policy staff_self on public.staff
+  for select to authenticated using (user_id = auth.uid());
+
+-- =====================================================================
 -- ROW LEVEL SECURITY
 -- =====================================================================
 alter table public.customers       enable row level security;
@@ -238,7 +283,7 @@ alter table public.site_content    enable row level security;
 alter table public.instagram_posts enable row level security;
 alter table public.settings        enable row level security;
 
--- staff-only tables: any logged-in user has full access
+-- shop data: readable and writable only by users listed in public.staff
 do $$
 declare t text;
 begin
@@ -247,7 +292,8 @@ begin
   loop
     execute format('drop policy if exists staff_all on public.%I', t);
     execute format($f$create policy staff_all on public.%I
-      for all to authenticated using (true) with check (true)$f$, t);
+      for all to authenticated
+      using (public.is_staff()) with check (public.is_staff())$f$, t);
   end loop;
 end $$;
 
@@ -257,7 +303,8 @@ create policy content_read on public.site_content
   for select to anon, authenticated using (true);
 drop policy if exists content_write on public.site_content;
 create policy content_write on public.site_content
-  for all to authenticated using (true) with check (true);
+  for all to authenticated
+  using (public.is_staff()) with check (public.is_staff());
 
 -- instagram: visitors see visible posts only, staff sees and edits everything
 drop policy if exists ig_read_public on public.instagram_posts;
@@ -265,7 +312,8 @@ create policy ig_read_public on public.instagram_posts
   for select to anon using (hidden = false);
 drop policy if exists ig_staff_all on public.instagram_posts;
 create policy ig_staff_all on public.instagram_posts
-  for all to authenticated using (true) with check (true);
+  for all to authenticated
+  using (public.is_staff()) with check (public.is_staff());
 
 -- =====================================================================
 -- STORAGE bucket for permanent copies of Instagram images
@@ -284,7 +332,8 @@ begin
     drop policy if exists ig_staff_write on storage.objects;
     create policy ig_staff_write on storage.objects
       for all to authenticated
-      using (bucket_id = 'instagram') with check (bucket_id = 'instagram');
+      using (bucket_id = 'instagram' and public.is_staff())
+      with check (bucket_id = 'instagram' and public.is_staff());
   exception when insufficient_privilege then
     raise notice 'Could not create storage policies here — create them in Dashboard → Storage → instagram → Policies.';
   end;
@@ -327,5 +376,24 @@ insert into public.site_content (key, az, ru, en, group_name, sort_order) values
  ('footer_tag','Aydın görmə, mükəmməl görünüş','Чёткое зрение, безупречный образ','Clear vision, perfect look','contact',40)
 on conflict (key) do nothing;
 
--- Done. Next: create the owner login under Authentication → Users,
--- then open /admin/ on the website and sign in.
+-- =====================================================================
+-- WHAT TO DO NEXT — the panel will not open until all three are done
+-- =====================================================================
+--  1. Authentication → Users → Add user → Create new user
+--     (tick "Auto Confirm User"). This is the shop's login.
+--
+--  2. Authentication → Sign In / Providers → turn OFF
+--     "Allow new users to sign up".
+--     Without this, anyone who reads the site's public anon key can
+--     register an account for themselves.
+--
+--  3. Grant that login access — SQL Editor, with the real address:
+--
+--        insert into public.staff (user_id, email)
+--        select id, email from auth.users where email = 'owner@example.com'
+--        on conflict (user_id) do nothing;
+--
+--     Repeat step 1 + 3 for every member of staff.
+--
+-- Then open /admin/ on the website and sign in.
+-- =====================================================================

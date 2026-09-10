@@ -18,9 +18,21 @@ No build step; data lives in a free [Supabase](https://supabase.com) project.
 1. Create a free Supabase project.
 2. SQL Editor → paste all of `admin/schema.sql` → **Run**.
 3. Authentication → Users → *Add user* (tick **Auto Confirm User**) — that is the login.
-4. Project Settings → API → copy **Project URL** and the **anon public** key.
-5. Put both into `assets/mo-config.js` and commit.
-6. Open `/admin/` and sign in.
+4. Authentication → Sign In / Providers → turn **off** "Allow new users to sign up".
+5. SQL Editor → put that login on the staff list (this is what actually grants access):
+
+   ```sql
+   insert into public.staff (user_id, email)
+   select id, email from auth.users where email = 'owner@example.com'
+   on conflict (user_id) do nothing;
+   ```
+6. Project Settings → API → copy **Project URL** and the **anon public** key.
+7. Put both into `assets/mo-config.js` and commit.
+8. Open `/admin/` and sign in.
+
+Steps 4 and 5 are not optional. The anon key is public, so without them anyone
+who reads the website's source could register an account and read every
+customer record.
 
 The full version of these steps, with the Instagram token tutorial, is in
 **[`admin/guide.html`](guide.html)** — open it in a browser, it has an AZ/EN switch.
@@ -39,7 +51,13 @@ The full version of these steps, with the Instagram token tutorial, is in
 
 ## Security
 
-Every table has Row Level Security. Anonymous visitors can read **only**
-`site_content` and non-hidden `instagram_posts`; everything else requires a
-signed-in user. The anon key in `assets/mo-config.js` is a public key and is
-safe to commit — the `service_role` key must never be put in this repository.
+Every table has Row Level Security, and the policies check membership of the
+`public.staff` table via `public.is_staff()` — being signed in is not enough,
+because a Supabase project accepts sign-ups through the public anon key unless
+you turn them off.
+
+Anonymous visitors can read **only** `site_content` and non-hidden
+`instagram_posts`. Customers, prescriptions, orders, stock and `settings`
+(which holds the Instagram token) are reachable only by users on the staff
+list. The anon key in `assets/mo-config.js` is a public key and is safe to
+commit — the `service_role` key must never be put in this repository.
