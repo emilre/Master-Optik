@@ -98,6 +98,8 @@
     return best;
   }
 
+  var onTileFailed = null;
+
   var IG_GLYPH =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
     'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -105,8 +107,6 @@
     '<circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none"/></svg>';
 
   function decorate(node, post) {
-    /* corner Instagram badge — only added if it cannot break the layout */
-    if (getComputedStyle(node).position === 'static') node.style.position = 'relative';
     var badge = document.createElement('span');
     badge.className = 'mo-ig-badge';
     badge.innerHTML = IG_GLYPH;
@@ -124,8 +124,24 @@
     }
   }
 
+  /* The template is one of the design's real tiles, so it can carry the
+     original's own furniture — d3 numbers each cell "01", d5 puts the photo
+     number in aria-label. Anything that is not the image would otherwise be
+     stamped onto all twelve Instagram tiles. */
+  function stripTemplateFurniture(node) {
+    var kids = node.querySelectorAll('*');
+    for (var i = kids.length - 1; i >= 0; i--) {
+      var el = kids[i];
+      if (el.tagName === 'IMG' || el.querySelector('img')) continue;
+      if ((el.textContent || '').trim()) el.remove();
+    }
+    node.removeAttribute('aria-label');
+    node.removeAttribute('title');
+  }
+
   function buildTile(template, post) {
     var node = template.cloneNode(true);
+    stripTemplateFurniture(node);
     var src = postImage(post);
     var permalink = safeUrl(post.permalink) || IG_PROFILE;
     if (!src) return null;
@@ -140,7 +156,10 @@
     img.setAttribute('loading', 'lazy');
     img.alt = shortCaption(post);
     img.src = src;
-    img.addEventListener('error', function () { node.remove(); });
+    img.addEventListener('error', function () {
+      node.remove();
+      if (onTileFailed) onTileFailed();
+    });
 
     /* make the whole tile open the post on Instagram */
     var link = node.tagName === 'A' ? node : node.querySelector('a');
@@ -189,9 +208,14 @@
     if (!posts.length) return;
     var grid = findGrid();
     if (!grid || !grid.children.length) return;
+    if (grid.getAttribute('data-ig-rendered')) return;   /* already swapped */
 
     injectStyles();
     var template = grid.children[0].cloneNode(true);
+    /* Instagram's own media links expire after a day or two. If they have
+       and every tile 404s, fall back to the photos the designer shipped
+       rather than showing an empty gallery. */
+    var original = Array.prototype.slice.call(grid.children);
     var limit = parseInt(grid.getAttribute('data-ig-count'), 10) || MAX_POSTS;
 
     var frag = document.createDocumentFragment();
@@ -202,9 +226,25 @@
     }
     if (!used) return;
 
+    onTileFailed = function () {
+      if (grid.children.length) return;
+      /* every Instagram image failed — put the design's own photos back */
+      onTileFailed = null;
+      grid.removeAttribute('data-ig-rendered');
+      original.forEach(function (el) { grid.appendChild(el); });
+      var follow = grid.parentNode && grid.parentNode.querySelector('.mo-ig-follow');
+      if (follow) follow.remove();
+    };
+
     grid.innerHTML = '';
     grid.appendChild(frag);
     grid.setAttribute('data-ig-rendered', String(used));
+
+    /* the badge is positioned against the tile, and getComputedStyle only
+       answers for a node that is in the document — so this runs after append */
+    Array.prototype.forEach.call(grid.children, function (tile) {
+      if (getComputedStyle(tile).position === 'static') tile.style.position = 'relative';
+    });
 
     /* follow link under the grid */
     if (!grid.parentNode.querySelector('.mo-ig-follow')) {

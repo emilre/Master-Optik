@@ -193,6 +193,7 @@ az: {
   cus_none:'Müştəri tapılmadı', cus_since:'Qeydiyyat', cus_rx:'Reseptlər',
   cus_orders:'Sifarişlər', cus_addrx:'Resept əlavə et', cus_card:'Müştəri kartı',
   cus_lastrx:'Son resept', cus_count:'müştəri',
+  cus_delwarn:'Müştəri ilə birlikdə onun bütün reseptləri də silinəcək. Sifarişlər qalır, amma müştərisiz görünür.',
   g_male:'Kişi', g_female:'Qadın',
   /* prescriptions */
   rx_title:'Resept', rx_issued:'Verilib', rx_doctor:'Həkim', rx_od:'Sağ (OD)',
@@ -299,6 +300,7 @@ ru: {
   cus_none:'Клиенты не найдены', cus_since:'Регистрация', cus_rx:'Рецепты',
   cus_orders:'Заказы', cus_addrx:'Добавить рецепт', cus_card:'Карточка клиента',
   cus_lastrx:'Последний рецепт', cus_count:'клиентов',
+  cus_delwarn:'Вместе с клиентом будут удалены все его рецепты. Заказы останутся, но без клиента.',
   g_male:'Муж.', g_female:'Жен.',
   rx_title:'Рецепт', rx_issued:'Выдан', rx_doctor:'Врач', rx_od:'Правый (OD)',
   rx_os:'Левый (OS)', rx_sph:'SPH', rx_cyl:'CYL', rx_axis:'AXIS', rx_add:'ADD',
@@ -396,6 +398,7 @@ en: {
   cus_none:'No customers found', cus_since:'Registered', cus_rx:'Prescriptions',
   cus_orders:'Orders', cus_addrx:'Add prescription', cus_card:'Customer card',
   cus_lastrx:'Latest prescription', cus_count:'customers',
+  cus_delwarn:'Deleting the customer also deletes every prescription on their card. Their orders stay, but without a customer.',
   g_male:'Male', g_female:'Female',
   rx_title:'Prescription', rx_issued:'Issued', rx_doctor:'Doctor', rx_od:'Right (OD)',
   rx_os:'Left (OS)', rx_sph:'SPH', rx_cyl:'CYL', rx_axis:'AXIS', rx_add:'ADD',
@@ -621,10 +624,12 @@ function modal(opts) {
   return handle;
 }
 
-function confirmDelete(onYes) {
+function confirmDelete(onYes, extra) {
   var m = modal({
     title: t('del'),
-    body: '<p>' + esc(t('confirm_del')) + '</p>',
+    body: '<p>' + esc(t('confirm_del')) + '</p>' +
+      (extra ? '<div class="notice warn">' + ico('alert') +
+        '<div>' + esc(extra) + '</div></div>' : ''),
     footHtml:
       '<span class="spacer"></span>' +
       '<button class="btn" data-close>' + esc(t('cancel')) + '</button>' +
@@ -859,9 +864,16 @@ function setBadge(id, n) {
 
 var VIEWS = {};   /* filled in by the module sections below */
 
+/* #view is one persistent node, so a slow query resolving after the user has
+   navigated would repaint the page they are now on — and its own selectors
+   would miss and throw. Every render checks it is still the current view. */
+var viewGen = 0;
+function stale(gen) { return gen !== viewGen; }
+
 function go(name, keepHash) {
   if (!VIEWS[name]) name = 'dashboard';
   openModals.slice().forEach(function (m) { m.close(); });
+  var gen = ++viewGen;
   route = name;
   if (!keepHash) location.hash = '#/' + name;
   $$('#nav a').forEach(function (a) {
@@ -871,7 +883,8 @@ function go(name, keepHash) {
   $('#pageTitle').textContent = meta ? t(meta.label) : '';
   var view = $('#view');
   view.innerHTML = '<div class="loading"><div class="spinner dark"></div></div>';
-  Promise.resolve(VIEWS[name](view)).catch(function (e) {
+  Promise.resolve(VIEWS[name](view, gen)).catch(function (e) {
+    if (stale(gen)) return;
     fail(e);
     view.innerHTML = '<div class="notice err">' + ico('alert') +
       '<div>' + esc((e && e.message) || t('err')) + '</div></div>';
@@ -906,9 +919,16 @@ function obGet() {
     .catch(function () { return {}; });
 }
 
-function obSave(value) {
-  return guard(db.from('settings').upsert({ key: 'onboarding', value: value },
-    { onConflict: 'key' })).catch(function () {});
+/* Several screens write onboarding flags. Each merges into whatever is
+   stored now, so "hide the checklist" cannot undo "copy was reviewed". */
+function obSave(patch) {
+  return obGet().then(function (current) {
+    var merged = {};
+    Object.keys(current || {}).forEach(function (k) { merged[k] = current[k]; });
+    Object.keys(patch || {}).forEach(function (k) { merged[k] = patch[k]; });
+    return guard(db.from('settings').upsert({ key: 'onboarding', value: merged },
+      { onConflict: 'key' }));
+  }).catch(function () {});
 }
 
 function showWelcome(state) {
@@ -945,7 +965,7 @@ function showWelcome(state) {
 
   function done() {
     state.seen = true;
-    obSave(state);
+    obSave({ seen: true });
     m.close();
     go('dashboard');
   }
@@ -1122,44 +1142,56 @@ function selectOptions(values, prefix, current) {
 /* =====================================================================
    8. DASHBOARD
    ===================================================================== */
-VIEWS.dashboard = function (view) {
+var OPEN_STATUSES = ['new', 'ordered', 'in_lab'];
+
+VIEWS.dashboard = function (view, gen) {
+  /* The counters are counted by the database rather than derived from a
+     page of rows: a slice would start disagreeing with the sidebar badge
+     as soon as the shop passes the page size. */
   return Promise.all([
     obProgress().catch(function () { return null; }),
-    guard(db.from('orders_view').select('*').order('created_at', { ascending: false }).limit(200)),
+    guard(db.from('orders_view').select('*')
+            .order('created_at', { ascending: false }).limit(8)),
+    guard(db.from('orders_view').select('*').eq('status', 'ready')
+            .order('promised_on', { ascending: true }).limit(8)),
+    guard(db.from('orders_view').select('paid').gte('created_at', monthStart())
+            .neq('status', 'cancelled').limit(5000)),
     guard(db.from('products').select('id,brand,model,sku,qty,min_qty,sale_price,category')
             .eq('archived', false).limit(2000)),
-    db.from('customers').select('id', { count: 'exact', head: true })
+    db.from('customers').select('id', { count: 'exact', head: true }),
+    db.from('orders').select('id', { count: 'exact', head: true }).in('status', OPEN_STATUSES),
+    db.from('orders').select('id', { count: 'exact', head: true }).eq('status', 'ready'),
+    db.from('orders').select('id', { count: 'exact', head: true })
+      .in('status', OPEN_STATUSES.concat(['ready'])).lt('promised_on', today()),
+    guard(db.from('orders').select('promised_on').in('status', OPEN_STATUSES)
+            .not('promised_on', 'is', null)
+            .order('promised_on', { ascending: true }).limit(1))
   ]).then(function (r) {
+    if (stale(gen)) return;
     var ob = r[0];
-    var orders = r[1] || [], products = r[2] || [], customerCount = (r[3] && r[3].count) || 0;
+    var recent = r[1] || [], ready = r[2] || [], monthRows = r[3] || [], products = r[4] || [];
+    var customerCount = (r[5] && r[5].count) || 0;
+    var openCount = (r[6] && r[6].count) || 0;
+    var readyCount = (r[7] && r[7].count) || 0;
+    var lateCount = (r[8] && r[8].count) || 0;
+    var soonest = (r[9] && r[9][0] && r[9][0].promised_on) || null;
 
-    var since = monthStart();
-    var revenue = orders.reduce(function (sum, o) {
-      return o.created_at >= since && o.status !== 'cancelled' ? sum + num(o.paid) : sum;
-    }, 0);
-    var open = orders.filter(function (o) {
-      return ['new', 'ordered', 'in_lab'].indexOf(o.status) >= 0;
-    });
-    var ready = orders.filter(function (o) { return o.status === 'ready'; });
+    var revenue = monthRows.reduce(function (sum, o) { return sum + num(o.paid); }, 0);
     var low = products.filter(function (p) { return num(p.qty) <= num(p.min_qty); });
     var stockValue = products.reduce(function (s, p) { return s + num(p.qty) * num(p.sale_price); }, 0);
-    var late = open.concat(ready).filter(function (o) {
-      return o.promised_on && daysUntil(o.promised_on) < 0;
-    });
 
     var kpis =
       '<div class="kpis">' +
         kpi('o', 'money', t('dash_rev'), money(revenue), t('dash_paid') + ' · ' + monthName()) +
-        kpi('t', 'orders', t('dash_open'), String(open.length),
-            late.length ? '<span style="color:var(--red);font-weight:700">' +
-              esc(t('dash_late')) + ': ' + late.length + '</span>'
-            : nextPromised(open)) +
-        kpi('g', 'check', t('dash_ready'), String(ready.length), t('dash_readyl')) +
+        kpi('t', 'orders', t('dash_open'), String(openCount),
+            lateCount ? '<span style="color:var(--red);font-weight:700">' +
+              esc(t('dash_late')) + ': ' + lateCount + '</span>'
+            : (soonest ? esc(t('ord_promised')) + ': ' + esc(fmtDate(soonest))
+                       : esc(t('nothing')))) +
+        kpi('g', 'check', t('dash_ready'), String(readyCount), t('dash_readyl')) +
         kpi('r', 'alert', t('dash_low'), String(low.length),
             t('dash_stockval') + ': ' + money(stockValue)) +
       '</div>';
-
-    var recent = orders.slice(0, 8);
 
     var obHtml = '';
     if (ob && !ob.state.dismissed && ob.items.some(function (i) { return !i.done; })) {
@@ -1170,7 +1202,7 @@ VIEWS.dashboard = function (view) {
       '<div class="grid-2" style="align-items:start">' +
         card(t('dash_recent'), ordersTable(recent, true),
              '<a class="btn sm" href="#/orders">' + esc(t('dash_all')) + '</a>') +
-        card(t('dash_readyl'), ordersTable(ready.slice(0, 8), true), '') +
+        card(t('dash_readyl'), ordersTable(ready, true), '') +
       '</div>' +
       '<div style="height:16px"></div>' +
       card(t('dash_lowl'), lowTable(low.slice(0, 10)),
@@ -1192,19 +1224,11 @@ VIEWS.dashboard = function (view) {
     var hide = $('#obHide', view);
     if (hide) hide.addEventListener('click', function () {
       ob.state.dismissed = true;
-      obSave(ob.state);
+      obSave({ dismissed: true });
       var card = $('#obCard', view);
       if (card) { card.remove(); }
     });
   });
-
-  /* the soonest promise still outstanding — the number the shop actually cares about */
-  function nextPromised(openOrders) {
-    var dates = openOrders.map(function (o) { return o.promised_on; })
-      .filter(Boolean).sort();
-    if (!dates.length) return esc(t('nothing'));
-    return esc(t('ord_promised')) + ': ' + esc(fmtDate(dates[0]));
-  }
 
   function monthName() {
     var names = {
@@ -1290,7 +1314,7 @@ function lowTable(rows) {
 /* =====================================================================
    9. CUSTOMERS + PRESCRIPTIONS
    ===================================================================== */
-VIEWS.customers = function (view) {
+VIEWS.customers = function (view, gen) {
   cache.cusQuery = cache.cusQuery || '';
 
   view.innerHTML =
@@ -1313,14 +1337,15 @@ VIEWS.customers = function (view) {
       .select('id,full_name,phone,email,birth_date,created_at,notes')
       .order('created_at', { ascending: false }).limit(300);
     if (cache.cusQuery) {
-      var term = '%' + cache.cusQuery.replace(/[,%]/g, '') + '%';
+      var term = '%' + cache.cusQuery.replace(/[,%()]/g, '') + '%';
       q = q.or('full_name.ilike.' + term + ',phone.ilike.' + term + ',email.ilike.' + term);
     }
     return guard(q).then(render).catch(fail);
   }
 
   function render(rows) {
-    var box = $('#cusList');
+    if (stale(gen)) return;
+    var box = $('#cusList', view);
     if (!rows.length) { box.innerHTML = emptyState(t('cus_none')); return; }
     box.innerHTML = '<div class="table-wrap"><table class="tbl"><thead><tr>' +
       '<th>' + esc(t('cus_name')) + '</th>' +
@@ -1392,13 +1417,14 @@ function editCustomer(customer, done) {
     var form = $('#cusForm', m.body);
     if (!form.reportValidity()) return;
     var data = readForm(form);
-    busy(e.currentTarget, true);
+    var _btn = e.currentTarget;
+    busy(_btn, true);
     var op = c.id
       ? db.from('customers').update(data).eq('id', c.id)
       : db.from('customers').insert(data);
     guard(op).then(function () {
       toast(t('saved'), 'good'); m.close(); if (done) done();
-    }).catch(function (err) { busy(e.currentTarget, false); fail(err); });
+    }).catch(function (err) { busy(_btn, false); fail(err); });
   });
 
   if (c.id) {
@@ -1407,7 +1433,7 @@ function editCustomer(customer, done) {
         guard(db.from('customers').delete().eq('id', c.id)).then(function () {
           toast(t('deleted')); m.close(); if (done) done();
         }).catch(fail);
-      });
+      }, t('cus_delwarn'));
     });
   }
 }
@@ -1570,13 +1596,14 @@ function editPrescription(rx, done) {
   $('#saveRx', m.foot).addEventListener('click', function (e) {
     var data = readForm($('#rxForm', m.body));
     data.customer_id = rx.customer_id;
-    busy(e.currentTarget, true);
+    var _btn = e.currentTarget;
+    busy(_btn, true);
     var op = rx.id
       ? db.from('prescriptions').update(data).eq('id', rx.id)
       : db.from('prescriptions').insert(data);
     guard(op).then(function () {
       toast(t('saved'), 'good'); m.close(); if (done) done();
-    }).catch(function (err) { busy(e.currentTarget, false); fail(err); });
+    }).catch(function (err) { busy(_btn, false); fail(err); });
   });
 
   if (rx.id) {
@@ -1665,7 +1692,7 @@ function pickCustomer(onPick) {
       var q = db.from('customers').select('id,full_name,phone')
         .order('created_at', { ascending: false }).limit(40);
       if (term) {
-        var s = '%' + term.replace(/[,%]/g, '') + '%';
+        var s = '%' + term.replace(/[,%()]/g, '') + '%';
         q = q.or('full_name.ilike.' + s + ',phone.ilike.' + s);
       }
       return guard(q);
@@ -1685,7 +1712,7 @@ function pickProduct(onPick) {
       var q = db.from('products').select('id,sku,brand,model,color,qty,sale_price,category')
         .eq('archived', false).order('brand').limit(40);
       if (term) {
-        var s = '%' + term.replace(/[,%]/g, '') + '%';
+        var s = '%' + term.replace(/[,%()]/g, '') + '%';
         q = q.or('brand.ilike.' + s + ',model.ilike.' + s + ',sku.ilike.' + s);
       }
       return guard(q);
@@ -1705,7 +1732,7 @@ function pickProduct(onPick) {
 /* =====================================================================
    10. ORDERS
    ===================================================================== */
-VIEWS.orders = function (view) {
+VIEWS.orders = function (view, gen) {
   cache.ordStatus = cache.ordStatus || 'open';
   cache.ordQuery = cache.ordQuery || '';
 
@@ -1744,11 +1771,12 @@ VIEWS.orders = function (view) {
     if (cache.ordStatus === 'open') q = q.in('status', ['new', 'ordered', 'in_lab', 'ready']);
     else if (cache.ordStatus !== 'all') q = q.eq('status', cache.ordStatus);
     if (cache.ordQuery) {
-      var s = '%' + cache.ordQuery.replace(/[,%]/g, '') + '%';
+      var s = '%' + cache.ordQuery.replace(/[,%()]/g, '') + '%';
       q = q.or('code.ilike.' + s + ',customer_name.ilike.' + s + ',customer_phone.ilike.' + s);
     }
     return guard(q).then(function (rows) {
-      var box = $('#ordList');
+      if (stale(gen)) return;
+      var box = $('#ordList', view);
       box.innerHTML = ordersTable(rows || [], false);
       $$('tr[data-order]', box).forEach(function (tr) {
         tr.addEventListener('click', function () { openOrder(tr.dataset.order, load); });
@@ -1824,9 +1852,11 @@ function openOrder(id, done) {
     });
 
     $('#oStatus', m.body).addEventListener('change', function (e) {
-      setOrderStatus(o, items, e.target.value).then(function () {
+      var sel = e.target;
+      sel.disabled = true;
+      setOrderStatus(o.id, sel.value).then(function () {
         toast(t('saved'), 'good'); load(); if (done) done();
-      }).catch(function (err) { fail(err); load(); });
+      }).catch(function (err) { sel.disabled = false; fail(err); load(); });
     });
   }
 
@@ -1839,34 +1869,21 @@ function totalRow(label, value) {
     '<span class="tabular">' + value + '</span></div>';
 }
 
-/* Delivering an order takes its stock lines out of the warehouse — once. */
-function setOrderStatus(order, items, status) {
-  var patch = { status: status };
-  if (status === 'delivered') patch.delivered_at = new Date().toISOString();
-
-  return guard(db.from('orders').update(patch).eq('id', order.id)).then(function () {
-    if (status !== 'delivered') return null;
-    return guard(db.from('stock_moves').select('id').eq('order_id', order.id).limit(1))
-      .then(function (existing) {
-        if (existing && existing.length) return null;   /* already deducted */
-        var lines = items.filter(function (i) { return i.product_id; });
-        if (!lines.length) return null;
-        return Promise.all(lines.map(function (line) {
-          return guard(db.from('products').select('qty').eq('id', line.product_id).single())
-            .then(function (p) {
-              return guard(db.from('products')
-                .update({ qty: num(p.qty) - num(line.qty) })
-                .eq('id', line.product_id));
-            })
-            .then(function () {
-              return guard(db.from('stock_moves').insert({
-                product_id: line.product_id, delta: -num(line.qty),
-                reason: 'order ' + order.code, order_id: order.id
-              }));
-            });
-        }));
-      });
-  }).then(function () { refreshBadges(); });
+/* Stock moves with the order's status, and the database does it in one
+   transaction: deliver_order() deducts each product once (two lines of the
+   same frame take two off the shelf, never below zero) and revert_order_stock()
+   puts it back when an order leaves 'delivered'. Doing this from the browser
+   meant read-modify-write over several requests, which lost quantities and
+   could double-deduct on a retry. */
+function setOrderStatus(orderId, status) {
+  var step = status === 'delivered'
+    ? guard(db.rpc('deliver_order', { p_order_id: orderId }))
+    : guard(db.rpc('revert_order_stock', { p_order_id: orderId }))
+        .then(function () {
+          return guard(db.from('orders')
+            .update({ status: status, delivered_at: null }).eq('id', orderId));
+        });
+  return step.then(function () { refreshBadges(); });
 }
 
 function editOrder(order, done) {
@@ -1986,8 +2003,14 @@ function editOrder(order, done) {
     data.customer_id = chosen.id;
     data.discount = num(data.discount);
     data.paid = num(data.paid);
+    /* status is applied through setOrderStatus() further down, never written
+       here: saving it directly would move an order to 'delivered' without
+       taking anything off the shelf */
+    var wanted = data.status || 'new';
+    delete data.status;
     var clean = items.filter(function (i) { return (i.description || '').trim(); });
-    busy(e.currentTarget, true);
+    var _btn = e.currentTarget;
+    busy(_btn, true);
 
     var save = o.id
       ? guard(db.from('orders').update(data).eq('id', o.id)).then(function () { return o.id; })
@@ -1995,18 +2018,27 @@ function editOrder(order, done) {
           .then(function (row) { return row.id; });
 
     save.then(function (orderId) {
-      return guard(db.from('order_items').delete().eq('order_id', orderId)).then(function () {
-        if (!clean.length) return null;
-        return guard(db.from('order_items').insert(clean.map(function (i) {
-          return {
-            order_id: orderId, product_id: i.product_id || null,
-            description: i.description, qty: num(i.qty) || 1, unit_price: num(i.unit_price)
-          };
-        })));
-      });
+      /* if this order already has stock out, return it before the lines
+         change, then re-apply the status so the deduction matches the
+         lines that were actually saved */
+      return guard(db.rpc('revert_order_stock', { p_order_id: orderId }))
+        .then(function () {
+          return guard(db.rpc('save_order_items', {
+            p_order_id: orderId,
+            p_items: clean.map(function (i) {
+              return {
+                product_id: i.product_id || null,
+                description: i.description,
+                qty: num(i.qty) || 1,
+                unit_price: num(i.unit_price)
+              };
+            })
+          }));
+        })
+        .then(function () { return setOrderStatus(orderId, wanted); });
     }).then(function () {
       toast(t('saved'), 'good'); m.close(); refreshBadges(); if (done) done();
-    }).catch(function (err) { busy(e.currentTarget, false); fail(err); });
+    }).catch(function (err) { busy(_btn, false); fail(err); });
   });
 
   if (o.id) {
@@ -2033,7 +2065,7 @@ function editOrder(order, done) {
 /* =====================================================================
    11. STOCK
    ===================================================================== */
-VIEWS.stock = function (view) {
+VIEWS.stock = function (view, gen) {
   cache.stkQuery = cache.stkQuery || '';
   cache.stkCat = cache.stkCat || 'all';
   cache.stkLow = cache.stkLow || false;
@@ -2071,15 +2103,16 @@ VIEWS.stock = function (view) {
       .order('brand', { ascending: true }).limit(1000);
     if (cache.stkCat !== 'all') q = q.eq('category', cache.stkCat);
     if (cache.stkQuery) {
-      var s = '%' + cache.stkQuery.replace(/[,%]/g, '') + '%';
+      var s = '%' + cache.stkQuery.replace(/[,%()]/g, '') + '%';
       q = q.or('brand.ilike.' + s + ',model.ilike.' + s + ',sku.ilike.' + s + ',color.ilike.' + s);
     }
     return guard(q).then(function (rows) {
+      if (stale(gen)) return;
       rows = rows || [];
       var lowRows = rows.filter(function (p) { return num(p.qty) <= num(p.min_qty); });
       var shown = cache.stkLow ? lowRows : rows;
 
-      $('#stkSummary').innerHTML =
+      $('#stkSummary', view).innerHTML =
         '<span class="chip" style="cursor:default">' + esc(t('total')) + ': <b>' + rows.length + '</b></span>' +
         '<span class="chip" style="cursor:default">' + esc(t('qty')) + ': <b>' +
           rows.reduce(function (s, p) { return s + num(p.qty); }, 0) + ' ' +
@@ -2089,7 +2122,7 @@ VIEWS.stock = function (view) {
         (lowRows.length ? '<span class="badge low">' + esc(t('stk_lowbadge')) + ': ' +
           lowRows.length + '</span>' : '');
 
-      var box = $('#stkList');
+      var box = $('#stkList', view);
       if (!shown.length) { box.innerHTML = emptyState(t('stk_none')); return; }
       box.innerHTML = '<div class="table-wrap"><table class="tbl"><thead><tr>' +
         '<th>' + esc(t('stk_brand')) + ' / ' + esc(t('stk_model')) + '</th>' +
@@ -2121,10 +2154,11 @@ VIEWS.stock = function (view) {
 
       $$('#stkList tr[data-id]', box).forEach(function (tr) {
         var p = shown.filter(function (x) { return x.id === tr.dataset.id; })[0];
-        $$('[data-adj]', tr).forEach(function (b) {
+        var adjButtons = $$('[data-adj]', tr);
+        adjButtons.forEach(function (b) {
           b.addEventListener('click', function (ev) {
             ev.stopPropagation();
-            adjustStock(p, Number(b.dataset.adj), load);
+            adjustStock(p, Number(b.dataset.adj), adjButtons, load);
           });
         });
         var openCell = $('[data-open]', tr), editBtn = $('[data-edit]', tr);
@@ -2138,17 +2172,28 @@ VIEWS.stock = function (view) {
   return load();
 };
 
-function adjustStock(product, delta, done) {
-  var next = num(product.qty) + delta;
-  if (next < 0) next = 0;
+function adjustStock(product, delta, buttons, done) {
+  var current = num(product.qty);
+  var next = Math.max(current + delta, 0);
+  var applied = next - current;           /* 0 when already at zero */
+  if (!applied) return;
+
+  /* the row is re-rendered on success, so these stay disabled until then —
+     a double-click used to write the same quantity twice and log two moves */
+  (buttons || []).forEach(function (b) { b.disabled = true; });
+
   guard(db.from('products').update({ qty: next }).eq('id', product.id))
     .then(function () {
       return guard(db.from('stock_moves').insert({
-        product_id: product.id, delta: delta, reason: delta > 0 ? 'manual +' : 'manual −'
+        product_id: product.id, delta: applied,
+        reason: applied > 0 ? 'manual +' : 'manual −'
       }));
     })
     .then(function () { if (done) done(); })
-    .catch(fail);
+    .catch(function (e) {
+      (buttons || []).forEach(function (b) { b.disabled = false; });
+      fail(e);
+    });
 }
 
 function editProduct(product, done) {
@@ -2205,13 +2250,14 @@ function editProduct(product, done) {
     if (!form.reportValidity()) return;
     var data = readForm(form);
     ['cost_price', 'sale_price', 'qty', 'min_qty'].forEach(function (k) { data[k] = num(data[k]); });
-    busy(e.currentTarget, true);
+    var _btn = e.currentTarget;
+    busy(_btn, true);
     var op = p.id
       ? db.from('products').update(data).eq('id', p.id)
       : db.from('products').insert(data);
     guard(op).then(function () {
       toast(t('saved'), 'good'); m.close(); if (done) done();
-    }).catch(function (err) { busy(e.currentTarget, false); fail(err); });
+    }).catch(function (err) { busy(_btn, false); fail(err); });
   });
 
   if (p.id) {
@@ -2260,7 +2306,7 @@ function igAutoRefreshToken() {
   }).catch(function () { /* silent — the panel still works without it */ });
 }
 
-VIEWS.instagram = function (view) {
+VIEWS.instagram = function (view, gen) {
   var settings = {};
 
   function load() {
@@ -2273,6 +2319,7 @@ VIEWS.instagram = function (view) {
   }
 
   function render(posts) {
+    if (stale(gen)) return;
     var visible = posts.filter(function (p) { return !p.hidden; }).length;
     view.innerHTML =
       '<div class="notice info" style="margin-bottom:16px">' + ico('info') +
@@ -2305,24 +2352,26 @@ VIEWS.instagram = function (view) {
 
     $('#igSave').addEventListener('click', function (e) {
       settings.token = $('#igToken').value.trim();
-      busy(e.currentTarget, true);
+      var _btn = e.currentTarget;
+      busy(_btn, true);
       igSaveSetting(settings).then(function () {
-        busy(e.currentTarget, false); toast(t('ig_saved'), 'good');
-      }).catch(function (err) { busy(e.currentTarget, false); fail(err); });
+        busy(_btn, false); toast(t('ig_saved'), 'good');
+      }).catch(function (err) { busy(_btn, false); fail(err); });
     });
 
     $('#igSync').addEventListener('click', function (e) {
       var token = $('#igToken').value.trim();
       if (!token) { toast(t('ig_tokenmiss'), 'err'); return; }
       settings.token = token;
-      busy(e.currentTarget, true);
+      var _btn = e.currentTarget;
+      busy(_btn, true);
       igSync(token, settings)
         .then(function (n) {
-          busy(e.currentTarget, false);
+          busy(_btn, false);
           toast(n + ' ' + t('ig_got'), 'good');
           load();
         })
-        .catch(function (err) { busy(e.currentTarget, false); fail(err); });
+        .catch(function (err) { busy(_btn, false); fail(err); });
     });
 
     $('#igManual').addEventListener('click', function () {
@@ -2468,10 +2517,11 @@ function igManualImport(settings, done) {
     var raw = $('#igJson', m.body).value.trim();
     var parsed;
     try { parsed = JSON.parse(raw); } catch (err) { return toast(t('err'), 'err'); }
-    busy(e.currentTarget, true);
+    var _btn = e.currentTarget;
+    busy(_btn, true);
     igStore(parsed, settings.token, settings).then(function (n) {
       m.close(); toast(n + ' ' + t('ig_got'), 'good'); if (done) done();
-    }).catch(function (err) { busy(e.currentTarget, false); fail(err); });
+    }).catch(function (err) { busy(_btn, false); fail(err); });
   });
 }
 
@@ -2524,7 +2574,7 @@ function igMirror(media) {
    ===================================================================== */
 var CONTENT_GROUPS = ['hero', 'services', 'gallery', 'about', 'contact', 'general'];
 
-VIEWS.content = function (view) {
+VIEWS.content = function (view, gen) {
   cache.cntLang = cache.cntLang || lang;
   var rows = [], dirty = {};
 
@@ -2534,13 +2584,13 @@ VIEWS.content = function (view) {
         rows = r || []; render();
         obGet().then(function (state) {
           if (state.content_seen) return;
-          state.content_seen = true;
-          obSave(state);
+          obSave({ content_seen: true });
         });
       });
   }
 
   function render() {
+    if (stale(gen)) return;
     var groups = {};
     rows.forEach(function (r) {
       var g = r.group_name || 'general';
@@ -2598,7 +2648,8 @@ VIEWS.content = function (view) {
     $('#cntSave').addEventListener('click', function (e) {
       var keys = Object.keys(dirty);
       if (!keys.length) { toast(t('saved'), 'good'); return; }
-      busy(e.currentTarget, true);
+      var _btn = e.currentTarget;
+      busy(_btn, true);
       var payload = keys.map(function (k) {
         var r = rows.filter(function (x) { return x.key === k; })[0];
         return { key: r.key, az: r.az, ru: r.ru, en: r.en,
@@ -2607,11 +2658,11 @@ VIEWS.content = function (view) {
       guard(db.from('site_content').upsert(payload, { onConflict: 'key' }))
         .then(function () {
           dirty = {};
-          busy(e.currentTarget, false);
+          busy(_btn, false);
           $('#dirtyCount').textContent = '';
           toast(t('saved'), 'good');
         })
-        .catch(function (err) { busy(e.currentTarget, false); fail(err); });
+        .catch(function (err) { busy(_btn, false); fail(err); });
     });
   }
 
@@ -2703,9 +2754,10 @@ VIEWS.settings = function (view) {
   $('#savePw').addEventListener('click', function (e) {
     var pw = $('#newPw').value;
     if (!pw || pw.length < 6) { toast(t('set_pwshort'), 'err'); return; }
-    busy(e.currentTarget, true);
+    var _btn = e.currentTarget;
+    busy(_btn, true);
     db.auth.updateUser({ password: pw }).then(function (res) {
-      busy(e.currentTarget, false);
+      busy(_btn, false);
       if (res.error) return fail(res.error);
       $('#newPw').value = '';
       toast(t('saved'), 'good');
@@ -2726,7 +2778,8 @@ VIEWS.settings = function (view) {
   });
 
   $('#backupBtn').addEventListener('click', function (e) {
-    busy(e.currentTarget, true);
+    var _btn = e.currentTarget;
+    busy(_btn, true);
     var tables = ['customers', 'prescriptions', 'products', 'stock_moves',
                   'orders', 'order_items', 'site_content', 'instagram_posts'];
     Promise.all(tables.map(function (name) {
@@ -2742,9 +2795,9 @@ VIEWS.settings = function (view) {
       a.download = 'master-optik-backup-' + today() + '.json';
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
-      busy(e.currentTarget, false);
+      busy(_btn, false);
       toast(t('saved'), 'good');
-    }).catch(function (err) { busy(e.currentTarget, false); fail(err); });
+    }).catch(function (err) { busy(_btn, false); fail(err); });
   });
 
   return Promise.resolve();

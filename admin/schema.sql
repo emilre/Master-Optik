@@ -123,6 +123,9 @@ create table if not exists public.stock_moves (
   created_at  timestamptz not null default now()
 );
 create index if not exists stock_moves_product_idx on public.stock_moves (product_id, created_at desc);
+-- the delivery guard looks moves up by order; the foreign key is added after
+-- public.orders exists, further down
+create index if not exists stock_moves_order_idx on public.stock_moves (order_id);
 
 -- =====================================================================
 -- ORDERS  (sifarişlər)
@@ -160,8 +163,151 @@ create table if not exists public.order_items (
 );
 create index if not exists order_items_order_idx on public.order_items (order_id);
 
+-- now that public.orders exists, tie the stock ledger to it
+do $$ begin
+  alter table public.stock_moves
+    add constraint stock_moves_order_fk
+    foreign key (order_id) references public.orders(id) on delete set null;
+exception when duplicate_object then null; end $$;
+
+-- =====================================================================
+-- STOCK MOVEMENTS THAT MUST NOT GO HALF-DONE
+-- ---------------------------------------------------------------------
+-- The browser talks to PostgREST directly and has no transactions, so
+-- anything that touches money or stock in more than one step lives here
+-- instead. A function body is one transaction: it either all happens or
+-- none of it does.
+-- =====================================================================
+
+-- Replace an order's lines. Doing this as delete-then-insert from the
+-- browser would wipe the lines whenever the insert failed (dropped wifi,
+-- expired token) and leave the order looking settled at 0 ₼.
+create or replace function public.save_order_items(p_order_id uuid, p_items jsonb)
+returns void
+language plpgsql
+as $$
+begin
+  if not public.is_staff() then
+    raise exception 'not authorised' using errcode = '42501';
+  end if;
+
+  delete from public.order_items where order_id = p_order_id;
+
+  insert into public.order_items (order_id, product_id, description, qty, unit_price)
+  select p_order_id,
+         nullif(x->>'product_id', '')::uuid,
+         coalesce(nullif(x->>'description', ''), '—'),
+         greatest(coalesce((x->>'qty')::int, 1), 1),
+         coalesce((x->>'unit_price')::numeric, 0)
+    from jsonb_array_elements(coalesce(p_items, '[]'::jsonb)) x;
+end $$;
+
+-- Has this order already taken stock out of the warehouse?
+-- Net, not existence: an order can be delivered, reverted and delivered
+-- again, and each pass must do the right thing.
+create or replace function public.order_stock_net(p_order_id uuid)
+returns int
+language sql
+stable
+as $$
+  select coalesce(sum(delta), 0)::int
+    from public.stock_moves where order_id = p_order_id;
+$$;
+
+-- Deliver: deduct every line once, aggregated per product (two lines of
+-- the same frame must take two off the shelf), never below zero, and log
+-- exactly what was applied.
+create or replace function public.deliver_order(p_order_id uuid)
+returns void
+language plpgsql
+as $$
+begin
+  if not public.is_staff() then
+    raise exception 'not authorised' using errcode = '42501';
+  end if;
+
+  update public.orders
+     set status = 'delivered', delivered_at = coalesce(delivered_at, now())
+   where id = p_order_id;
+
+  if public.order_stock_net(p_order_id) < 0 then
+    return;                      -- already deducted
+  end if;
+
+  with want as (
+    select product_id, sum(qty)::int as qty
+      from public.order_items
+     where order_id = p_order_id and product_id is not null
+     group by product_id
+  ),
+  calc as (
+    -- read the current quantity before the update, so the ledger records
+    -- what actually left the shelf rather than what was asked for
+    select w.product_id, least(w.qty, p.qty) as applied
+      from want w
+      join public.products p on p.id = w.product_id
+     order by w.product_id            -- stable lock order
+       for update of p
+  ),
+  upd as (
+    update public.products p
+       set qty = p.qty - c.applied
+      from calc c
+     where p.id = c.product_id
+     returning p.id
+  )
+  insert into public.stock_moves (product_id, delta, reason, order_id)
+  select product_id, -applied, 'order delivered', p_order_id
+    from calc where applied > 0;
+end $$;
+
+-- Put the stock back: an order that was delivered and is then cancelled,
+-- reopened or re-costed must not leave the shelf count short.
+create or replace function public.revert_order_stock(p_order_id uuid)
+returns void
+language plpgsql
+as $$
+begin
+  if not public.is_staff() then
+    raise exception 'not authorised' using errcode = '42501';
+  end if;
+
+  if public.order_stock_net(p_order_id) >= 0 then
+    return;                      -- nothing is out on this order
+  end if;
+
+  with back as (
+    select product_id, (-sum(delta))::int as qty
+      from public.stock_moves
+     where order_id = p_order_id
+     group by product_id
+    having sum(delta) < 0
+  ),
+  upd as (
+    update public.products p
+       set qty = p.qty + b.qty
+      from back b
+     where p.id = b.product_id
+     returning p.id
+  )
+  insert into public.stock_moves (product_id, delta, reason, order_id)
+  select product_id, qty, 'order reverted', p_order_id from back;
+end $$;
+
+revoke all on function public.save_order_items(uuid, jsonb)  from public, anon;
+revoke all on function public.order_stock_net(uuid)          from public, anon;
+revoke all on function public.deliver_order(uuid)            from public, anon;
+revoke all on function public.revert_order_stock(uuid)       from public, anon;
+grant execute on function public.save_order_items(uuid, jsonb) to authenticated;
+grant execute on function public.order_stock_net(uuid)         to authenticated;
+grant execute on function public.deliver_order(uuid)           to authenticated;
+grant execute on function public.revert_order_stock(uuid)      to authenticated;
+
 -- convenience view: order + computed money + customer name
-create or replace view public.orders_view
+-- (dropped first: CREATE OR REPLACE VIEW cannot reorder columns, so re-running
+--  this file after `orders` gains a column would otherwise abort here)
+drop view if exists public.orders_view;
+create view public.orders_view
 with (security_invoker = on) as
 select
   o.*,
