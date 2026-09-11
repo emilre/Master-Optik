@@ -5,24 +5,21 @@ Static site hosted on **GitHub Pages** → https://emilre.github.io/Master-Optik
 No build step. Plain HTML/CSS/vanilla JS. Deploy is automatic: every push to
 `claude/github-pages-deploy-e3kwmy` or `main` runs `.github/workflows/deploy-pages.yml`.
 
-## Designs
+## The site
 
-The landing page (`index.html`) lists all eleven design directions, numbered in
-display order (badge → folder):
+`index.html` is the whole public site: **Vitrin / 4 səhifə** — the design that
+was chosen out of the eleven directions (it was `d6`). Four hash-routed pages,
+`#/` · `#/xidmetler` · `#/qalereya` · `#/elaqe`, with the dioptre slider on the
+hero.
 
-| # | Path | Design |
-|---|---|---|
-| 01 | `/d6/` | **Vitrin / 4 səhifə** — four-page full site, showcase boards |
-| 02 | `/d7/` | **Gecə Neon** — night indigo & amber, sunglasses energy |
-| 03 | `/d8/` | **Riso Kağız** — print style: paper, red/blue ink, serifs |
-| 04 | `/d9/` | **Zümrüd** — emerald, bone & copper, quiet luxury |
-| 05 | `/d10/` | **Brutal Narıncı** — white, heavy black rules, big orange |
-| 06 | `/d11/` | **Pastel Lilac** — lilac/mint, soft, youthful |
-| 07 | `/d1/` | **Warm Boutique Minimal** — cream, airy, understated |
-| 08 | `/d2/` | **Elegant Serif Luxe** — light ivory, serif, champagne/gold |
-| 09 | `/d3/` | **Bold Editorial / Swiss** — big type, high-contrast grid |
-| 10 | `/d4/` | **Vibrant Gradient / Friendly** — colorful, rounded, energetic |
-| 11 | `/d5/` | **Clinical Trust / Optometry** — clean, professional, trust cues |
+It was authored as a 2.4 MB self-extracting bundle with every photo, font and
+script base64'd into one file. It now ships as ordinary files: a 46 KB page,
+photos served from `images/`, fonts from `fonts/`, and the renderer — React 18
+plus the design runtime — from `vendor/`. Rendering is identical; the bytes are
+shared and cached instead of inlined once per visit.
+
+The other ten directions were deleted when this one was picked. They are still
+in git history if anyone wants to look back at them.
 
 ## Admin panel / CRM (`/admin/`)
 
@@ -42,26 +39,36 @@ Instagram access token). Short version in [`admin/SETUP.md`](admin/SETUP.md).
 | `assets/mo-config.js` | the two Supabase values the site needs (fill in once) |
 | `assets/mo-site.js` | public-site runtime: Instagram gallery + copy overrides |
 
-Until `assets/mo-config.js` is filled in, every design keeps working exactly as
+Until `assets/mo-config.js` is filled in, the site keeps working exactly as
 before — the runtime silently does nothing.
 
 ### Gallery = Instagram posts
 
-`assets/mo-site.js` replaces each design's static gallery photos with the real
-posts synced from [@master__optik](https://instagram.com/master__optik), reusing
-that design's own tile markup and CSS, and links each tile to the post. `d1`–`d5`
-load the script directly; `d6`–`d11` get it through `overlay.js` after they
-unpack. Which posts appear, and in what order, is decided in the admin panel.
+`assets/mo-site.js` replaces the static gallery photos with the real posts
+synced from [@master__optik](https://instagram.com/master__optik), reusing the
+page's own tile markup and CSS, and links each tile to the post. `overlay.js`
+loads it once the page has rendered. Which posts appear, and in what order, is
+decided in the admin panel.
 
 ## Structure
 
-`d1`–`d5` read photos/videos from the shared `images/` and `videos/` folders —
-replacing a file there updates all five at once. `d6`–`d11` are fully
-self-contained: their photos are embedded in the HTML (1.6–2.3 MB per page), so
-they need nothing from `images/` (they can be rewired to the shared folder to
-slim each page to ~60 KB if wanted).
+| Path | What it is |
+|---|---|
+| `index.html` | the site — markup plus the design runtime's template syntax |
+| `vendor/` | `react` · `react-dom` · `dc-runtime.js`, which renders the page |
+| `fonts/` | Nunito, five `woff2` subsets; the browser fetches only what a page uses |
+| `images/` | every photo the site shows — replacing a file here changes the site |
+| `overlay.js` | shared nav, language switcher, WhatsApp/call buttons; loads the runtime below |
+| `assets/` | `mo-config.js` (Supabase keys) · `mo-site.js` (Instagram gallery + copy) |
+| `admin/` | the CRM — see above |
+| `videos/` | three reels, used by designs that no longer ship; kept as source media |
 
-## Shared media slots (`d1`–`d5` + landing)
+`index.html` is generated, not hand-written: it is the old `d6` bundle unpacked
+into real files. Edit it directly — the bundle is gone, and there is no build
+step. The `{{ … }}`, `sc-if` and `ref=` attributes in it are the design
+runtime's template syntax and are evaluated in the browser.
+
+## Media slots
 
 | File | Content |
 |---|---|
@@ -74,14 +81,17 @@ slim each page to ~60 KB if wanted).
 
 Photos came from Instagram [@master__optik](https://instagram.com/master__optik):
 EXIF orientation applied then stripped, progressive JPEG, under 400 KB each.
-If a file is missing, `d1`–`d5` fall back to a branded placeholder tile.
+The site uses `hero.jpg`, `01`–`09`, `about.jpg`, `mekan.jpg` and `reel1.jpg` —
+replacing any of those changes the live site with no other edit. `reel2`/`reel3`
+and the three `.mp4`s are unused by the current design and kept only as source
+material.
 
 ## Languages
 
 All pages are trilingual — **AZ (default) / RU / EN** — with a language switcher
-in the header (and inside the mobile menu on `d1`–`d5`). Choice persists in
-`localStorage`. Copy lives in a `const I18N` object inside each page; keep the
-three languages in sync when editing.
+in the header and inside the mobile menu. Choice persists in `localStorage`.
+Translation is applied by `overlay.js` over the Azerbaijani markup; the shop can
+also override the headline copy from the admin panel.
 
 ## Logo
 

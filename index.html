@@ -1,237 +1,631 @@
 <!DOCTYPE html>
-<html lang="az">
-<head>
+<html><head>
+<link rel="icon" href="images/logo.svg" type="image/svg+xml">
+<meta name="description" content="Master Optik — Bakıda eynək satışı, təmiri və fərdi sifariş. Faiq Yusifov küç. 73. Əlaqə: +994 77 745 19 05.">
+<script>window.__resources = {"https://unpkg.com/react@18.3.1/umd/react.production.min.js":"vendor/react.production.min.js","https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js":"vendor/react-dom.production.min.js"};</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Master Optik — Design Directions</title>
-<meta name="description" content="Master Optik — on bir dizayn istiqaməti / одиннадцать дизайн-направлений / eleven design directions">
-<link rel="icon" href="images/logo.svg" type="image/svg+xml">
-<style>
-  :root{
-    --orange:#f27c17; --orange2:#f7962b; --teal:#17a398; --teal2:#26c3a6;
-    --ink:#1c1a17; --muted:#6b6a66; --cream:#faf9f5; --line:#e7e4dc;
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.55}
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-
-  header{position:sticky;top:0;z-index:20;background:rgba(250,249,245,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-  .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;max-width:1120px;margin:0 auto}
-  .brand{display:flex;align-items:center;gap:12px}
-  .brand img{height:38px;width:auto;display:block}
-  .brand b{font-weight:800;letter-spacing:.02em;font-size:18px}
-  .brand span{color:var(--orange);font-weight:800}
-  .langs{display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px}
-  .langs button{border:0;background:transparent;font:inherit;font-weight:700;font-size:13px;color:var(--muted);padding:6px 12px;border-radius:999px;cursor:pointer;transition:.2s}
-  .langs button.active{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff}
-
-  .hero{text-align:center;padding:72px 24px 34px}
-  .hero .mark{height:96px;margin:0 auto 22px;display:block}
-  .hero h1{font-size:clamp(30px,5vw,52px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
-  .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--orange),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .hero p{max-width:620px;margin:16px auto 0;color:var(--muted);font-size:clamp(15px,2.2vw,18px)}
-
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;padding:22px 0 8px}
-  .card{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;transition:transform .25s ease,box-shadow .25s ease}
-  .card:hover{transform:translateY(-6px);box-shadow:0 22px 50px -24px rgba(0,0,0,.28)}
-  .thumb{height:172px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  .thumb .n{position:absolute;top:12px;left:14px;font-size:12px;font-weight:800;letter-spacing:.14em;opacity:.9}
-  .thumb .glass{font-weight:800;font-size:22px;letter-spacing:.02em}
-  .d1 .thumb{background:radial-gradient(120% 120% at 30% 20%,#fff,#f0eee6)}
-  .d1 .thumb .glass{color:#2e2c26}
-  .d2 .thumb{background:radial-gradient(120% 120% at 70% 18%,#fffdf8,#f2ead9)}
-  .d2 .thumb .glass{color:#b0862f;font-family:Georgia,'Times New Roman',serif;font-style:italic}
-  .d3 .thumb{background:#fff;border-bottom:1px solid var(--ink)}
-  .d3 .thumb .glass{color:#111;text-transform:uppercase;font-size:26px;letter-spacing:-.01em}
-  .d4 .thumb{background:linear-gradient(135deg,var(--teal2),var(--orange2))}
-  .d4 .thumb .glass{color:#fff}
-  .d5 .thumb{background:linear-gradient(180deg,#f6f9f9,#eaf3f2)}
-  .d5 .thumb .glass{color:#0f8f7e}
-  .d6 .thumb{background:linear-gradient(180deg,#fffdf7,#fff0dc)}
-  .d6 .thumb .glass{color:#f27c17}
-  .d7 .thumb{background:radial-gradient(120% 120% at 50% 0%,#1b2138,#0b0e1a)}
-  .d7 .thumb .glass{color:#ffb020;text-shadow:0 0 18px rgba(255,176,32,.55)}
-  .d8 .thumb{background:#f7f3e8}
-  .d8 .thumb .glass{color:#e8402a;font-family:Georgia,'Times New Roman',serif}
-  .d9 .thumb{background:#0e3b2e}
-  .d9 .thumb .glass{color:#c87941;font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:26px}
-  .d10 .thumb{background:#fff;border-bottom:3px solid #000}
-  .d10 .thumb .glass{color:#000;text-transform:uppercase;font-size:27px;letter-spacing:-.03em}
-  .d10 .thumb .glass i{color:#ff5a00;font-style:normal}
-  .d11 .thumb{background:linear-gradient(140deg,#f4f0fa,#e3daf6)}
-  .d11 .thumb .glass{color:#7c4def}
-  .card .body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
-  .card .kicker{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange)}
-  .card h3{font-size:19px;font-weight:800}
-  .card p{color:var(--muted);font-size:14.5px;flex:1}
-  .quirk{display:inline-flex;align-self:flex-start;gap:7px;align-items:center;background:#f4f2ec;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700;color:#4a4844}
-  .quirk b{color:var(--teal)}
-  .card .open{margin-top:8px;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:14px;color:#fff;background:linear-gradient(135deg,var(--orange),var(--orange2));padding:10px 16px;border-radius:999px}
-  .card .open svg{width:15px;height:15px}
-
-  .note{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin:26px 0 60px;color:var(--muted);font-size:14px}
-  .note a{color:var(--teal);font-weight:700}
-  footer{border-top:1px solid var(--line);padding:26px 24px;text-align:center;color:var(--muted);font-size:13px}
-  footer img{height:26px;vertical-align:middle;margin-right:8px}
-</style>
+<script src="vendor/dc-runtime.js"></script>
 </head>
 <body>
-<header>
-  <div class="bar">
-    <div class="brand">
-      <img src="images/logo.svg" alt="Master Optik">
-      <b>MASTER <span>OPTİK</span></b>
-    </div>
-    <div class="langs" role="group" aria-label="Language">
-      <button data-lang="az" class="active">AZ</button>
-      <button data-lang="ru">RU</button>
-      <button data-lang="en">EN</button>
-    </div>
-  </div>
-</header>
-
-<main>
-  <section class="hero">
-    <img class="mark" src="images/logo.svg" alt="Master Optik">
-    <h1 data-i18n="title">On bir <em>dizayn istiqaməti</em></h1>
-    <p data-i18n="sub">Master Optik saytının on bir fərqli dizaynı. Sonuncu altısında mağazanın öz şəkilləri istifadə olunub.</p>
-  </section>
-
-  <div class="wrap">
-    <div class="grid">
-      <a class="card d6" href="d6/">
-        <div class="thumb"><span class="n">01</span><span class="glass">mc — vitrin</span></div>
-        <div class="body"><span class="kicker" data-i18n="k6">İstiqamət 01</span><h3 data-i18n="t6">Vitrin / 4 səhifə</h3><p data-i18n="p6">Dörd səhifəli tam sayt. Yumşaq künclər, narıncı və teal. Vitrin lövhələri: rəf şəkli taxılmış şəklə keçir.</p><span class="quirk"><b data-i18n="q6l">Funksiya</b> <span data-i18n="q6">dioptri sürgüsü + vitrin keçidi</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-      </a>
-      <a class="card d7" href="d7/">
-        <div class="thumb"><span class="n">02</span><span class="glass">mc — neon</span></div>
-        <div class="body"><span class="kicker" data-i18n="k7">İstiqamət 02</span><h3 data-i18n="t7">Gecə Neon</h3><p data-i18n="p7">Gecə indiqosu və kəhrəba. Premium, günəş eynəyi enerjisi, gecə Bakısı.</p><span class="quirk"><b data-i18n="q7l">Funksiya</b> <span data-i18n="q7">linza sürgüsü bütün səhifəni tündləşdirir</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-      </a>
-      <a class="card d8" href="d8/">
-        <div class="thumb"><span class="n">03</span><span class="glass">mc — kağız</span></div>
-        <div class="body"><span class="kicker" data-i18n="k8">İstiqamət 03</span><h3 data-i18n="t8">Riso Kağız</h3><p data-i18n="p8">Çap üslubu: kağız fon, qırmızı və mavi mürəkkəb, serif başlıqlar, qalın xətlər.</p><span class="quirk"><b data-i18n="q8l">Funksiya</b> <span data-i18n="q8">siyahı şəklində xidmətlər, təbii rəngli şəkillər</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-      </a>
-      <a class="card d9" href="d9/">
-        <div class="thumb"><span class="n">04</span><span class="glass">mc — zümrüd</span></div>
-        <div class="body"><span class="kicker" data-i18n="k9">İstiqamət 04</span><h3 data-i18n="t9">Zümrüd</h3><p data-i18n="p9">Zümrüd yaşıl, sümük rəngi və mis. Sakit, bahalı, optika salonu hissi.</p><span class="quirk"><b data-i18n="q9l">Funksiya</b> <span data-i18n="q9">üz formasına görə vitrin filtri</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-      </a>
-      <a class="card d10" href="d10/">
-        <div class="thumb"><span class="n">05</span><span class="glass">MC — <i>brutal</i></span></div>
-        <div class="body"><span class="kicker" data-i18n="k10">İstiqamət 05</span><h3 data-i18n="t10">Brutal Narıncı</h3><p data-i18n="p10">Ağ fon, qalın qara xətlər, iri narıncı. Sərt, birbaşa, yadda qalan.</p><span class="quirk"><b data-i18n="q10l">Funksiya</b> <span data-i18n="q10">canlı saat: indi açıqdır / bağlıdır</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-      </a>
-      <a class="card d11" href="d11/">
-        <div class="thumb"><span class="n">06</span><span class="glass">mc — pastel</span></div>
-        <div class="body"><span class="kicker" data-i18n="k11">İstiqamət 06</span><h3 data-i18n="t11">Pastel Lilac</h3><p data-i18n="p11">Lilac, bənövşəyi və nanə. Yumşaq, müasir, gənc auditoriya üçün.</p><span class="quirk"><b data-i18n="q11l">Funksiya</b> <span data-i18n="q11">eynəksiz / eynəklə bölünmüş şəkil</span></span><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-      </a>
-    <a class="card d1" href="d1/">
-        <div class="thumb"><span class="n">07</span><span class="glass">mc — minimal</span></div>
-        <div class="body"><span class="kicker" data-i18n="k1">İstiqamət 07</span><h3 data-i18n="t1">Warm Boutique Minimal</h3><p data-i18n="p1">Açıq, səliqəli, premium butik hissi. Krem fon, çoxlu boş sahə, incə vurğular.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-      </a>
-      <a class="card d2" href="d2/">
-        <div class="thumb"><span class="n">08</span><span class="glass">mc — luxe</span></div>
-        <div class="body"><span class="kicker" data-i18n="k2">İstiqamət 08</span><h3 data-i18n="t2">Elegant Serif Luxe</h3><p data-i18n="p2">İşıqlı, zərif butik. Serif başlıqlar, çempen/qızılı və teal vurğular, premium hiss.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-      </a>
-      <a class="card d3" href="d3/">
-        <div class="thumb"><span class="n">09</span><span class="glass">MC — editorial</span></div>
-        <div class="body"><span class="kicker" data-i18n="k3">İstiqamət 09</span><h3 data-i18n="t3">Bold Editorial / Swiss</h3><p data-i18n="p3">Yüksək kontrast, iri tipografiya, jurnal üslubu. Cəsarətli və art-direct.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-      </a>
-      <a class="card d4" href="d4/">
-        <div class="thumb"><span class="n">10</span><span class="glass">mc — vibrant</span></div>
-        <div class="body"><span class="kicker" data-i18n="k4">İstiqamət 10</span><h3 data-i18n="t4">Vibrant Gradient / Friendly</h3><p data-i18n="p4">Enerjili qradiyentlər, yumşaq formalar, dost və müasir pərakəndə hissi.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-      </a>
-      <a class="card d5" href="d5/">
-        <div class="thumb"><span class="n">11</span><span class="glass">mc — clinic</span></div>
-        <div class="body"><span class="kicker" data-i18n="k5">İstiqamət 11</span><h3 data-i18n="t5">Clinical Trust / Optometry</h3><p data-i18n="p5">Təmiz, peşəkar, etibarlı — müasir optometriya klinikası hissi.</p><span class="open" data-i18n="open">Bax<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-      </a>
-    </div>
-  </div>
-</main>
-
-<footer>
-  <img src="images/logo.svg" alt="Master Optik">
-  <span>© 2026 Master Optik · <span data-i18n="rights">Bütün hüquqlar qorunur</span></span>
-  <span style="display:block;margin-top:10px;font-size:12.5px">
-    <a href="admin/" style="color:var(--teal);font-weight:700">İdarə paneli / CRM</a>
-  </span>
-</footer>
-
-<script>
-const I18N = {
-  az:{title:'On bir <em>dizayn istiqaməti</em>',sub:'Master Optik saytının on bir fərqli dizaynı. Sonuncu altısında mağazanın öz şəkilləri istifadə olunub.',
-    k1:'İstiqamət 07',k2:'İstiqamət 08',k3:'İstiqamət 09',k4:'İstiqamət 10',k5:'İstiqamət 11',
-    k6:'İstiqamət 01',k7:'İstiqamət 02',k8:'İstiqamət 03',k9:'İstiqamət 04',k10:'İstiqamət 05',k11:'İstiqamət 06',
-    t1:'Warm Boutique Minimal',t2:'Elegant Serif Luxe',t3:'Bold Editorial / Swiss',t4:'Vibrant Gradient / Friendly',t5:'Clinical Trust / Optometry',
-    t6:'Vitrin / 4 səhifə',t7:'Gecə Neon',t8:'Riso Kağız',t9:'Zümrüd',t10:'Brutal Narıncı',t11:'Pastel Lilac',
-    p1:'Açıq, səliqəli, premium butik hissi. Krem fon, çoxlu boş sahə, incə vurğular.',
-    p2:'İşıqlı, zərif butik. Serif başlıqlar, çempen/qızılı və teal vurğular, premium hiss.',
-    p3:'Yüksək kontrast, iri tipografiya, jurnal üslubu. Cəsarətli və art-direct.',
-    p4:'Enerjili qradiyentlər, yumşaq formalar, dost və müasir pərakəndə hissi.',
-    p5:'Təmiz, peşəkar, etibarlı — müasir optometriya klinikası hissi.',
-    p6:'Dörd səhifəli tam sayt. Yumşaq künclər, narıncı və teal. Vitrin lövhələri: rəf şəkli taxılmış şəklə keçir.',
-    p7:'Gecə indiqosu və kəhrəba. Premium, günəş eynəyi enerjisi, gecə Bakısı.',
-    p8:'Çap üslubu: kağız fon, qırmızı və mavi mürəkkəb, serif başlıqlar, qalın xətlər.',
-    p9:'Zümrüd yaşıl, sümük rəngi və mis. Sakit, bahalı, optika salonu hissi.',
-    p10:'Ağ fon, qalın qara xətlər, iri narıncı. Sərt, birbaşa, yadda qalan.',
-    p11:'Lilac, bənövşəyi və nanə. Yumşaq, müasir, gənc auditoriya üçün.',
-    q6l:'Funksiya',q7l:'Funksiya',q8l:'Funksiya',q9l:'Funksiya',q10l:'Funksiya',q11l:'Funksiya',
-    q6:'dioptri sürgüsü + vitrin keçidi',q7:'linza sürgüsü bütün səhifəni tündləşdirir',q8:'siyahı şəklində xidmətlər, təbii rəngli şəkillər',
-    q9:'üz formasına görə vitrin filtri',q10:'canlı saat: indi açıqdır / bağlıdır',q11:'eynəksiz / eynəklə bölünmüş şəkil',
-    open:'Bax',rights:'Bütün hüquqlar qorunur'},
-
-  ru:{title:'Одиннадцать <em>дизайн-направлений</em>',sub:'Одиннадцать разных дизайнов сайта Master Optik. В последних шести — настоящие фото магазина.',
-    k1:'Направление 07',k2:'Направление 08',k3:'Направление 09',k4:'Направление 10',k5:'Направление 11',
-    k6:'Направление 01',k7:'Направление 02',k8:'Направление 03',k9:'Направление 04',k10:'Направление 05',k11:'Направление 06',
-    t1:'Warm Boutique Minimal',t2:'Elegant Serif Luxe',t3:'Bold Editorial / Swiss',t4:'Vibrant Gradient / Friendly',t5:'Clinical Trust / Optometry',
-    t6:'Витрина / 4 страницы',t7:'Ночной неон',t8:'Ризо-бумага',t9:'Изумруд',t10:'Брутальный оранжевый',t11:'Пастельный лиловый',
-    p1:'Светлый, аккуратный, премиум-бутик. Кремовый фон, много воздуха, тонкие акценты.',
-    p2:'Светлый, изысканный бутик. Серифные заголовки, шампань/золото и teal, премиум.',
-    p3:'Высокий контраст, крупная типографика, журнальный стиль. Смело и арт-дирекшн.',
-    p4:'Энергичные градиенты, мягкие формы, дружелюбный современный ритейл.',
-    p5:'Чисто, профессионально, надёжно — современная клиника оптометрии.',
-    p6:'Полный сайт из четырёх страниц. Мягкие углы, оранжевый и teal. Плитки витрины: фото полки сменяется фото на лице.',
-    p7:'Ночное индиго и янтарь. Премиум, энергия солнцезащитных очков, ночное Баку.',
-    p8:'Печатный стиль: бумажный фон, красная и синяя краска, серифные заголовки, жирные линии.',
-    p9:'Изумрудный, костяной и медь. Спокойно, дорого, ощущение салона оптики.',
-    p10:'Белый фон, толстые чёрные линии, крупный оранжевый. Резко, прямо, запоминается.',
-    p11:'Лиловый, фиолетовый и мята. Мягко, современно, для молодой аудитории.',
-    q6l:'Функция',q7l:'Функция',q8l:'Функция',q9l:'Функция',q10l:'Функция',q11l:'Функция',
-    q6:'ползунок диоптрий + смена фото витрины',q7:'ползунок линзы затемняет всю страницу',q8:'услуги списком, фото в естественном цвете',
-    q9:'фильтр витрины по форме лица',q10:'живые часы: сейчас открыто / закрыто',q11:'фото со сдвигом: без очков / в очках',
-    open:'Открыть',rights:'Все права защищены'},
-
-  en:{title:'Eleven <em>design directions</em>',sub:'Eleven distinct designs for the Master Optik site. The last six use the shop\u2019s own photos.',
-    k1:'Direction 07',k2:'Direction 08',k3:'Direction 09',k4:'Direction 10',k5:'Direction 11',
-    k6:'Direction 01',k7:'Direction 02',k8:'Direction 03',k9:'Direction 04',k10:'Direction 05',k11:'Direction 06',
-    t1:'Warm Boutique Minimal',t2:'Elegant Serif Luxe',t3:'Bold Editorial / Swiss',t4:'Vibrant Gradient / Friendly',t5:'Clinical Trust / Optometry',
-    t6:'Storefront / 4 pages',t7:'Night Neon',t8:'Riso Paper',t9:'Emerald',t10:'Brutal Orange',t11:'Pastel Lilac',
-    p1:'Light, tidy, premium-boutique feel. Cream background, lots of whitespace, subtle accents.',
-    p2:'Light, refined boutique. Serif headings, champagne/gold and teal accents, premium feel.',
-    p3:'High-contrast, big typography, magazine style. Bold and art-directed.',
-    p4:'Energetic gradients, soft shapes, friendly modern retail vibe.',
-    p5:'Clean, professional, trustworthy — a modern optometry clinic.',
-    p6:'A full four-page site. Soft corners, orange and teal. Storefront tiles swap the shelf photo for the worn one.',
-    p7:'Night indigo and amber. Premium, sunglasses-first energy, night-time Baku.',
-    p8:'Print-led: paper stock, red and blue ink, serif headings, heavy rules.',
-    p9:'Emerald, bone and copper. Quiet, expensive, optical-salon feel.',
-    p10:'White ground, thick black rules, big orange. Blunt, direct, memorable.',
-    p11:'Lilac, violet and mint. Soft, modern, aimed at a younger audience.',
-    q6l:'Feature',q7l:'Feature',q8l:'Feature',q9l:'Feature',q10l:'Feature',q11l:'Feature',
-    q6:'diopter slider + storefront hover swap',q7:'lens slider darkens the whole page',q8:'services as a list, photos in true colour',
-    q9:'storefront filter by face shape',q10:'live clock: open now / closed',q11:'split photo: without glasses / with',
-    open:'Open',rights:'All rights reserved'}
-};
-function setLang(l){
-  const d=I18N[l]||I18N.az;
-  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(d[k]!=null)el.innerHTML=d[k];});
-  document.documentElement.lang=l;
-  document.querySelectorAll('.langs button').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));
-  try{localStorage.setItem('mo_lang',l);}catch(e){}
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Master Optik — Eynək satışı, təmiri və sifarişi | Bakı</title>
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/nunito-cyrillic-ext.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
-document.querySelectorAll('.langs button').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
-let init='az';try{const s=localStorage.getItem('mo_lang');if(s&&I18N[s])init=s;}catch(e){}
-setLang(init);
+/* cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/nunito-cyrillic.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/nunito-vietnamese.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/nunito-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/nunito-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/nunito-cyrillic-ext.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/nunito-cyrillic.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/nunito-vietnamese.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/nunito-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/nunito-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/nunito-cyrillic-ext.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/nunito-cyrillic.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/nunito-vietnamese.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/nunito-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/nunito-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("fonts/nunito-cyrillic-ext.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("fonts/nunito-cyrillic.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("fonts/nunito-vietnamese.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("fonts/nunito-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("fonts/nunito-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("fonts/nunito-cyrillic-ext.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("fonts/nunito-cyrillic.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("fonts/nunito-vietnamese.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("fonts/nunito-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("fonts/nunito-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#FFFDF7;color:#101617;-webkit-font-smoothing:antialiased}
+  a{color:#101617;text-decoration:none}
+  a:hover{color:#F5851F}
+  #callbar{display:flex}
+  @media(min-width:900px){#callbar{display:none!important}}
+  input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;cursor:grab}
+  input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:99px;background:#FFE2BF}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#F5851F;border:4px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.18);margin-top:-11px}
+  @keyframes pageIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  @keyframes riseIn{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+<div style="font-family:Nunito,'Helvetica Neue',Arial,sans-serif">
+
+  <nav style="position:sticky;top:0;z-index:40;background:rgba(255,253,247,0.92);backdrop-filter:blur(10px);border-bottom:1px solid #F0E7D6">
+    <div style="max-width:1200px;margin:0 auto;padding:14px clamp(18px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+      <a href="#/" sc-camel-on-click="{{ goHome }}" style="font-weight:900;font-size:20px;letter-spacing:-0.01em">Master <span style="color:#F5851F">Optik</span></a>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end;flex:1">
+        <a href="#/" ref="{{ navHome }}" sc-camel-on-click="{{ goHome }}" style="border-radius:999px;padding:10px 14px;font-size:13.5px;font-weight:700;white-space:nowrap;transition:background 160ms,color 160ms">Ana səhifə</a>
+        <a href="#/xidmetler" ref="{{ navServices }}" sc-camel-on-click="{{ goServices }}" style="border-radius:999px;padding:10px 14px;font-size:13.5px;font-weight:700;white-space:nowrap;transition:background 160ms,color 160ms">Xidmətlər</a>
+        <a href="#/qalereya" ref="{{ navGallery }}" sc-camel-on-click="{{ goGallery }}" style="border-radius:999px;padding:10px 14px;font-size:13.5px;font-weight:700;white-space:nowrap;transition:background 160ms,color 160ms">Qalereya</a>
+        <a href="#/elaqe" ref="{{ navContact }}" sc-camel-on-click="{{ goContact }}" style="border-radius:999px;padding:10px 14px;font-size:13.5px;font-weight:700;white-space:nowrap;transition:background 160ms,color 160ms">Əlaqə</a>
+        <a href="tel:+994777451905" style="background:#101617;color:#fff;border-radius:999px;padding:10px 16px;font-size:13.5px;font-weight:800;white-space:nowrap" style-hover="background:#F5851F">+994 77 745 19 05</a>
+      </div>
+    </div>
+  </nav>
+
+  <main style="max-width:1200px;margin:0 auto;padding:clamp(20px,3vw,34px) clamp(18px,4vw,40px) 140px">
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div style="animation:pageIn 340ms cubic-bezier(.2,.7,.2,1) both">
+        <div style="background:#FFF8ED;border-radius:44px;padding:clamp(26px,4vw,52px) clamp(20px,4vw,48px) clamp(24px,3vw,40px);text-align:center">
+          <span style="display:inline-block;background:#17A398;color:#fff;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:800">Sürgüyü çəkin — linza fərqini görün</span>
+          <div ref="{{ heroRef }}" style="filter:blur(0px);transition:filter 120ms linear;margin-top:clamp(22px,3vw,34px)">
+            <div style="font-size:clamp(52px,10vw,124px);line-height:0.9;font-weight:900;letter-spacing:-0.045em">EYNƏK</div>
+            <div style="font-size:clamp(30px,5.6vw,68px);line-height:1;font-weight:900;letter-spacing:-0.03em;margin-top:10px;color:#17A398">AYDIN GÖRÜŞ</div>
+            <div style="font-size:clamp(19px,3.2vw,38px);line-height:1.05;font-weight:800;margin-top:14px">SATIŞ · TƏMİR · SİFARİŞ</div>
+            <div style="font-size:clamp(13px,1.8vw,22px);line-height:1.15;font-weight:700;letter-spacing:0.08em;margin-top:14px;color:#F5851F">FAİQ YUSİFOV KÜÇ. 73</div>
+            <div style="font-size:clamp(10px,1.2vw,14px);line-height:1.2;font-weight:700;letter-spacing:0.18em;margin-top:12px;color:#7A8281">HƏR NÖV EYNƏYİN TƏK ÜNVANI · BAKI</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;max-width:520px;margin:clamp(26px,3vw,38px) auto 0">
+            <span style="font-size:13px;font-weight:800;color:#7A8281;white-space:nowrap">DİOPTRİ</span>
+            <input type="range" min="0" max="10" step="0.1" sc-camel-default-value="4.2" sc-camel-on-input="{{ onDiopter }}" sc-camel-on-change="{{ onDiopter }}" style="flex:1;height:30px">
+            <span ref="{{ labelRef }}" style="font-size:15px;font-weight:900;min-width:62px;text-align:right">−4.20</span>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(16px,2vw,24px);align-items:center;margin-top:clamp(24px,3vw,40px)">
+          <div>
+            <h1 style="margin:0;font-size:clamp(30px,4.4vw,52px);line-height:1.06;font-weight:900;letter-spacing:-0.03em">Eynək seçmək<br>asan olsun.</h1>
+            <p style="margin:18px 0 0;max-width:46ch;font-size:18px;line-height:1.65;color:#3F4747">Satış, təmir və fərdi sifariş. Gəlin, rahat-rahat seçin — hansı çərçivənin sizə yaraşdığını yerində göstərək.</p>
+            <div style="display:flex;gap:12px;margin-top:26px;flex-wrap:wrap">
+              <a href="tel:+994777451905" style="background:#F5851F;color:#fff;border-radius:999px;padding:17px 30px;font-size:16px;font-weight:800;white-space:nowrap" style-hover="background:#101617">Zəng edin</a>
+              <a href="https://wa.me/994777451905" style="background:#fff;border:2px solid #17A398;color:#17A398;border-radius:999px;padding:15px 28px;font-size:16px;font-weight:800;white-space:nowrap" style-hover="background:#17A398;color:#fff">WhatsApp yazın</a>
+            </div>
+          </div>
+          <div style="position:relative;aspect-ratio:4/3;border-radius:36px;overflow:hidden;background:#FFF0DC">
+            <img src="images/hero.jpg" alt="Master Optik mağazası" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+          </div>
+        </div>
+
+        <div style="margin-top:clamp(44px,5vw,72px)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px">
+            <h2 style="margin:0;font-size:clamp(24px,3.4vw,38px);font-weight:900;letter-spacing:-0.02em">Vitrinimiz</h2>
+            <span style="font-size:14px;font-weight:700;color:#7A8281">Üzərinə gəlin — taxılmış halını görün</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(10px,1.4vw,16px);margin-top:20px">
+
+            <div sc-camel-on-click="{{ tapSwap }}" style="position:relative;aspect-ratio:4/5;border-radius:30px;overflow:hidden;background:#EFE7DA;cursor:pointer">
+              <img src="images/02.jpg" alt="Optik çərçivə taxılmış halda" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+              <img src="images/07.jpg" alt="Optik çərçivələr vitrini" data-swap="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 320ms ease" style-hover="opacity:0">
+              <div style="position:absolute;left:0;right:0;bottom:0;padding:44px 18px 16px;background:linear-gradient(to top,rgba(16,22,23,.82),rgba(16,22,23,0));pointer-events:none">
+                <div style="color:#fff;font-size:19px;font-weight:800">Optik çərçivələr</div>
+                <div style="color:#F5851F;font-size:13px;font-weight:800;margin-top:2px">Metal · asetat · titan</div>
+              </div>
+            </div>
+
+            <div sc-camel-on-click="{{ tapSwap }}" style="position:relative;aspect-ratio:4/5;border-radius:30px;overflow:hidden;background:#EFE7DA;cursor:pointer">
+              <img src="images/03.jpg" alt="Günəş eynəyi taxılmış halda" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+              <img src="images/01.jpg" alt="Günəş eynəkləri vitrini" data-swap="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 320ms ease" style-hover="opacity:0">
+              <div style="position:absolute;left:0;right:0;bottom:0;padding:44px 18px 16px;background:linear-gradient(to top,rgba(16,22,23,.82),rgba(16,22,23,0));pointer-events:none">
+                <div style="color:#fff;font-size:19px;font-weight:800">Günəş eynəkləri</div>
+                <div style="color:#F5851F;font-size:13px;font-weight:800;margin-top:2px">UV qorumalı</div>
+              </div>
+            </div>
+
+            <div sc-camel-on-click="{{ tapSwap }}" style="position:relative;aspect-ratio:4/5;border-radius:30px;overflow:hidden;background:#EFE7DA;cursor:pointer">
+              <img src="images/06.jpg" alt="Uşaq eynəyi taxılmış halda" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+              <img src="images/09.jpg" alt="Brend divarı" data-swap="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 320ms ease" style-hover="opacity:0">
+              <div style="position:absolute;left:0;right:0;bottom:0;padding:44px 18px 16px;background:linear-gradient(to top,rgba(16,22,23,.82),rgba(16,22,23,0));pointer-events:none">
+                <div style="color:#fff;font-size:19px;font-weight:800">Uşaq eynəkləri</div>
+                <div style="color:#17A398;font-size:13px;font-weight:800;margin-top:2px">Yumşaq, davamlı çərçivələr</div>
+              </div>
+            </div>
+
+            <div sc-camel-on-click="{{ tapSwap }}" style="position:relative;aspect-ratio:4/5;border-radius:30px;overflow:hidden;background:#EFE7DA;cursor:pointer">
+              <img src="images/05.jpg" alt="Linza emalı" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+              <img src="images/04.jpg" alt="Eynək təmiri" data-swap="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 320ms ease" style-hover="opacity:0">
+              <div style="position:absolute;left:0;right:0;bottom:0;padding:44px 18px 16px;background:linear-gradient(to top,rgba(16,22,23,.82),rgba(16,22,23,0));pointer-events:none">
+                <div style="color:#fff;font-size:19px;font-weight:800">Təmir və linza</div>
+                <div style="color:#F5851F;font-size:13px;font-weight:800;margin-top:2px">Çox hallarda eyni gün</div>
+              </div>
+            </div>
+
+            <div sc-camel-on-click="{{ tapSwap }}" style="position:relative;aspect-ratio:4/5;border-radius:30px;overflow:hidden;background:#EFE7DA;cursor:pointer">
+              <img src="images/08.jpg" alt="Mağazada ölçü seçimi" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+              <img src="images/reel1.jpg" alt="Mağaza rəfləri" data-swap="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 320ms ease" style-hover="opacity:0">
+              <div style="position:absolute;left:0;right:0;bottom:0;padding:44px 18px 16px;background:linear-gradient(to top,rgba(16,22,23,.82),rgba(16,22,23,0));pointer-events:none">
+                <div style="color:#fff;font-size:19px;font-weight:800">Mağazada seçim</div>
+                <div style="color:#17A398;font-size:13px;font-weight:800;margin-top:2px">Ustamız yerində tənzimləyir</div>
+              </div>
+            </div>
+
+            <div sc-camel-on-click="{{ tapSwap }}" style="position:relative;aspect-ratio:4/5;border-radius:30px;overflow:hidden;background:#EFE7DA;cursor:pointer">
+              <img src="images/about.jpg" alt="Sifarişin təhvili" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+              <img src="images/mekan.jpg" alt="Mağazanın girişi" data-swap="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 320ms ease" style-hover="opacity:0">
+              <div style="position:absolute;left:0;right:0;bottom:0;padding:44px 18px 16px;background:linear-gradient(to top,rgba(16,22,23,.82),rgba(16,22,23,0));pointer-events:none">
+                <div style="color:#fff;font-size:19px;font-weight:800">Fərdi sifariş</div>
+                <div style="color:#F5851F;font-size:13px;font-weight:800;margin-top:2px">Mağazada yoxdursa — gətiririk</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div style="margin-top:clamp(40px,5vw,64px);background:#FFF8ED;border-radius:36px;padding:26px clamp(20px,3vw,34px)">
+          <div style="font-size:13px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:#B39B7C">Rəflərimizdəki brendlər</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px 12px;margin-top:16px">
+            <span style="background:#fff;border-radius:999px;padding:10px 20px;font-size:15px;font-weight:800">Ray-Ban</span>
+            <span style="background:#fff;border-radius:999px;padding:10px 20px;font-size:15px;font-weight:800">Gucci</span>
+            <span style="background:#fff;border-radius:999px;padding:10px 20px;font-size:15px;font-weight:800">Chanel</span>
+            <span style="background:#fff;border-radius:999px;padding:10px 20px;font-size:15px;font-weight:800">Carrera</span>
+            <span style="background:#fff;border-radius:999px;padding:10px 20px;font-size:15px;font-weight:800">Lacoste</span>
+            <span style="background:#fff;border-radius:999px;padding:10px 20px;font-size:15px;font-weight:800">Montblanc</span>
+            <span style="background:#fff;border-radius:999px;padding:10px 20px;font-size:15px;font-weight:800">Tara Pro</span>
+            <span style="background:#fff;border-radius:999px;padding:10px 20px;font-size:15px;font-weight:800">Rosso</span>
+          </div>
+          <p style="margin:16px 0 0;font-size:15px;line-height:1.6;color:#5A6262">Siyahı mağazadakı rəflərdən götürülüb — dəyişməli brend varsa deyin.</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:clamp(40px,5vw,64px)">
+          <a href="#/xidmetler" sc-camel-on-click="{{ goServices }}" style="background:#FFF3E4;border-radius:32px;padding:28px 26px 30px;transition:transform 180ms" style-hover="transform:translateY(-4px)">
+            <div style="width:52px;height:52px;border-radius:16px;background:#F5851F;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:22px">6</div>
+            <h3 style="margin:18px 0 8px;font-size:22px;font-weight:800">Xidmətlər</h3>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:#4A5252">Satış, linza, təmir, fərdi sifariş — altı iş bir ünvanda.</p>
+          </a>
+          <a href="#/qalereya" sc-camel-on-click="{{ goGallery }}" style="background:#E6F6F4;border-radius:32px;padding:28px 26px 30px;transition:transform 180ms" style-hover="transform:translateY(-4px)">
+            <div style="width:52px;height:52px;border-radius:16px;background:#17A398;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:22px">9</div>
+            <h3 style="margin:18px 0 8px;font-size:22px;font-weight:800">Qalereya</h3>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:#4A5252">Mağazadan və işlərimizdən şəkillər.</p>
+          </a>
+          <a href="#/elaqe" sc-camel-on-click="{{ goContact }}" style="background:#101617;color:#fff;border-radius:32px;padding:28px 26px 30px;transition:transform 180ms" style-hover="transform:translateY(-4px)">
+            <div style="width:52px;height:52px;border-radius:16px;background:#F5851F;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:22px">→</div>
+            <h3 style="margin:18px 0 8px;font-size:22px;font-weight:800">Ünvan və saatlar</h3>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:#9BA3A3">Faiq Yusifov küç. 73, N.Nərimanov, Bakı.</p>
+          </a>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isServices }}">
+      <div style="animation:pageIn 340ms cubic-bezier(.2,.7,.2,1) both">
+        <h1 style="margin:0 0 8px;font-size:clamp(30px,4.6vw,54px);font-weight:900;letter-spacing:-0.025em">Nə edirik?</h1>
+        <p style="margin:0 0 30px;font-size:18px;color:#5A6262">Altı iş — hamısı bir ünvanda.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px">
+          <div style="background:#FFF3E4;border-radius:32px;padding:28px 26px 32px;animation:riseIn 400ms 40ms cubic-bezier(.2,.7,.2,1) both;transition:transform 180ms" style-hover="transform:translateY(-4px)">
+            <div style="width:52px;height:52px;border-radius:16px;background:#F5851F;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px">1</div>
+            <h3 style="margin:18px 0 8px;font-size:22px;font-weight:800">Günəş eynəkləri</h3>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:#4A5252">UV qorumalı modellər, brend və büdcə variantları. Yerində sınayıb seçin.</p>
+          </div>
+          <div style="background:#E6F6F4;border-radius:32px;padding:28px 26px 32px;animation:riseIn 400ms 90ms cubic-bezier(.2,.7,.2,1) both;transition:transform 180ms" style-hover="transform:translateY(-4px)">
+            <div style="width:52px;height:52px;border-radius:16px;background:#17A398;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px">2</div>
+            <h3 style="margin:18px 0 8px;font-size:22px;font-weight:800">Optik çərçivələr</h3>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:#4A5252">Metal, asetat və titan çərçivələr. Üz formanıza uyğun ölçü seçirik.</p>
+          </div>
+          <div style="background:#FFF3E4;border-radius:32px;padding:28px 26px 32px;animation:riseIn 400ms 140ms cubic-bezier(.2,.7,.2,1) both;transition:transform 180ms" style-hover="transform:translateY(-4px)">
+            <div style="width:52px;height:52px;border-radius:16px;background:#F5851F;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px">3</div>
+            <h3 style="margin:18px 0 8px;font-size:22px;font-weight:800">Linzalar</h3>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:#4A5252">Antirefleks, blue-cut, fotoxrom və proqressiv linzalar reseptə uyğun hazırlanır.</p>
+          </div>
+          <div style="background:#E6F6F4;border-radius:32px;padding:28px 26px 32px;animation:riseIn 400ms 190ms cubic-bezier(.2,.7,.2,1) both;transition:transform 180ms" style-hover="transform:translateY(-4px)">
+            <div style="width:52px;height:52px;border-radius:16px;background:#17A398;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px">4</div>
+            <h3 style="margin:18px 0 8px;font-size:22px;font-weight:800">Təmir</h3>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:#4A5252">Qırılmış çərçivə, vint, menteşə və burun yastıqcalarının bərpası — çox hallarda eyni gün.</p>
+          </div>
+          <div style="background:#FFF3E4;border-radius:32px;padding:28px 26px 32px;animation:riseIn 400ms 240ms cubic-bezier(.2,.7,.2,1) both;transition:transform 180ms" style-hover="transform:translateY(-4px)">
+            <div style="width:52px;height:52px;border-radius:16px;background:#F5851F;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px">5</div>
+            <h3 style="margin:18px 0 8px;font-size:22px;font-weight:800">Fərdi sifariş</h3>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:#4A5252">Axtardığınız model mağazada yoxdursa, sizin üçün sifariş edirik.</p>
+          </div>
+          <div style="background:#E6F6F4;border-radius:32px;padding:28px 26px 32px;animation:riseIn 400ms 290ms cubic-bezier(.2,.7,.2,1) both;transition:transform 180ms" style-hover="transform:translateY(-4px)">
+            <div style="width:52px;height:52px;border-radius:16px;background:#17A398;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px">6</div>
+            <h3 style="margin:18px 0 8px;font-size:22px;font-weight:800">Mağazada seçim</h3>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:#4A5252">Gəlin, taxıb baxın. Ustamız ölçü və oturuşu yerində tənzimləyir.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:34px;flex-wrap:wrap;align-items:center">
+          <a href="tel:+994777451905" style="background:#F5851F;color:#fff;border-radius:999px;padding:17px 30px;font-size:16px;font-weight:800;white-space:nowrap" style-hover="background:#101617">Zəng edin</a>
+          <a href="#/qalereya" sc-camel-on-click="{{ goGallery }}" style="font-size:16px;font-weight:800;color:#17A398">Qalereyaya keç →</a>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isGallery }}">
+      <div style="animation:pageIn 340ms cubic-bezier(.2,.7,.2,1) both">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:26px">
+          <div>
+            <h1 style="margin:0 0 8px;font-size:clamp(30px,4.6vw,54px);font-weight:900;letter-spacing:-0.025em">Qalereya</h1>
+            <p style="margin:0;font-size:18px;color:#5A6262">Mağazadan, çərçivələrdən və işlərimizdən.</p>
+          </div>
+          <a href="https://www.instagram.com/master__optik" style="background:#101617;color:#fff;border-radius:999px;padding:12px 22px;font-size:15px;font-weight:800" style-hover="background:#17A398">@master__optik</a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,1.4vw,16px)">
+          <div style="position:relative;aspect-ratio:1;border-radius:26px;overflow:hidden;background:repeating-linear-gradient(120deg,#FFF0DC 0 10px,#FFF8ED 10px 20px);animation:riseIn 420ms 30ms cubic-bezier(.2,.7,.2,1) both;transition:transform 200ms" style-hover="transform:scale(1.02)"><img src="images/01.jpg" alt="mağaza vitrini" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><span style="position:absolute;left:0;right:0;bottom:0;padding:38px 14px 12px;background:linear-gradient(to top,rgba(16,22,23,.7),rgba(16,22,23,0));color:#fff;font-size:13px;font-weight:800">mağaza vitrini</span></div>
+          <div style="position:relative;aspect-ratio:1;border-radius:26px;overflow:hidden;background:repeating-linear-gradient(120deg,#DFF2EF 0 10px,#EFF9F8 10px 20px);animation:riseIn 420ms 70ms cubic-bezier(.2,.7,.2,1) both;transition:transform 200ms" style-hover="transform:scale(1.02)"><img src="images/02.jpg" alt="optik çərçivə portret" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><span style="position:absolute;left:0;right:0;bottom:0;padding:38px 14px 12px;background:linear-gradient(to top,rgba(16,22,23,.7),rgba(16,22,23,0));color:#fff;font-size:13px;font-weight:800">optik çərçivə portret</span></div>
+          <div style="position:relative;aspect-ratio:1;border-radius:26px;overflow:hidden;background:repeating-linear-gradient(120deg,#FFF0DC 0 10px,#FFF8ED 10px 20px);animation:riseIn 420ms 110ms cubic-bezier(.2,.7,.2,1) both;transition:transform 200ms" style-hover="transform:scale(1.02)"><img src="images/03.jpg" alt="günəş eynəyi" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><span style="position:absolute;left:0;right:0;bottom:0;padding:38px 14px 12px;background:linear-gradient(to top,rgba(16,22,23,.7),rgba(16,22,23,0));color:#fff;font-size:13px;font-weight:800">günəş eynəyi</span></div>
+          <div style="position:relative;aspect-ratio:1;border-radius:26px;overflow:hidden;background:repeating-linear-gradient(120deg,#DFF2EF 0 10px,#EFF9F8 10px 20px);animation:riseIn 420ms 150ms cubic-bezier(.2,.7,.2,1) both;transition:transform 200ms" style-hover="transform:scale(1.02)"><img src="images/04.jpg" alt="təmir prosesi" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><span style="position:absolute;left:0;right:0;bottom:0;padding:38px 14px 12px;background:linear-gradient(to top,rgba(16,22,23,.7),rgba(16,22,23,0));color:#fff;font-size:13px;font-weight:800">təmir prosesi</span></div>
+          <div style="position:relative;aspect-ratio:1;border-radius:26px;overflow:hidden;background:repeating-linear-gradient(120deg,#FFF0DC 0 10px,#FFF8ED 10px 20px);animation:riseIn 420ms 190ms cubic-bezier(.2,.7,.2,1) both;transition:transform 200ms" style-hover="transform:scale(1.02)"><img src="images/05.jpg" alt="linza kəsimi" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><span style="position:absolute;left:0;right:0;bottom:0;padding:38px 14px 12px;background:linear-gradient(to top,rgba(16,22,23,.7),rgba(16,22,23,0));color:#fff;font-size:13px;font-weight:800">linza kəsimi</span></div>
+          <div style="position:relative;aspect-ratio:1;border-radius:26px;overflow:hidden;background:repeating-linear-gradient(120deg,#DFF2EF 0 10px,#EFF9F8 10px 20px);animation:riseIn 420ms 230ms cubic-bezier(.2,.7,.2,1) both;transition:transform 200ms" style-hover="transform:scale(1.02)"><img src="images/06.jpg" alt="uşaq eynəyi" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><span style="position:absolute;left:0;right:0;bottom:0;padding:38px 14px 12px;background:linear-gradient(to top,rgba(16,22,23,.7),rgba(16,22,23,0));color:#fff;font-size:13px;font-weight:800">uşaq eynəyi</span></div>
+          <div style="position:relative;aspect-ratio:1;border-radius:26px;overflow:hidden;background:repeating-linear-gradient(120deg,#FFF0DC 0 10px,#FFF8ED 10px 20px);animation:riseIn 420ms 270ms cubic-bezier(.2,.7,.2,1) both;transition:transform 200ms" style-hover="transform:scale(1.02)"><img src="images/07.jpg" alt="çərçivə rəfi" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><span style="position:absolute;left:0;right:0;bottom:0;padding:38px 14px 12px;background:linear-gradient(to top,rgba(16,22,23,.7),rgba(16,22,23,0));color:#fff;font-size:13px;font-weight:800">çərçivə rəfi</span></div>
+          <div style="position:relative;aspect-ratio:1;border-radius:26px;overflow:hidden;background:repeating-linear-gradient(120deg,#DFF2EF 0 10px,#EFF9F8 10px 20px);animation:riseIn 420ms 310ms cubic-bezier(.2,.7,.2,1) both;transition:transform 200ms" style-hover="transform:scale(1.02)"><img src="images/08.jpg" alt="usta işi" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><span style="position:absolute;left:0;right:0;bottom:0;padding:38px 14px 12px;background:linear-gradient(to top,rgba(16,22,23,.7),rgba(16,22,23,0));color:#fff;font-size:13px;font-weight:800">usta işi</span></div>
+          <div style="position:relative;aspect-ratio:1;border-radius:26px;overflow:hidden;background:repeating-linear-gradient(120deg,#FFF0DC 0 10px,#FFF8ED 10px 20px);animation:riseIn 420ms 350ms cubic-bezier(.2,.7,.2,1) both;transition:transform 200ms" style-hover="transform:scale(1.02)"><img src="images/09.jpg" alt="mağaza interyeri" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><span style="position:absolute;left:0;right:0;bottom:0;padding:38px 14px 12px;background:linear-gradient(to top,rgba(16,22,23,.7),rgba(16,22,23,0));color:#fff;font-size:13px;font-weight:800">mağaza interyeri</span></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:34px;flex-wrap:wrap;align-items:center">
+          <a href="#/elaqe" sc-camel-on-click="{{ goContact }}" style="background:#17A398;color:#fff;border-radius:999px;padding:16px 28px;font-size:16px;font-weight:800" style-hover="background:#101617">Ünvan və saatlar</a>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isContact }}">
+      <div style="animation:pageIn 340ms cubic-bezier(.2,.7,.2,1) both">
+        <h1 style="margin:0 0 8px;font-size:clamp(30px,4.6vw,54px);font-weight:900;letter-spacing:-0.025em">Bizə gəlin</h1>
+        <p style="margin:0 0 30px;font-size:18px;color:#5A6262">N.Nərimanov rayonu, metrodan yaxın.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px">
+          <div style="background:#101617;color:#fff;border-radius:36px;padding:34px 30px;animation:riseIn 400ms 40ms cubic-bezier(.2,.7,.2,1) both">
+            <h2 style="margin:0 0 20px;font-size:15px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:#F5851F">Əlaqə</h2>
+            <p style="margin:0 0 4px;font-size:30px;font-weight:900"><a href="tel:+994777451905" style="color:#fff">+994 77 745 19 05</a></p>
+            <p style="margin:0 0 24px;font-size:15px;color:#9BA3A3">Zəng və WhatsApp</p>
+            <p style="margin:0;font-size:17px;line-height:1.7">Faiq Yusifov küç. 73<br>N.Nərimanov, Bakı</p>
+            <div style="display:flex;gap:10px;margin-top:24px;flex-wrap:wrap">
+              <a href="https://maps.google.com/?q=Faiq+Yusifov+73+Baku" style="background:#fff;color:#101617;border-radius:999px;padding:13px 22px;font-size:15px;font-weight:800" style-hover="background:#F5851F;color:#fff">Xəritədə bax</a>
+              <a href="https://wa.me/994777451905" style="background:#17A398;color:#fff;border-radius:999px;padding:13px 22px;font-size:15px;font-weight:800" style-hover="background:#F5851F">WhatsApp</a>
+            </div>
+          </div>
+          <div style="background:#E6F6F4;border-radius:36px;padding:34px 30px;animation:riseIn 400ms 100ms cubic-bezier(.2,.7,.2,1) both">
+            <h2 style="margin:0 0 20px;font-size:15px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:#0E7A72">İş saatları</h2>
+            <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #CBE6E2;font-size:16px;font-weight:600"><span>Bazar ertəsi — Cümə</span><span>10:00 — 20:00</span></div>
+            <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #CBE6E2;font-size:16px;font-weight:600"><span>Şənbə</span><span>10:00 — 20:00</span></div>
+            <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #CBE6E2;font-size:16px;font-weight:600"><span>Bazar</span><span>11:00 — 18:00</span></div>
+            <p style="margin:22px 0 0;font-size:16px;line-height:1.6;color:#3F5250">Təmir və sifariş üçün əvvəlcədən zəng etmək tövsiyə olunur.</p>
+          </div>
+        </div>
+        <div style="position:relative;margin-top:16px;aspect-ratio:21/9;min-height:240px;border-radius:36px;overflow:hidden;background:repeating-linear-gradient(120deg,#FFF0DC 0 12px,#FFF8ED 12px 24px);animation:riseIn 400ms 160ms cubic-bezier(.2,.7,.2,1) both">
+          <img src="images/mekan.jpg" alt="Master Optik mağazasının girişi" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+          <a href="https://maps.google.com/?q=Faiq+Yusifov+73+Baku" style="position:absolute;right:20px;top:20px;background:#101617;color:#fff;border-radius:999px;padding:12px 22px;font-size:15px;font-weight:800" style-hover="background:#F5851F">Google Maps</a>
+        </div>
+      </div>
+    </sc-if>
+
+  </main>
+
+  <footer style="border-top:1px solid #F0E7D6;padding:26px clamp(18px,4vw,40px) 120px">
+    <div style="max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-size:14px;font-weight:700;color:#7A8281">
+      <span>Master Optik · Faiq Yusifov küç. 73, Bakı</span>
+      <div style="display:flex;gap:18px;flex-wrap:wrap">
+        <a href="#/xidmetler" sc-camel-on-click="{{ goServices }}" style="color:#7A8281" style-hover="color:#F5851F">Xidmətlər</a>
+        <a href="#/qalereya" sc-camel-on-click="{{ goGallery }}" style="color:#7A8281" style-hover="color:#F5851F">Qalereya</a>
+        <a href="#/elaqe" sc-camel-on-click="{{ goContact }}" style="color:#7A8281" style-hover="color:#F5851F">Əlaqə</a>
+        <a href="https://www.instagram.com/master__optik" style="color:#7A8281" style-hover="color:#F5851F">Instagram</a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="callbar" style="position:fixed;left:12px;right:12px;bottom:12px;background:#101617;border-radius:999px;padding:8px;gap:8px;z-index:50">
+    <a href="tel:+994777451905" style="flex:1;text-align:center;background:#F5851F;color:#fff;border-radius:999px;padding:15px;font-size:15px;font-weight:800">Zəng et</a>
+    <a href="https://wa.me/994777451905" style="flex:1;text-align:center;background:#17A398;color:#fff;border-radius:999px;padding:15px;font-size:15px;font-weight:800">WhatsApp</a>
+  </div>
+
+  
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.heroRef = React.createRef();
+    this.labelRef = React.createRef();
+    this.navHome = React.createRef();
+    this.navServices = React.createRef();
+    this.navGallery = React.createRef();
+    this.navContact = React.createRef();
+    this.state = { page: this.pageFromHash() };
+  }
+  pageFromHash() {
+    const h = (typeof location !== 'undefined' ? location.hash : '') || '';
+    if (h.indexOf('xidmetler') > -1) return 'services';
+    if (h.indexOf('qalereya') > -1) return 'gallery';
+    if (h.indexOf('elaqe') > -1) return 'contact';
+    return 'home';
+  }
+  go(page, hash) {
+    return (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      if (typeof history !== 'undefined' && history.pushState) history.pushState(null, '', hash);
+      this.setState({ page: page }, () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      if (page === 'home') this.startBlur();
+    };
+  }
+  syncNav() {
+    const map = { home: this.navHome, services: this.navServices, gallery: this.navGallery, contact: this.navContact };
+    const tint = { home: '#FFF3E4', services: '#FFF3E4', gallery: '#E6F6F4', contact: '#FFF3E4' };
+    Object.keys(map).forEach((k) => {
+      const el = map[k].current;
+      if (!el) return;
+      const active = this.state.page === k;
+      el.style.background = active ? (k === 'gallery' ? '#17A398' : '#F5851F') : tint[k];
+      el.style.color = active ? '#fff' : '#101617';
+    });
+  }
+  apply(d) {
+    this._d = d;
+    const h = this.heroRef.current, l = this.labelRef.current;
+    if (h) h.style.filter = 'blur(' + (d * 1.5).toFixed(2) + 'px)';
+    if (l) l.textContent = d < 0.05 ? '0.00' : '\u2212' + d.toFixed(2);
+  }
+  startBlur() {
+    cancelAnimationFrame(this._raf);
+    const from = 4.2, dur = 2200;
+    let t0 = null;
+    const step = (t) => {
+      if (t0 === null) t0 = t;
+      const p = Math.min(1, (t - t0) / dur);
+      const e = 1 - Math.pow(1 - p, 3);
+      this.apply(from * (1 - e));
+      if (p < 1) this._raf = requestAnimationFrame(step);
+    };
+    this._raf = requestAnimationFrame(step);
+  }
+  componentDidMount() {
+    this.syncNav();
+    if (this.state.page === 'home') this.startBlur();
+    this._onPop = () => { this.setState({ page: this.pageFromHash() }); };
+    window.addEventListener('popstate', this._onPop);
+    window.addEventListener('hashchange', this._onPop);
+  }
+  componentDidUpdate() {
+    this.syncNav();
+    if (this.state.page === 'home' && this._d != null) this.apply(this._d);
+  }
+  componentWillUnmount() {
+    cancelAnimationFrame(this._raf);
+    window.removeEventListener('popstate', this._onPop);
+    window.removeEventListener('hashchange', this._onPop);
+  }
+  renderVals() {
+    const p = this.state.page;
+    return {
+      isHome: p === 'home',
+      isServices: p === 'services',
+      isGallery: p === 'gallery',
+      isContact: p === 'contact',
+      heroRef: this.heroRef,
+      labelRef: this.labelRef,
+      navHome: this.navHome,
+      navServices: this.navServices,
+      navGallery: this.navGallery,
+      navContact: this.navContact,
+      goHome: this.go('home', '#/'),
+      goServices: this.go('services', '#/xidmetler'),
+      goGallery: this.go('gallery', '#/qalereya'),
+      goContact: this.go('contact', '#/elaqe'),
+      tapSwap: (e) => {
+        if (window.matchMedia && window.matchMedia('(hover: hover)').matches) return;
+        const tile = e.currentTarget;
+        const top = tile.querySelector('[data-swap]');
+        if (top) top.style.opacity = top.style.opacity === '0' ? '1' : '0';
+      },
+      onDiopter: (e) => { cancelAnimationFrame(this._raf); this.apply(parseFloat(e.target.value)); }
+    };
+  }
+}
+
 </script>
-</body>
-</html>
+
+
+  <script src="overlay.js" data-accent="#f27c17" defer></script>
+</body></html>
