@@ -1,5 +1,20 @@
 # Handoff prompt — finish the Master Optik CRM setup locally
 
+> **This is done — 11 September 2026. Do not run it again.**
+>
+> The Supabase project is `master-optik` in `eu-central-1`, the schema is
+> applied, sign-ups are off, the staff login exists and `assets/mo-config.js`
+> is filled in. The site is live and one design (`d6`, "Vitrin / 4 səhifə")
+> ships from the repo root — the other ten were deleted.
+>
+> Still open: the Instagram access token (step 5 of the verification below),
+> and the showcase gallery must stay **separate** from the Instagram feed
+> rather than being replaced by it, which is not how `assets/mo-site.js`
+> behaves today.
+>
+> Kept below as a record of how the project was set up and what to check if it
+> ever has to be rebuilt.
+
 Everything below is written to be pasted into a local Claude Code session
 (or followed by hand). It needs a machine that can reach `supabase.com` and
 a browser you are logged into — the cloud session that built this could not
