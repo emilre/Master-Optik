@@ -179,7 +179,12 @@ az: {
   /* nav */
   nav_dash:'İdarə paneli', nav_customers:'Müştərilər', nav_orders:'Sifarişlər',
   nav_stock:'Anbar', nav_instagram:'Instagram', nav_content:'Sayt mətnləri',
-  nav_settings:'Ayarlar', nav_work:'İş', nav_site:'Sayt',
+  nav_settings:'Ayarlar', nav_work:'İş', nav_site:'Sayt', nav_showcase:'Vitrin',
+  sc_desc:'Vitrin — saytın Qalereya səhifəsində göstərilən öz şəkilləriniz. Instagram lenti ayrıca bölmədir.',
+  sc_add:'Şəkil əlavə et', sc_none:'Hələ şəkil yoxdur', sc_cap:'Başlıq',
+  sc_added:'Şəkil əlavə olundu', sc_saved:'Yadda saxlanıldı', sc_deleted:'Silindi',
+  sc_delwarn:'Şəkil vitrindən silinəcək.', sc_uploading:'Yüklənir…',
+  sc_imgonly:'Yalnız şəkil faylı seçin', sc_count:'şəkil vitrindədir',
   /* dashboard */
   dash_hi:'Xoş gəldiniz', dash_rev:'Bu ayın satışı', dash_open:'Açıq sifarişlər',
   dash_ready:'Hazır — təhvil gözləyir', dash_low:'Anbarda azalıb',
@@ -288,7 +293,12 @@ ru: {
   email:'Эл. почта', password:'Пароль', optional:'необязательно', apply:'Применить',
   nav_dash:'Панель', nav_customers:'Клиенты', nav_orders:'Заказы',
   nav_stock:'Склад', nav_instagram:'Instagram', nav_content:'Тексты сайта',
-  nav_settings:'Настройки', nav_work:'Работа', nav_site:'Сайт',
+  nav_settings:'Настройки', nav_work:'Работа', nav_site:'Сайт', nav_showcase:'Витрина',
+  sc_desc:'Витрина — ваши собственные фотографии на странице «Галерея». Лента Instagram — отдельный раздел.',
+  sc_add:'Добавить фото', sc_none:'Фотографий пока нет', sc_cap:'Подпись',
+  sc_added:'Фото добавлено', sc_saved:'Сохранено', sc_deleted:'Удалено',
+  sc_delwarn:'Фотография будет удалена из витрины.', sc_uploading:'Загрузка…',
+  sc_imgonly:'Выберите файл изображения', sc_count:'фото в витрине',
   dash_hi:'Добро пожаловать', dash_rev:'Продажи за месяц', dash_open:'Открытые заказы',
   dash_ready:'Готовы к выдаче', dash_low:'Заканчивается на складе',
   dash_recent:'Последние заказы', dash_readyl:'Ожидают выдачи',
@@ -386,7 +396,12 @@ en: {
   email:'Email', password:'Password', optional:'optional', apply:'Apply',
   nav_dash:'Dashboard', nav_customers:'Customers', nav_orders:'Orders',
   nav_stock:'Stock', nav_instagram:'Instagram', nav_content:'Site copy',
-  nav_settings:'Settings', nav_work:'Work', nav_site:'Website',
+  nav_settings:'Settings', nav_work:'Work', nav_site:'Website', nav_showcase:'Showcase',
+  sc_desc:'The showcase is your own photos on the Gallery page. The Instagram feed is a separate section.',
+  sc_add:'Add photo', sc_none:'No photos yet', sc_cap:'Caption',
+  sc_added:'Photo added', sc_saved:'Saved', sc_deleted:'Deleted',
+  sc_delwarn:'The photo will be removed from the showcase.', sc_uploading:'Uploading…',
+  sc_imgonly:'Choose an image file', sc_count:'photos in the showcase',
   dash_hi:'Welcome', dash_rev:'Sales this month', dash_open:'Open orders',
   dash_ready:'Ready for pickup', dash_low:'Running low',
   dash_recent:'Recent orders', dash_readyl:'Waiting for pickup',
@@ -754,6 +769,7 @@ var NAV = [
   { id: 'orders',     icon: 'orders', label: 'nav_orders' },
   { id: 'stock',      icon: 'box',    label: 'nav_stock' },
   { group: 'nav_site' },
+  { id: 'showcase',   icon: 'glasses', label: 'nav_showcase' },
   { id: 'instagram',  icon: 'ig',     label: 'nav_instagram' },
   { id: 'content',    icon: 'text',   label: 'nav_content' },
   { id: 'settings',   icon: 'cog',    label: 'nav_settings' }
@@ -2568,6 +2584,190 @@ function igMirror(media) {
     }, Promise.resolve());
   });
 }
+
+/* =====================================================================
+   12b. SHOWCASE  (vitrin — the shop's own gallery)
+
+   Deliberately NOT the Instagram feed: the showcase is what the shop
+   chooses to display, the feed is what it happens to have posted. They
+   render as two separate sections on the website's Qalereya page.
+   ===================================================================== */
+
+/* Seeded rows point at files that ship with the site; uploads are absolute
+   Storage URLs. The panel lives in /admin/, hence the ../ */
+function scImageUrl(value) {
+  if (!value) return '';
+  var v = String(value).trim();
+  if (/^https?:\/\//i.test(v)) return v;
+  if (/^[\w./-]+$/.test(v) && v.indexOf('..') < 0) return '../' + v;
+  return '';
+}
+
+/* The object name inside the showcase bucket, or null when the row points at a
+   file that ships with the site rather than at an upload. */
+function scStoredName(url) {
+  var m = /\/storage\/v1\/object\/public\/showcase\/(.+)$/.exec(String(url || ''));
+  return m ? decodeURIComponent(m[1].split('?')[0]) : null;
+}
+
+/* Phone photos are 3-5 MB; the site never needs more than ~1600px. Resizing
+   in the browser keeps both the free Storage tier and the page light. */
+function scResize(file, maxEdge) {
+  return new Promise(function (resolve, reject) {
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function () {
+      URL.revokeObjectURL(url);
+      var scale = Math.min(1, maxEdge / Math.max(img.naturalWidth, img.naturalHeight));
+      var c = document.createElement('canvas');
+      c.width = Math.round(img.naturalWidth * scale);
+      c.height = Math.round(img.naturalHeight * scale);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      c.toBlob(function (blob) {
+        blob ? resolve(blob) : reject(new Error('encode failed'));
+      }, 'image/jpeg', 0.82);
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('not an image')); };
+    img.src = url;
+  });
+}
+
+function scUpload(file) {
+  return scResize(file, 1600).then(function (blob) {
+    var name = 'sc-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.jpg';
+    return db.storage.from('showcase')
+      .upload(name, blob, { contentType: 'image/jpeg', upsert: false })
+      .then(function (res) {
+        if (res.error) throw res.error;
+        return db.storage.from('showcase').getPublicUrl(name).data.publicUrl;
+      });
+  });
+}
+
+VIEWS.showcase = function (view, gen) {
+  function load() {
+    return guard(db.from('showcase_items').select('*')
+      .order('sort_order', { ascending: true }))
+      .then(function (rows) { render(rows || []); });
+  }
+
+  function card(r) {
+    var img = scImageUrl(r.image_url);
+    var cap = function (code) {
+      return '<div class="field"><label>' + esc(t('sc_cap')) + ' ' + code.toUpperCase() + '</label>' +
+        '<input class="input" data-sc-cap="' + code + '" data-id="' + esc(r.id) + '" value="' +
+        esc(r['caption_' + code] || '') + '"></div>';
+    };
+    return '<div class="card" style="margin-bottom:12px"><div class="body">' +
+      '<div class="row wrap" style="gap:14px;align-items:flex-start">' +
+        '<div style="width:104px;height:104px;flex:0 0 auto;border-radius:14px;' +
+          'background:#eee center/cover no-repeat' +
+          (img ? ';background-image:url(' + esc(img).replace(/[()]/g, '') + ')' : '') + ';' +
+          (r.hidden ? 'opacity:.4' : '') + '"></div>' +
+        '<div style="flex:1 1 240px;display:grid;gap:8px">' + cap('az') + cap('ru') + cap('en') + '</div>' +
+        '<div class="row" style="gap:6px;flex:0 0 auto;flex-wrap:wrap">' +
+          '<button class="btn sm primary" data-sc="' + esc(r.id) + '" data-act="save">' +
+            esc(t('save')) + '</button>' +
+          '<button class="btn icon ghost" data-sc="' + esc(r.id) + '" data-act="toggle" title="' +
+            esc(r.hidden ? t('ig_show') : t('ig_hide')) + '">' +
+            ico(r.hidden ? 'eyeoff' : 'eye') + '</button>' +
+          '<button class="btn icon ghost" data-sc="' + esc(r.id) + '" data-act="up" title="' +
+            esc(t('ig_up')) + '">' + ico('up') + '</button>' +
+          '<button class="btn icon ghost" data-sc="' + esc(r.id) + '" data-act="down" title="' +
+            esc(t('ig_down')) + '">' + ico('down') + '</button>' +
+          '<button class="btn icon ghost" data-sc="' + esc(r.id) + '" data-act="del" title="' +
+            esc(t('del')) + '">' + ico('trash') + '</button>' +
+        '</div>' +
+      '</div></div></div>';
+  }
+
+  function render(rows) {
+    if (stale(gen)) return;
+    var shown = rows.filter(function (r) { return !r.hidden; }).length;
+    view.innerHTML =
+      '<div class="notice info" style="margin-bottom:16px">' + ico('info') +
+        '<div>' + esc(t('sc_desc')) + '</div></div>' +
+      '<div class="card" style="margin-bottom:18px"><div class="body">' +
+        '<div class="row wrap">' +
+          '<button class="btn primary" id="scAdd">' + ico('plus') + esc(t('sc_add')) + '</button>' +
+          '<input type="file" id="scFile" accept="image/*" hidden>' +
+          '<span class="spacer"></span>' +
+          '<span class="small muted">' + shown + ' ' + esc(t('sc_count')) + '</span>' +
+        '</div>' +
+      '</div></div>' +
+      (rows.length ? rows.map(card).join('')
+        : '<div class="card"><div class="body">' + emptyState(t('sc_none')) + '</div></div>');
+
+    $('#scAdd').addEventListener('click', function () { $('#scFile').click(); });
+
+    $('#scFile').addEventListener('change', function (e) {
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (!/^image\//.test(file.type)) { toast(t('sc_imgonly'), 'err'); return; }
+      var btn = $('#scAdd');
+      busy(btn, true);
+      toast(t('sc_uploading'));
+      var next = rows.length ? num(rows[rows.length - 1].sort_order) + 10 : 10;
+      scUpload(file)
+        .then(function (url) {
+          return guard(db.from('showcase_items').insert({ image_url: url, sort_order: next }));
+        })
+        .then(function () { busy(btn, false); toast(t('sc_added'), 'good'); load(); })
+        .catch(function (err) { busy(btn, false); fail(err); });
+      e.target.value = '';
+    });
+
+    $$('[data-sc]', view).forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var row = rows.filter(function (r) { return String(r.id) === btn.dataset.sc; })[0];
+        if (!row) return;
+        var act = btn.dataset.act;
+
+        if (act === 'save') {
+          var patch = {};
+          ['az', 'ru', 'en'].forEach(function (code) {
+            var input = view.querySelector('[data-sc-cap="' + code + '"][data-id="' + row.id + '"]');
+            patch['caption_' + code] = input && input.value.trim() ? input.value.trim() : null;
+          });
+          busy(btn, true);
+          guard(db.from('showcase_items').update(patch).eq('id', row.id))
+            .then(function () { busy(btn, false); toast(t('sc_saved'), 'good'); })
+            .catch(function (err) { busy(btn, false); fail(err); });
+
+        } else if (act === 'toggle') {
+          guard(db.from('showcase_items').update({ hidden: !row.hidden }).eq('id', row.id))
+            .then(load).catch(fail);
+
+        } else if (act === 'up' || act === 'down') {
+          var i = rows.indexOf(row);
+          var swap = rows[act === 'up' ? i - 1 : i + 1];
+          if (!swap) return;
+          var a = num(row.sort_order), b = num(swap.sort_order);
+          if (a === b) { a = i; b = rows.indexOf(swap); }
+          Promise.all([
+            guard(db.from('showcase_items').update({ sort_order: b }).eq('id', row.id)),
+            guard(db.from('showcase_items').update({ sort_order: a }).eq('id', swap.id))
+          ]).then(load).catch(fail);
+
+        } else if (act === 'del') {
+          confirmDelete(function () {
+            guard(db.from('showcase_items').delete().eq('id', row.id))
+              .then(function () {
+                /* drop the stored file too, or the bucket fills with orphans.
+                   Seeded rows point at files shipped with the site — leave those. */
+                var name = scStoredName(row.image_url);
+                return name ? db.storage.from('showcase').remove([name]) : null;
+              })
+              .then(function () { toast(t('sc_deleted'), 'good'); load(); })
+              .catch(fail);
+          }, t('sc_delwarn'));
+        }
+      });
+    });
+  }
+
+  load().catch(fail);
+};
 
 /* =====================================================================
    13. SITE CONTENT  (what the public website says)

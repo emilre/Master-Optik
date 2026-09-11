@@ -486,6 +486,80 @@ begin
 end $$;
 
 -- =====================================================================
+-- SHOWCASE (vitrin) — the shop's own curated gallery.
+-- Deliberately separate from instagram_posts: the showcase is what the
+-- shop chooses to display, the Instagram feed is what it happens to have
+-- posted. The two render as two sections on the Qalereya page.
+-- =====================================================================
+create table if not exists public.showcase_items (
+  id         uuid primary key default gen_random_uuid(),
+  image_url  text not null,           -- 'images/01.jpg', or a Storage URL
+  caption_az text,
+  caption_ru text,
+  caption_en text,
+  sort_order int     not null default 0,
+  hidden     boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create index if not exists showcase_visible_idx
+  on public.showcase_items (hidden, sort_order);
+
+drop trigger if exists showcase_touch on public.showcase_items;
+create trigger showcase_touch before update on public.showcase_items
+  for each row execute function public.touch_updated_at();
+
+alter table public.showcase_items enable row level security;
+
+-- same shape as instagram_posts: visitors see what is not hidden,
+-- staff sees and edits everything
+drop policy if exists showcase_read_public on public.showcase_items;
+create policy showcase_read_public on public.showcase_items
+  for select to anon using (hidden = false);
+drop policy if exists showcase_staff_all on public.showcase_items;
+create policy showcase_staff_all on public.showcase_items
+  for all to authenticated
+  using (public.is_staff()) with check (public.is_staff());
+
+-- Storage for showcase uploads, mirroring the instagram bucket.
+insert into storage.buckets (id, name, public)
+values ('showcase', 'showcase', true)
+on conflict (id) do update set public = true;
+
+do $$
+begin
+  begin
+    drop policy if exists showcase_public_read on storage.objects;
+    create policy showcase_public_read on storage.objects
+      for select to anon, authenticated using (bucket_id = 'showcase');
+    drop policy if exists showcase_staff_write on storage.objects;
+    create policy showcase_staff_write on storage.objects
+      for all to authenticated
+      using (bucket_id = 'showcase' and public.is_staff())
+      with check (bucket_id = 'showcase' and public.is_staff());
+  exception when insufficient_privilege then
+    raise notice 'Could not create storage policies here - create them in Dashboard > Storage > showcase > Policies.';
+  end;
+end $$;
+
+-- SEED: the nine photos the site shipped with, so the panel opens already
+-- populated. Only runs while the table is empty, so it never fights the
+-- shop's own edits. The files stay in images/ until they are replaced.
+insert into public.showcase_items (image_url, caption_az, sort_order)
+select * from (values
+  ('images/01.jpg', 'mağaza vitrini',        10),
+  ('images/02.jpg', 'optik çərçivə portret', 20),
+  ('images/03.jpg', 'günəş eynəyi',          30),
+  ('images/04.jpg', 'təmir prosesi',         40),
+  ('images/05.jpg', 'linza kəsimi',          50),
+  ('images/06.jpg', 'uşaq eynəyi',           60),
+  ('images/07.jpg', 'çərçivə rəfi',          70),
+  ('images/08.jpg', 'usta işi',              80),
+  ('images/09.jpg', 'mağaza interyeri',      90)
+) as v(image_url, caption_az, sort_order)
+where not exists (select 1 from public.showcase_items);
+
+-- =====================================================================
 -- SEED: the website copy that is currently hard-coded in the designs.
 -- Editing these rows from the admin panel changes the live website.
 -- =====================================================================

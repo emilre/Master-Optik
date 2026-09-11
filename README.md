@@ -24,7 +24,8 @@ in git history if anyone wants to look back at them.
 ## Admin panel / CRM (`/admin/`)
 
 A working CRM for the shop owner, on the same static host: **customers &
-prescriptions, orders, stock, an Instagram-only gallery and the website copy**.
+prescriptions, orders, stock, the showcase gallery, the Instagram feed and the
+website copy**.
 Data lives in a free Supabase project (Postgres + Auth, Row Level Security).
 
 Start with **[`admin/guide.html`](admin/guide.html)** — a step-by-step setup
@@ -37,18 +38,29 @@ Instagram access token). Short version in [`admin/SETUP.md`](admin/SETUP.md).
 | `admin/schema.sql` | run once in the Supabase SQL editor |
 | `admin/guide.html` | setup tutorial |
 | `assets/mo-config.js` | the two Supabase values the site needs (fill in once) |
-| `assets/mo-site.js` | public-site runtime: Instagram gallery + copy overrides |
+| `assets/mo-site.js` | public-site runtime: website copy overrides |
 
 Until `assets/mo-config.js` is filled in, the site keeps working exactly as
 before — the runtime silently does nothing.
 
-### Gallery = Instagram posts
+### Two galleries, deliberately separate
 
-`assets/mo-site.js` replaces the static gallery photos with the real posts
-synced from [@master__optik](https://instagram.com/master__optik), reusing the
-page's own tile markup and CSS, and links each tile to the post. `overlay.js`
-loads it once the page has rendered. Which posts appear, and in what order, is
-decided in the admin panel.
+The Qalereya page shows **two** sections, and they are not the same thing:
+
+- **Vitrin** — the shop's own curated photos, managed in the panel under
+  *Vitrin*: upload, caption in AZ/RU/EN, reorder, hide. Uploads are resized in
+  the browser to 1600px and stored in Supabase Storage.
+- **Instagram** — the posts synced from
+  [@master__optik](https://instagram.com/master__optik), below the showcase,
+  each tile linking to its post. It renders only when there are posts.
+
+Both are rendered by the page itself from `showcase_items` and
+`instagram_posts`, inside the design runtime — not injected by a script
+afterwards. That matters: the page is React-rendered, and DOM injected from
+outside is destroyed the moment the visitor changes route.
+
+The nine photos the site shipped with are seeded into `showcase_items`, so the
+panel opens populated and the shop edits from there.
 
 ## Structure
 
@@ -58,8 +70,8 @@ decided in the admin panel.
 | `vendor/` | `react` · `react-dom` · `dc-runtime.js`, which renders the page |
 | `fonts/` | Nunito, five `woff2` subsets; the browser fetches only what a page uses |
 | `images/` | every photo the site shows — replacing a file here changes the site |
-| `overlay.js` | shared nav, language switcher, WhatsApp/call buttons; loads the runtime below |
-| `assets/` | `mo-config.js` (Supabase keys) · `mo-site.js` (Instagram gallery + copy) |
+| `overlay.js` | shared nav, language switcher, WhatsApp/call buttons; loads the copy runtime |
+| `assets/` | `mo-config.js` (Supabase keys) · `mo-site.js` (website copy overrides) |
 | `admin/` | the CRM — see above |
 | `videos/` | three reels, used by designs that no longer ship; kept as source media |
 
@@ -81,10 +93,12 @@ runtime's template syntax and are evaluated in the browser.
 
 Photos came from Instagram [@master__optik](https://instagram.com/master__optik):
 EXIF orientation applied then stripped, progressive JPEG, under 400 KB each.
-The site uses `hero.jpg`, `01`–`09`, `about.jpg`, `mekan.jpg` and `reel1.jpg` —
-replacing any of those changes the live site with no other edit. `reel2`/`reel3`
-and the three `.mp4`s are unused by the current design and kept only as source
-material.
+The home page uses `hero.jpg`, `01`–`09`, `about.jpg`, `mekan.jpg` and
+`reel1.jpg` directly — replacing any of those changes it with no other edit.
+The Qalereya showcase no longer reads these files by name: it reads
+`showcase_items`, which was seeded to point at `01`–`09` and is edited in the
+panel from then on. `reel2`/`reel3` and the three `.mp4`s are unused by the
+current design and kept only as source material.
 
 ## Languages
 
