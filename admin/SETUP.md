@@ -37,6 +37,10 @@ customer record.
 The full version of these steps, with the Instagram token tutorial, is in
 **[`admin/guide.html`](guide.html)** — open it in a browser, it has an AZ/EN switch.
 
+To hand the remaining setup to a local Claude Code session, paste
+[`admin/LOCAL-SETUP-PROMPT.md`](LOCAL-SETUP-PROMPT.md) — it carries the same
+steps plus the verification checklist and the known gotchas.
+
 ## What the panel does
 
 - **Dashboard** — sales this month, open orders, ready for pickup, low stock.
