@@ -75,6 +75,8 @@
     'Vitrinimiz': ['Наша витрина', 'Our showcase'],
     'Mağazadan və işlərimizdən şəkillər.': ['Фотографии магазина и наших работ.', 'Photos of the store and our work.'],
     'Mağazadan, çərçivələrdən və işlərimizdən.': ['Магазин, оправы и наши работы.', 'The store, frames and our work.'],
+    'Instagram-da': ['В Instagram', 'On Instagram'],
+    'Ən son paylaşımlarımız.': ['Наши последние публикации.', 'Our latest posts.'],
     'Qalereyaya keç →': ['Перейти в галерею →', 'Open the gallery →'],
     'Eynək seçmək': ['Выбрать очки', 'Choosing glasses'],
     'asan olsun.': ['— это просто.', 'made easy.'],
@@ -167,6 +169,9 @@
           var tag = p.nodeName;
           if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return NodeFilter.FILTER_REJECT;
           if (p.closest && p.closest('[data-mo-ui]')) return NodeFilter.FILTER_REJECT;
+          /* text the shop edits in the admin panel: mo-site.js has already put
+             the right language there, and our dictionary would overwrite it */
+          if (p.closest && p.closest('[data-mo-applied]')) return NodeFilter.FILTER_REJECT;
           return NodeFilter.FILTER_ACCEPT;
         }
       });

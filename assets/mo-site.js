@@ -49,7 +49,14 @@
       var row = OVERRIDES[nodes[i].getAttribute('data-i18n')];
       if (!row) continue;
       var text = row[lang] || row.az;
-      if (text && nodes[i].textContent !== text) nodes[i].textContent = text;
+      if (!text) continue;
+      if (nodes[i].textContent !== text) nodes[i].textContent = text;
+      /* overlay.js translates loose text nodes from its own dictionary and
+         would put its version back over the shop's. The mark tells it to
+         leave this element alone — see translateTree there. It is only set
+         once a value from the database has actually been applied, so if the
+         database is unreachable the overlay keeps translating as before. */
+      nodes[i].setAttribute('data-mo-applied', '');
     }
   }
 
@@ -64,7 +71,7 @@
     /* the designs re-render [data-i18n] on every language click */
     document.addEventListener('click', function (e) {
       if (!e.target.closest) return;
-      if (e.target.closest('[data-lang],[data-mo-pill-lang],.langs button')) {
+      if (e.target.closest('[data-lang],[data-mo-lang],[data-mo-pill-lang],.langs button')) {
         setTimeout(applyCopy, 0);
         setTimeout(applyCopy, 150);
       }

@@ -560,41 +560,51 @@ select * from (values
 where not exists (select 1 from public.showcase_items);
 
 -- =====================================================================
--- SEED: the website copy that is currently hard-coded in the designs.
--- Editing these rows from the admin panel changes the live website.
+-- SEED: the website copy, exactly as the page shows it, in all three
+-- languages. Editing these rows from the admin panel changes the live
+-- website: every one of them is tagged with data-i18n in index.html and
+-- applied by assets/mo-site.js.
+--
+-- Only seeds an empty table, so re-running this file never overwrites
+-- what the shop has written.
 -- =====================================================================
-insert into public.site_content (key, az, ru, en, group_name, sort_order) values
- ('hero_title','Aydın görmə, mükəmməl görünüş','Чёткое зрение, безупречный образ','Clear vision, perfect look','hero',10),
- ('hero_sub','Master Optik — Bakıda eynək satışı, dioptrili linzalar, təmir və fərdi sifariş. Keyfiyyətli çərçivələr və peşəkar xidmət.','Master Optik — продажа очков, диоптрийные линзы, ремонт и индивидуальный заказ в Баку. Качественные оправы и профессиональный сервис.','Master Optik — eyewear, prescription lenses, repairs and custom orders in Baku. Quality frames and professional service.','hero',20),
- ('hero_badge','2015-dən etibarən Bakıda','В Баку с 2015 года','In Baku since 2015','hero',30),
- ('services_title','Xidmətlərimiz','Наши услуги','Our services','services',10),
- ('services_sub','Gözlərinizə lazım olan hər şey bir yerdə','Всё для ваших глаз в одном месте','Everything your eyes need, in one place','services',20),
- ('svc1_t','Eynək satışı','Продажа очков','Eyewear sales','services',30),
- ('svc1_d','Geniş çeşiddə optik və günəş eynəkləri, müasir çərçivələr.','Большой выбор оптических и солнцезащитных очков, современные оправы.','A wide range of optical and sunglasses with modern frames.','services',31),
- ('svc2_t','Dioptrili linzalar','Диоптрийные линзы','Prescription lenses','services',40),
- ('svc2_d','Reseptə uyğun optik linzalar, antirefleks və blue-light örtük.','Линзы по рецепту, антибликовое и blue-light покрытие.','Lenses to prescription with anti-reflective and blue-light coating.','services',41),
- ('svc3_t','Günəş eynəkləri','Солнцезащитные очки','Sunglasses','services',50),
- ('svc3_d','UV qorumalı, orijinal brend günəş eynəkləri.','Оригинальные брендовые очки с UV-защитой.','Genuine branded sunglasses with UV protection.','services',51),
- ('svc4_t','Eynək təmiri','Ремонт очков','Eyewear repair','services',60),
- ('svc4_d','Çərçivə və linza təmiri, vint, burun altlığı və menteşə dəyişimi.','Ремонт оправ и линз, замена винтов, носоупоров и петель.','Frame and lens repair, screw, nose-pad and hinge replacement.','services',61),
- ('svc5_t','Göz yoxlanışı','Проверка зрения','Vision test','services',70),
- ('svc5_d','Görmə itiliyinin ölçülməsi və düzgün linza seçimi.','Измерение остроты зрения и подбор правильных линз.','Visual acuity measurement and correct lens selection.','services',71),
- ('svc6_t','Kontakt linzalar','Контактные линзы','Contact lenses','services',80),
- ('svc6_d','Gündəlik, aylıq və rəngli kontakt linzalar.','Однодневные, месячные и цветные контактные линзы.','Daily, monthly and colored contact lenses.','services',81),
- ('svc7_t','Uşaq eynəkləri','Детские очки','Kids'' eyewear','services',90),
- ('svc7_d','Davamlı və rahat uşaq çərçivələri.','Прочные и удобные детские оправы.','Durable and comfortable frames for children.','services',91),
- ('svc8_t','Fərdi sifariş','Индивидуальный заказ','Custom orders','services',100),
- ('svc8_d','İstədiyiniz model və linzanın fərdi sifarişi.','Индивидуальный заказ нужной модели и линз.','Custom order of the model and lenses you want.','services',101),
- ('gallery_title','Qalereya','Галерея','Gallery','gallery',10),
- ('gallery_sub','Mağazamızdan və işlərimizdən görüntülər','Кадры из нашего магазина и работ','Shots from our store and our work','gallery',20),
- ('reels_title','Videolar','Видео','Videos','gallery',30),
- ('about_title','Haqqımızda','О нас','About us','about',10),
- ('about_p','Master Optik uzun illərdir Bakıda keyfiyyətli optik məhsullar və peşəkar xidmət təqdim edir. Məqsədimiz — hər müştəriyə həm sağlam görmə, həm də zövqlü görünüş qazandırmaqdır. Təcrübəli komandamız düzgün linza və çərçivə seçimində sizə kömək edir.','Master Optik уже много лет предлагает в Баку качественную оптику и профессиональный сервис. Наша цель — обеспечить каждому клиенту и здоровое зрение, и стильный образ. Опытная команда поможет подобрать правильные линзы и оправу.','For many years Master Optik has offered quality optics and professional service in Baku. Our goal is to give every customer both healthy vision and a stylish look. Our experienced team helps you pick the right lenses and frames.','about',20),
- ('contact_title','Əlaqə','Контакты','Contact','contact',10),
- ('hours_v','B.e–Şənbə 10:00–20:00 · Bazar 11:00–18:00','Пн–Сб 10:00–20:00 · Вс 11:00–18:00','Mon–Sat 10:00–20:00 · Sun 11:00–18:00','contact',20),
- ('addr_v','Faiq Yusifov küç. 73, Nərimanov r., Bakı','ул. Фаига Юсифова 73, Наримановский р-н, Баку','73 Faig Yusifov str., Narimanov dist., Baku','contact',30),
- ('footer_tag','Aydın görmə, mükəmməl görünüş','Чёткое зрение, безупречный образ','Clear vision, perfect look','contact',40)
-on conflict (key) do nothing;
+insert into public.site_content (key, az, ru, en, group_name, sort_order)
+select * from (values
+ ('hero_sub','Satış, təmir və fərdi sifariş. Gəlin, rahat-rahat seçin — hansı çərçivənin sizə yaraşdığını yerində göstərək.','Продажа, ремонт и индивидуальный заказ. Приходите и выбирайте спокойно — на месте покажем, какая оправа вам идёт.','Sales, repairs and custom orders. Come choose at ease — we will show you which frame suits you.','hero',10),
+ ('home_vit_t','Vitrinimiz','Наша витрина','Our showcase','hero',20),
+ ('home_vit_p','Siyahı mağazadakı rəflərdən götürülüb — dəyişməli brend varsa deyin.','Список взят с полок магазина — скажите, если какой-то бренд нужно заменить.','The list comes from our store shelves — tell us if a brand should change.','hero',30),
+ ('home_svc_t','Xidmətlər','Услуги','Services','hero',40),
+ ('home_svc_p','Satış, linza, təmir, fərdi sifariş — altı iş bir ünvanda.','Продажа, линзы, ремонт, индивидуальный заказ — шесть услуг по одному адресу.','Sales, lenses, repairs, custom orders — six services at one address.','hero',50),
+ ('home_gal_t','Qalereya','Галерея','Gallery','hero',60),
+ ('home_gal_p','Mağazadan və işlərimizdən şəkillər.','Фотографии магазина и наших работ.','Photos of the store and our work.','hero',70),
+ ('home_addr_t','Ünvan və saatlar','Адрес и часы','Address & hours','hero',80),
+ ('home_addr_p','Faiq Yusifov küç. 73, N.Nərimanov, Bakı.','ул. Фаига Юсифова 73, Нариманов, Баку.','73 Faig Yusifov str., Narimanov, Baku.','hero',90),
+ ('svc_title','Nə edirik?','Что мы делаем?','What we do','services',100),
+ ('svc_sub','Altı iş — hamısı bir ünvanda.','Шесть услуг — всё по одному адресу.','Six services — all at one address.','services',110),
+ ('svc1_t','Günəş eynəkləri','Солнцезащитные очки','Sunglasses','services',120),
+ ('svc1_d','UV qorumalı modellər, brend və büdcə variantları. Yerində sınayıb seçin.','Модели с UV-защитой, брендовые и бюджетные варианты. Примерьте и выберите на месте.','UV-protected models, brand and budget options. Try and choose in store.','services',130),
+ ('svc2_t','Optik çərçivələr','Оптические оправы','Optical frames','services',140),
+ ('svc2_d','Metal, asetat və titan çərçivələr. Üz formanıza uyğun ölçü seçirik.','Оправы из металла, ацетата и титана. Подберём размер под форму вашего лица.','Metal, acetate and titanium frames. We match the size to your face shape.','services',150),
+ ('svc3_t','Linzalar','Линзы','Lenses','services',160),
+ ('svc3_d','Antirefleks, blue-cut, fotoxrom və proqressiv linzalar reseptə uyğun hazırlanır.','Антибликовые, blue-cut, фотохромные и прогрессивные линзы изготавливаются по рецепту.','Anti-reflective, blue-cut, photochromic and progressive lenses made to prescription.','services',170),
+ ('svc4_t','Təmir','Ремонт','Repairs','services',180),
+ ('svc4_d','Qırılmış çərçivə, vint, menteşə və burun yastıqcalarının bərpası — çox hallarda eyni gün.','Ремонт сломанных оправ, винтов, петель и носоупоров — чаще всего в тот же день.','Repair of broken frames, screws, hinges and nose pads — usually same day.','services',190),
+ ('svc5_t','Fərdi sifariş','Индивидуальный заказ','Custom orders','services',200),
+ ('svc5_d','Axtardığınız model mağazada yoxdursa, sizin üçün sifariş edirik.','Если нужной модели нет в магазине, закажем её для вас.','If the model you want isn''t in store, we''ll order it for you.','services',210),
+ ('svc6_t','Mağazada seçim','Выбор в магазине','In-store selection','services',220),
+ ('svc6_d','Gəlin, taxıb baxın. Ustamız ölçü və oturuşu yerində tənzimləyir.','Приходите и примерьте. Мастер на месте подгонит размер и посадку.','Come try them on. Our master adjusts size and fit on the spot.','services',230),
+ ('gal_title','Qalereya','Галерея','Gallery','gallery',240),
+ ('gal_sub','Mağazadan, çərçivələrdən və işlərimizdən.','Магазин, оправы и наши работы.','The store, frames and our work.','gallery',250),
+ ('ig_title','Instagram-da','В Instagram','On Instagram','gallery',260),
+ ('ig_sub','Ən son paylaşımlarımız.','Наши последние публикации.','Our latest posts.','gallery',270),
+ ('con_title','Bizə gəlin','Приходите к нам','Visit us','contact',280),
+ ('con_sub','N.Nərimanov rayonu, metrodan yaxın.','Наримановский район, рядом с метро.','Narimanov district, near the metro.','contact',290),
+ ('con_phone_t','Əlaqə','Контакты','Contact','contact',300),
+ ('con_phone_p','Zəng və WhatsApp','Звонок и WhatsApp','Call & WhatsApp','contact',310),
+ ('con_hours_t','İş saatları','Часы работы','Opening hours','contact',320),
+ ('con_hours_p','Təmir və sifariş üçün əvvəlcədən zəng etmək tövsiyə olunur.','Для ремонта и заказа рекомендуем позвонить заранее.','For repairs and orders, calling ahead is recommended.','contact',330)
+) as v(key, az, ru, en, group_name, sort_order)
+where not exists (select 1 from public.site_content);
 
 -- =====================================================================
 -- WHAT TO DO NEXT — the panel will not open until all three are done

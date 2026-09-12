@@ -43,6 +43,23 @@ Instagram access token). Short version in [`admin/SETUP.md`](admin/SETUP.md).
 Until `assets/mo-config.js` is filled in, the site keeps working exactly as
 before — the runtime silently does nothing.
 
+### Website copy
+
+Every heading and paragraph the shop would want to change carries a
+`data-i18n` key, and `assets/mo-site.js` fills it from `site_content` in the
+active language — 33 texts, seeded in AZ/RU/EN with exactly what the page
+already said.
+
+Two runtimes write to that text, so they are kept apart on purpose:
+`overlay.js` translates loose text from its own 118-phrase dictionary, while
+`mo-site.js` applies what the shop typed. Once a database value has been
+applied, the element is marked `data-mo-applied` and the overlay leaves it
+alone — otherwise the dictionary would put its own wording back over the
+shop's. The mark is only set after a value actually arrives, so if Supabase is
+unreachable the overlay keeps translating as before.
+
+Editing a text in RU or EN in the panel changes only that language.
+
 ### Two galleries, deliberately separate
 
 The Qalereya page shows **two** sections, and they are not the same thing:
